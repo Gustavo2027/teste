@@ -29,6 +29,7 @@
     }
 
     #root {
+      height: 100vh;
       height: calc(100dvh - 120px);
       display: flex;
       flex-direction: column;
@@ -37,7 +38,7 @@
     }
 
     .custom-scrollbar {
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
       overscroll-behavior-y: contain;
@@ -56,8 +57,14 @@
       border-radius: 3px;
     }
 
-    .perspective-3000 { perspective: 2500px; }
-    .transform-style-3d { transform-style: preserve-3d; }
+    .perspective-3000 { 
+      perspective: 3000px; 
+      -webkit-perspective: 3000px;
+    }
+    .transform-style-3d { 
+      transform-style: preserve-3d; 
+      -webkit-transform-style: preserve-3d;
+    }
     
     .sheet {
       position: absolute;
@@ -67,11 +74,13 @@
       height: 100%;
       transform-origin: left;
       transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
       z-index: 10;
     }
 
     .sheet.flipped {
       transform: rotateY(-180deg);
+      -webkit-transform: rotateY(-180deg);
     }
 
     .backface-hidden { 
@@ -127,9 +136,13 @@
 
     .font-serif { font-family: 'Cinzel', serif; }
 
-    @media (max-width: 600px) {
-      #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 70px; }
+    @media (max-width: 640px) {
+      #book-container { 
+        width: 95% !important; 
+        height: 80% !important; 
+        aspect-ratio: auto !important;
+      }
+      .flip-zone { width: 80px; }
     }
   </style>
 <script type="importmap">
@@ -343,26 +356,26 @@
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente (Lado direito do livro quando aberto)
+        // Frente (Direita do livro)
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
-        front.innerHTML = renderPage(MENU_DATA[i], i);
+        front.innerHTML = renderPage(MENU_DATA[i]);
         
         const flipR = document.createElement('div');
         flipR.className = 'flip-zone flip-zone-right';
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso (Lado esquerdo do livro quando aberto)
+        // Verso (Esquerda do livro)
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
         back.style.transform = 'rotateY(180deg)';
+        back.style.webkitTransform = 'rotateY(180deg)';
         back.style.pointerEvents = 'none'; 
-        back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
+        back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1]) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // Zona de clique para voltar (no verso rotacionado, a borda externa esquerda visual é a borda esquerda do div)
         const flipL = document.createElement('div');
         flipL.className = 'flip-zone flip-zone-left'; 
         flipL.style.zIndex = "6000";
@@ -381,7 +394,7 @@
       lucide.createIcons();
     }
 
-    function renderPage(data, index) {
+    function renderPage(data) {
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
         const isBack = data.type === 'back';
@@ -432,7 +445,6 @@
                 <div class="custom-scrollbar pr-3">
                   <div class="pb-16 pt-2">${sectionsHtml}</div>
                 </div>
-                <div class="absolute bottom-3 left-0 right-0 text-center text-[9px] opacity-20 font-serif tracking-widest uppercase">PÁGINA ${index}</div>
               </div>`;
     }
 
@@ -473,8 +485,10 @@
 
     window.addEventListener('resize', () => {
       const cont = document.getElementById('book-container');
-      if (cont) {
-        cont.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2.1/1";
+      if (cont && window.innerWidth > 640) {
+        cont.style.aspectRatio = "2.1/1";
+      } else if (cont) {
+        cont.style.aspectRatio = "0.75/1";
       }
     });
     
