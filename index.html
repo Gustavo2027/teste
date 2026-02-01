@@ -48,13 +48,16 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem Invisível - Aparece apenas no Scroll/Touch */
+    /* Barra de rolagem 100% Invisível - Aparece apenas no Scroll/Touch */
     .custom-scrollbar {
       overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
-      will-change: transform, scroll-position;
-      transform: translate3d(0,0,0); /* Estabiliza renderização no mobile */
+      isolation: isolate;
+      transform: translateZ(0); /* Crucial para scroll funcionar em transformações 3D no mobile */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      height: 100%;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -62,13 +65,13 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); /* Totalmente invisível inicial */
+      background: rgba(197, 160, 89, 0); 
       border-radius: 10px;
       transition: background 0.3s ease;
     }
 
     .custom-scrollbar.scrolling::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0.8); /* Visível apenas quando houver a classe .scrolling */
+      background: rgba(197, 160, 89, 0.8);
     }
 
     .top-bar {
@@ -101,10 +104,10 @@
       height: 100%;
       transform-origin: left;
       transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-      pointer-events: none; /* Permite toques passarem para o conteúdo */
+      pointer-events: none;
     }
     
-    .sheet > div { pointer-events: auto; } /* Reativa toques no conteúdo real */
+    .sheet > div { pointer-events: auto; }
     .sheet.flipped { transform: rotateY(-180deg); }
 
     .shadow-page-left { box-shadow: inset -1.5rem 0 3rem -1.25rem rgba(0,0,0,0.4); }
@@ -129,11 +132,11 @@
       top: -4px;
     }
 
-    /* Zonas de clique para virar página - Ficam apenas nas pontas extremas */
+    /* Zonas de clique para virar página - Bordas bem finas no mobile */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 40px; 
+      width: 25px; 
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -142,9 +145,8 @@
     .flip-zone-left { left: 0; }
 
     @media (max-width: 600px) {
+      #book-container { width: 95%; margin: 0 auto; }
       .sheet { width: 50%; }
-      #book-container { width: 95%; }
-      .flip-zone { width: 30px; } /* Menor ainda no mobile para não travar scroll */
     }
   </style>
 <script type="importmap">
@@ -313,8 +315,17 @@
             
             // Ativa no scroll e no toque
             el.addEventListener('scroll', showScrollbar, { passive: true });
-            el.addEventListener('touchmove', showScrollbar, { passive: true });
-            el.addEventListener('touchstart', showScrollbar, { passive: true });
+            
+            // Prevenção de conflito de gestos
+            el.addEventListener('touchstart', (e) => {
+              // Permite que o evento suba para scroll mas não para virada de página
+              showScrollbar();
+            }, { passive: true });
+
+            el.addEventListener('touchmove', (e) => {
+               // Essencial para o scroll funcionar dentro de elementos com transform 3D
+               showScrollbar();
+            }, { passive: true });
         });
     }
 
@@ -363,10 +374,12 @@
         `).join('');
 
         return `<div class="h-full w-full bg-texture-paper p-6 sm:p-10 flex flex-col shadow-inner">
-            <div class="flex-grow custom-scrollbar pr-1 pb-10">
-                ${sections}
+            <div class="flex-grow overflow-hidden">
+                <div class="custom-scrollbar pr-1 pb-16">
+                    ${sections}
+                </div>
             </div>
-            <div class="text-center font-serif text-[8px] mt-4 opacity-20">PÁGINA ${index}</div>
+            <div class="text-center font-serif text-[8px] mt-2 opacity-20">PÁGINA ${index}</div>
         </div>`;
     }
 
