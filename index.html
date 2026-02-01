@@ -27,7 +27,7 @@
       padding: 0;
       height: 100dvh;
       background-color: #1a1110;
-      overflow: hidden; /* Mantém o body fixo */
+      overflow: hidden; 
       overscroll-behavior: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -43,28 +43,28 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem Invisível por padrão */
+    /* Barra de rolagem Invisível que aparece no movimento */
     .custom-scrollbar {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y !important; /* Crucial para scroll no celular */
+      overflow-y: scroll !important; /* Força scroll */
+      -webkit-overflow-scrolling: touch !important; /* Inércia iOS */
       scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      touch-action: pan-y !important; /* Permite rolagem vertical */
     }
 
     .custom-scrollbar::-webkit-scrollbar {
-      width: 5px;
-      background: transparent;
+      width: 4px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); /* Invisível */
+      background: rgba(197, 160, 89, 0); /* Invisível por padrão */
       border-radius: 10px;
-      transition: background 0.3s ease;
+      transition: background 0.4s ease;
     }
 
-    /* Aparece apenas quando a classe .scrolling é adicionada via JS */
+    /* Classe ativada via JS durante a rolagem */
     .custom-scrollbar.scrolling::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0.8);
+      background: rgba(197, 160, 89, 0.7);
     }
 
     * {
@@ -129,11 +129,11 @@
       height: 100%;
       transform-origin: left;
       transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
-      pointer-events: none; /* Deixa passar para os filhos (páginas) */
+      pointer-events: none;
     }
     
     .sheet > div {
-      pointer-events: auto; /* Reativa para os conteúdos */
+      pointer-events: auto;
     }
 
     .sheet.flipped {
@@ -170,11 +170,11 @@
       white-space: nowrap;
     }
 
-    /* Zonas de clique para virar página - posicionadas nas extremidades */
+    /* Zonas de clique estreitas para não interferir na rolagem central */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 15%; /* Reduzido para não atrapalhar o scroll central */
+      width: 50px; 
       height: 100%;
       z-index: 60;
       cursor: pointer;
@@ -185,7 +185,7 @@
     @media (max-width: 600px) {
       .title-bar h1 { font-size: 16px; }
       .sheet { width: 50%; }
-      .flip-zone { width: 20%; }
+      .flip-zone { width: 40px; }
     }
   </style>
 <script type="importmap">
@@ -379,30 +379,22 @@
     }
 
     function setupScrollDetect() {
-        // Lógica de "aparição" da barra de rolagem apenas quando em uso
-        document.querySelectorAll('.custom-scrollbar').forEach(el => {
+        const containers = document.querySelectorAll('.custom-scrollbar');
+        containers.forEach(el => {
             let scrollTimeout;
             
-            // Evento para Desktop
-            el.addEventListener('scroll', () => {
+            const showScroll = () => {
                 el.classList.add('scrolling');
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     el.classList.remove('scrolling');
                 }, 1000);
-            }, { passive: true });
+            };
 
-            // Garantia para Touch em alguns navegadores mobile
-            el.addEventListener('touchstart', () => {
-                el.classList.add('scrolling');
-            }, { passive: true });
-
-            el.addEventListener('touchend', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    el.classList.remove('scrolling');
-                }, 1000);
-            }, { passive: true });
+            // Eventos para detectar interação
+            el.addEventListener('scroll', showScroll, { passive: true });
+            el.addEventListener('touchmove', showScroll, { passive: true });
+            el.addEventListener('touchstart', showScroll, { passive: true });
         });
     }
 
@@ -433,11 +425,11 @@
         
         let sectionsHtml = data.sections.map(s => `
             <div class="mb-5">
-                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-2">
+                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-3">
                     <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#8b4513]"></i>
                     <h3 class="font-serif text-[12px] sm:text-[14px] font-bold text-gray-800 uppercase">${s.title}</h3>
                 </div>
-                <ul class="space-y-4">
+                <ul class="space-y-5">
                     ${s.items.map(item => `
                         <li class="menu-item">
                             <div class="item-name-group">
@@ -454,7 +446,7 @@
 
         return `
             <div class="h-full w-full bg-paper p-6 sm:p-10 relative bg-texture-paper flex flex-col shadow-inner">
-                <div class="flex-grow custom-scrollbar pr-2 pb-4">
+                <div class="flex-grow custom-scrollbar pr-2 pb-6" style="min-height: 0;">
                     ${sectionsHtml}
                 </div>
                 <div class="text-center font-serif text-[8px] mt-2 opacity-30">PÁGINA ${index}</div>
