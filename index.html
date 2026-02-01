@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Cardápio Digital - AFPESP Peruíbe II</title>
   
-  <!-- Estilos Externos -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,7 +54,6 @@
     #root { min-height: 100vh; display: flex; flex-direction: column; }
   </style>
 
-  <!-- Import Map para React e Lucide via ESM -->
   <script type="importmap">
 {
   "imports": {
@@ -72,113 +70,155 @@
   <div id="root"></div>
 
   <script type="module">
-    import React, { useState, useEffect, useCallback, useMemo } from 'react';
+    import React, { useState, useEffect, useCallback } from 'react';
     import { createRoot } from 'react-dom/client';
     import { Wine, Beer, Martini, GlassWater, Utensils, Coffee, ArrowLeft, ArrowRight, ChefHat, Info } from 'lucide-react';
 
-    // --- DADOS DO CARDÁPIO ---
+    // Helper para criar elementos sem JSX (compatibilidade total sem compilador)
+    const h = React.createElement;
+
+    // --- DADOS COMPLETOS DO CARDÁPIO ---
     const MENU_PAGES = [
-      { id: 'cover', type: 'cover', title: 'MENU', footer: 'Bem-vindo' },
+      { id: 'cover', type: 'cover' },
       { id: 'v1', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Alegria Brasileira' },
       { id: 'p1', type: 'content', sections: [
-          { title: 'Doses', icon: React.createElement(GlassWater), items: [
+          { title: 'Doses', icon: h(GlassWater), items: [
               { name: 'Pinga 51', price: '4,00' },
               { name: 'Velho Barreiro', price: '4,00' },
               { name: 'Sagatiba', price: '5,00' },
-              { name: 'Vodka', price: '5,00' },
+              { name: 'Saquê', price: '6,00' },
+              { name: 'Vodka (Caipiroska)', price: '5,00' },
               { name: 'Campari', price: '7,00' },
             ]},
-          { title: 'Cervejas', icon: React.createElement(Beer), items: [
+          { title: 'Caipirinhas', icon: h(Martini), items: [
+              { name: 'Pinga 51', price: '20,00' },
+              { name: 'Velho Barreiro', price: '15,00' },
+              { name: 'Sagatiba', price: '25,00' },
+              { name: 'Saquê', price: '18,00' },
+              { name: 'Vodka (Caipiroska)', price: '25,00' },
+            ]},
+          { title: 'Cervejas', icon: h(Beer), items: [
               { name: 'Skol / Brahma', price: '7,00' },
+              { name: 'Brahma Malzbier', price: '9,00' },
               { name: 'Heineken', price: '10,00' },
-              { name: 'Heineken 0.0', price: '10,00' },
+              { name: 'Heineken sem álcool', price: '10,00' },
             ]}
       ]},
       { id: 'v2', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Vinhos & Chopp' },
       { id: 'p2', type: 'content', sections: [
-          { title: 'Chopp', icon: React.createElement(Beer), items: [
-              { name: 'Chopp Claro 330ml', price: '9,00' },
-              { name: 'Chopp Claro 500ml', price: '13,50' },
-              { name: 'Chopp Escuro 1L', price: '30,00' },
+          { title: 'Chopp', icon: h(Beer), items: [
+              { name: 'Chopp Claro', price: '9,00', description: '330ML' },
+              { name: 'Chopp Claro', price: '13,50', description: '500ML' },
+              { name: 'Chopp Escuro', price: '30,00', description: 'Garrafa 1L' },
             ]},
-          { title: 'Vinhos', icon: React.createElement(Wine), items: [
-              { name: 'Taça Tinto Suave/Seco', price: '8,00' },
-              { name: 'Concha y Toro (Garrafa)', price: '50,00' },
-              { name: 'Periquita (Garrafa)', price: '90,00' },
+          { title: 'Vinhos', icon: h(Wine), items: [
+              { name: 'Vinho Tinto Seco/Suave', price: '8,00' },
+              { name: 'Concha y Toro Meio Seco', price: '50,00' },
+              { name: 'Periquita Meio Seco', price: '90,00' },
+              { name: 'Santa Helena Chardonay', price: '52,00' },
             ]}
       ]},
-      { id: 'v3', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Refrescos' },
+      { id: 'v3', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Refrescância' },
       { id: 'p3', type: 'content', sections: [
-          { title: 'Não Alcoólicos', icon: React.createElement(GlassWater), items: [
-              { name: 'Água com/sem gás', price: '5,00' },
-              { name: 'Refrigerante Lata', price: '7,00' },
-              { name: 'H2O Limão', price: '7,00' },
+          { title: 'Batidas', icon: h(Martini), items: [
+              { name: 'Pinga 51 / Saquê', price: '20,00' },
+              { name: 'Vodka (Caipiroska)', price: '25,00' },
+              { name: 'Espanhola (Morango)', price: '18,00' },
             ]},
-          { title: 'Sucos Naturais', icon: React.createElement(GlassWater), items: [
+          { title: 'Bebidas não alcoólicas', icon: h(GlassWater), items: [
+              { name: 'Água com/sem gás', price: '5,00' },
+              { name: 'Coca-cola / Guaraná', price: '7,00' },
+              { name: 'Schweppes / H2O', price: '7,00' },
+              { name: 'Pacote de Gelo (3kg)', price: '6,00' },
+            ]}
+      ]},
+      { id: 'v4', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Sucos Naturais' },
+      { id: 'p4', type: 'content', sections: [
+          { title: 'Suco Natural', icon: h(GlassWater), items: [
               { name: 'Laranja / Limão', price: '10,00' },
               { name: 'Melancia', price: '10,00' },
               { name: 'Jarra de Suco', price: '18,00' },
+            ]},
+          { title: 'Especiais', icon: h(Coffee), items: [
+              { name: 'Copo de Leite Longo', price: '5,00' },
+              { name: 'Café Expresso', price: '5,00' },
+              { name: 'Especial Peruíbe II', price: '8,00', description: 'Sem álcool' },
             ]}
       ]},
-      { id: 'v4', type: 'image', imageUrl: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', imageCaption: 'Nossas Porções' },
-      { id: 'p4', type: 'content', sections: [
-          { title: 'Porções', icon: React.createElement(Utensils), items: [
-              { name: 'Batata Frita 200g', price: '15,00' },
-              { name: 'Batata Frita 400g', price: '20,00' },
-              { name: 'Camarão 250g', price: '40,00' },
-              { name: 'Camarão 500g', price: '55,00' },
-              { name: 'Isca de Peixe 500g', price: '45,00' },
-              { name: 'Calabresa Acebolada', price: '18,00' },
+      { id: 'v5', type: 'image', imageUrl: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', imageCaption: 'Nossas Porções' },
+      { id: 'p5', type: 'content', sections: [
+          { title: 'Porções', icon: h(Utensils), items: [
+              { name: 'Batata Frita', price: '15,00', description: '200 gramas' },
+              { name: 'Batata Frita', price: '20,00', description: '400 gramas' },
+              { name: 'Camarão', price: '40,00', description: '250 gramas' },
+              { name: 'Camarão', price: '55,00', description: '500 gramas' },
+              { name: 'Isca de Peixe', price: '45,00', description: '500 gramas' },
+              { name: 'Calabresa Acebolada', price: '18,00', description: '400 gramas' },
             ]}
       ]},
-      { id: 'back', type: 'back', title: 'Volte Sempre', footer: 'AFPESP Peruíbe II' }
+      { id: 'v6', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', imageCaption: 'Lanches e Pratos' },
+      { id: 'p6', type: 'content', sections: [
+          { title: 'Lanches', icon: h(Utensils), items: [
+              { name: 'Misto Quente/Frio', price: '10,00' },
+              { name: 'Queijo Quente', price: '10,00' },
+            ]},
+          { title: 'Pratos Extras', icon: h(Utensils), items: [
+              { name: 'Omelete com Queijo', price: '5,00' },
+              { name: 'Ovo Frito/Cozido', price: '3,00' },
+              { name: 'Bife Grelhado', price: '9,00' },
+            ]}
+      ]},
+      { id: 'back', type: 'back' }
     ];
 
-    // --- COMPONENTE DE CONTEÚDO DA PÁGINA ---
     const MenuContent = ({ page, pageIndex }) => {
       if (page.type === 'cover' || page.type === 'back') return null;
 
-      const PageNumber = ({ isImage = false }) => (
-        <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 font-serif font-bold text-[10px] sm:text-xs tracking-widest pointer-events-none ${isImage ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
-          <span className="text-gold">/</span> {pageIndex} <span className="text-gold">/</span>
-        </div>
-      );
+      const PageNumber = ({ isImage = false }) => h('div', { 
+        className: `absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 font-serif font-bold text-[10px] sm:text-xs tracking-widest pointer-events-none ${isImage ? 'text-white drop-shadow-lg' : 'text-gray-800'}` 
+      }, [
+        h('span', { className: "text-gold" }, "/"), 
+        pageIndex, 
+        h('span', { className: "text-gold" }, "/")
+      ]);
 
       if (page.type === 'image') {
-        return React.createElement('div', { className: "h-full w-full relative overflow-hidden bg-zinc-900" }, [
-          React.createElement('div', { 
+        return h('div', { className: "h-full w-full relative overflow-hidden bg-zinc-900" }, [
+          h('div', { 
             key: 'bg',
-            className: "absolute inset-0 bg-cover bg-center",
+            className: "absolute inset-0 bg-cover bg-center transition-transform duration-[4000ms] hover:scale-110",
             style: { backgroundImage: `url(${page.imageUrl})` }
           }),
-          React.createElement('div', { key: 'overlay', className: "absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-transparent" }),
-          page.imageCaption && React.createElement('div', { key: 'caption', className: "absolute bottom-10 left-0 right-0 text-center px-4" }, [
-            React.createElement('h3', { className: "font-serif text-lg sm:text-2xl text-paper uppercase tracking-widest drop-shadow-lg" }, page.imageCaption),
-            React.createElement('div', { className: "w-12 h-0.5 bg-gold mx-auto mt-2 shadow-lg" })
+          h('div', { key: 'overlay', className: "absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-transparent" }),
+          page.imageCaption && h('div', { key: 'caption', className: "absolute bottom-10 left-0 right-0 text-center px-4" }, [
+            h('h3', { className: "font-serif text-lg sm:text-2xl text-paper uppercase tracking-widest drop-shadow-lg" }, page.imageCaption),
+            h('div', { className: "w-12 h-0.5 bg-gold mx-auto mt-2" })
           ]),
-          React.createElement(PageNumber, { key: 'num', isImage: true })
+          h(PageNumber, { key: 'num', isImage: true })
         ]);
       }
 
-      return React.createElement('div', { className: "h-full flex flex-col p-4 sm:p-8 text-gray-800 relative z-10" }, [
-        React.createElement('div', { key: 'scroll', className: "flex-grow space-y-4 overflow-y-auto custom-scrollbar pr-2" }, 
-          page.sections.map((section, sIdx) => React.createElement('div', { key: sIdx, className: "space-y-3" }, [
-            React.createElement('div', { className: "flex items-center gap-2 border-b border-gold/30 pb-2 mb-2" }, [
-              React.createElement('span', { className: "text-gold-dark" }, React.cloneElement(section.icon, { size: 18 })),
-              React.createElement('h3', { className: "font-serif text-xs sm:text-base font-bold text-gray-900 tracking-tight uppercase" }, section.title)
+      return h('div', { className: "h-full flex flex-col p-4 sm:p-8 text-gray-800 relative z-10" }, [
+        h('div', { key: 'scroll', className: "flex-grow space-y-4 overflow-y-auto custom-scrollbar pr-2" }, 
+          page.sections.map((section, sIdx) => h('div', { key: sIdx, className: "space-y-3" }, [
+            h('div', { className: "flex items-center gap-2 border-b border-gold/30 pb-2 mb-2" }, [
+              h('span', { className: "text-gold-dark" }, React.cloneElement(section.icon, { size: 18 })),
+              h('h3', { className: "font-serif text-[11px] sm:text-base font-bold text-gray-900 tracking-tight uppercase" }, section.title)
             ]),
-            React.createElement('ul', { className: "space-y-2" }, section.items.map((item, iIdx) => React.createElement('li', { key: iIdx, className: "flex justify-between items-baseline text-xs sm:text-sm" }, [
-              React.createElement('span', { className: "font-semibold text-gray-900" }, item.name),
-              React.createElement('div', { className: "flex-grow mx-2 border-b border-dotted border-gray-400 opacity-30" }),
-              React.createElement('span', { className: "font-serif font-bold text-gray-900" }, `R$ ${item.price}`)
+            h('ul', { className: "space-y-2" }, section.items.map((item, iIdx) => h('li', { key: iIdx, className: "flex justify-between items-baseline text-[10px] sm:text-sm" }, [
+              h('div', { className: "flex flex-col" }, [
+                h('span', { className: "font-semibold text-gray-900" }, item.name),
+                item.description && h('span', { className: "text-[9px] text-gray-500 italic" }, item.description)
+              ]),
+              h('div', { className: "flex-grow mx-2 border-b border-dotted border-gray-400 opacity-30" }),
+              h('span', { className: "font-serif font-bold text-gray-900" }, `R$ ${item.price}`)
             ])))
           ]))
         ),
-        React.createElement(PageNumber, { key: 'num' })
+        h(PageNumber, { key: 'num' })
       ]);
     };
 
-    // --- COMPONENTE DO LIVRO 3D ---
     const MenuBook = () => {
       const [currentSheet, setCurrentSheet] = useState(0);
       const totalSheets = Math.ceil(MENU_PAGES.length / 2);
@@ -194,46 +234,44 @@
       const next = () => currentSheet < totalSheets && setCurrentSheet(s => s + 1);
       const prev = () => currentSheet > 0 && setCurrentSheet(s => s - 1);
 
-      return React.createElement('div', { className: "relative w-[95%] sm:w-full max-w-4xl perspective-3000 mx-auto", style: { aspectRatio } }, [
-        // Botões Mobile/Desktop
-        React.createElement('button', { key: 'btn-p', onClick: prev, className: "absolute -left-4 sm:-left-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0", disabled: currentSheet === 0 }, React.createElement(ArrowLeft, { size: 32 })),
-        React.createElement('button', { key: 'btn-n', onClick: next, className: "absolute -right-4 sm:-right-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0", disabled: currentSheet === totalSheets }, React.createElement(ArrowRight, { size: 32 })),
+      return h('div', { className: "relative w-[95%] sm:w-full max-w-5xl perspective-3000 mx-auto", style: { aspectRatio } }, [
+        h('button', { key: 'btn-p', onClick: prev, className: "absolute -left-4 sm:-left-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0 transition-all", disabled: currentSheet === 0 }, h(ArrowLeft, { size: 32 })),
+        h('button', { key: 'btn-n', onClick: next, className: "absolute -right-4 sm:-right-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0 transition-all", disabled: currentSheet === totalSheets }, h(ArrowRight, { size: 32 })),
 
-        React.createElement('div', { className: "relative w-full h-full transform-style-3d" }, 
+        h('div', { className: "relative w-full h-full transform-style-3d" }, 
           Array.from({ length: totalSheets }).map((_, i) => {
             const flipped = i < currentSheet;
             const p1 = MENU_PAGES[i * 2];
             const p2 = MENU_PAGES[i * 2 + 1];
             
-            return React.createElement('div', {
+            return h('div', {
               key: i,
               className: `absolute top-0 w-1/2 h-full transform-style-3d origin-left transition-transform duration-[2000ms] cubic-bezier(0.645, 0.045, 0.355, 1) ${flipped ? 'rotate-y-180' : 'rotate-y-0'}`,
               style: { zIndex: flipped ? 50 + i : totalSheets - i, left: '50%' },
               onClick: (e) => { e.stopPropagation(); flipped ? prev() : next(); }
             }, [
-              // Frente da Folha
-              React.createElement('div', { 
+              h('div', { 
                 className: `absolute inset-0 w-full h-full backface-hidden shadow-page-right border-y-4 border-r-4 border-leather-light overflow-hidden rounded-r-lg ${p1.type === 'cover' ? 'bg-leather' : 'bg-paper'}`,
                 style: { transform: 'translateZ(1px)' }
               }, [
-                React.createElement('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
-                p1.type === 'cover' ? React.createElement('div', { className: "h-full flex flex-col items-center justify-center p-4 border-4 border-double border-gold/50 m-2 relative bg-texture-leather" }, [
-                  React.createElement(ChefHat, { size: 48, className: "text-gold mb-4" }),
-                  React.createElement('h1', { className: "font-serif text-3xl sm:text-5xl text-gold font-bold tracking-widest text-center" }, "MENU"),
-                  React.createElement('p', { className: "text-gold/70 text-[10px] sm:text-xs tracking-[0.4em] mt-4 uppercase" }, "Bar Peruíbe II"),
-                  React.createElement('div', { className: "absolute bottom-8 animate-bounce text-gold/50 text-[10px]" }, "TOQUE PARA ABRIR")
-                ]) : React.createElement(MenuContent, { page: p1, pageIndex: i * 2 })
+                h('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
+                p1.type === 'cover' ? h('div', { className: "h-full flex flex-col items-center justify-center p-4 border-4 border-double border-gold/50 m-2 relative bg-texture-leather shadow-inner" }, [
+                  h(ChefHat, { size: 50, className: "text-gold mb-4" }),
+                  h('h1', { className: "font-serif text-3xl sm:text-6xl text-gold font-bold tracking-[0.2em] text-center" }, "MENU"),
+                  h('p', { className: "text-gold/70 text-[10px] sm:text-sm tracking-[0.4em] mt-4 uppercase font-sans" }, "Bar Peruíbe II"),
+                  h('div', { className: "absolute bottom-10 animate-bounce text-gold/40 text-[10px] tracking-widest" }, "TOQUE PARA ABRIR")
+                ]) : h(MenuContent, { page: p1, pageIndex: i * 2 })
               ]),
-              // Verso da Folha
-              React.createElement('div', { 
+              h('div', { 
                 className: `absolute inset-0 w-full h-full backface-hidden shadow-page-left border-y-4 border-l-4 border-leather-light overflow-hidden rounded-l-lg ${p2 && p2.type === 'back' ? 'bg-leather' : 'bg-paper'}`,
                 style: { transform: 'rotateY(180deg)' }
               }, [
-                React.createElement('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
-                p2 ? (p2.type === 'back' ? React.createElement('div', { className: "h-full flex flex-col items-center justify-center p-4 text-gold bg-texture-leather" }, [
-                  React.createElement('h2', { className: "font-serif text-2xl mb-4" }, "Volte Sempre"),
-                  React.createElement(Info, { size: 30, className: "opacity-50" })
-                ]) : React.createElement(MenuContent, { page: p2, pageIndex: i * 2 + 1 })) : null
+                h('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
+                p2 ? (p2.type === 'back' ? h('div', { className: "h-full flex flex-col items-center justify-center p-4 text-gold bg-texture-leather m-2 border-4 border-double border-gold/50 shadow-inner" }, [
+                  h('h2', { className: "font-serif text-2xl sm:text-4xl mb-4 text-center" }, "Volte Sempre"),
+                  h(Info, { size: 40, className: "opacity-40" }),
+                  h('p', { className: "mt-8 text-[10px] text-gold-dark tracking-widest uppercase" }, "AFPESP Peruíbe II")
+                ]) : h(MenuContent, { page: p2, pageIndex: i * 2 + 1 })) : h('div', { className: "w-full h-full bg-paper" })
               ])
             ]);
           })
@@ -241,32 +279,28 @@
       ]);
     };
 
-    // --- APP PRINCIPAL ---
     const App = () => {
-      return React.createElement('div', { className: "relative flex-1 flex flex-col items-center" }, [
-        // Header
-        React.createElement('header', { key: 'header', className: "w-full py-6 flex flex-col items-center z-20" }, [
-          React.createElement('div', { className: "flex items-center gap-3" }, [
-            React.createElement('img', { src: "https://i.ibb.co/R4jn242d/afpesp-2.png", className: "h-10 object-contain", alt: "Logo" }),
-            React.createElement('span', { className: "text-gold font-serif font-bold text-xl tracking-widest uppercase border-b border-gold/30" }, "AFPESP Peruíbe II")
+      return h('div', { className: "relative flex-1 flex flex-col items-center" }, [
+        h('div', { key: 'bg-ambience', className: "absolute inset-0 z-0 opacity-40 pointer-events-none bg-[radial-gradient(circle_at_center,_#3e2723_0%,_#1a1110_70%)]" }),
+        h('header', { key: 'header', className: "w-full py-4 sm:py-8 flex flex-col items-center z-20" }, [
+          h('div', { className: "flex items-center gap-4" }, [
+            h('img', { src: "https://i.ibb.co/R4jn242d/afpesp-2.png", className: "h-10 sm:h-14 object-contain drop-shadow-xl", alt: "Logo" }),
+            h('span', { className: "text-gold font-serif font-bold text-xl sm:text-3xl tracking-widest uppercase border-b border-gold/40 shadow-sm" }, "AFPESP Peruíbe II")
           ]),
-          React.createElement('p', { className: "text-white/40 text-[10px] tracking-[0.5em] uppercase mt-2" }, "Cardápio do Bar")
+          h('p', { className: "text-white/40 text-[10px] sm:text-xs tracking-[0.5em] uppercase mt-3 font-sans" }, "Cardápio Digital do Bar")
         ]),
-        // Book Area
-        React.createElement('main', { key: 'main', className: "flex-1 w-full flex items-center justify-center p-4" }, 
-          React.createElement(MenuBook)
+        h('main', { key: 'main', className: "flex-1 w-full flex items-center justify-center px-2" }, 
+          h(MenuBook)
         ),
-        // Footer
-        React.createElement('footer', { key: 'footer', className: "py-6" }, 
-          React.createElement('p', { className: "text-gold/40 text-[10px] tracking-widest uppercase" }, "Toque nas páginas para navegar")
+        h('footer', { key: 'footer', className: "py-6 z-20" }, 
+          h('p', { className: "text-gold/40 text-[10px] tracking-widest uppercase font-sans" }, "Folheie tocando nas páginas")
         )
       ]);
     };
 
-    // Renderização Final
     const container = document.getElementById('root');
     const root = createRoot(container);
-    root.render(React.createElement(App));
+    root.render(h(App));
   </script>
 </body>
 </html>
