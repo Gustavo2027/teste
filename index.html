@@ -51,6 +51,10 @@
       width: 6px;
     }
 
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: var(--gold);
       border-radius: 3px;
@@ -118,9 +122,9 @@
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 100px;
+      width: 120px;
       height: 100%;
-      z-index: 3000;
+      z-index: 4000;
       cursor: pointer;
     }
     .flip-zone-right { right: 0; }
@@ -130,7 +134,7 @@
 
     @media (max-width: 600px) {
       #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 70px; }
+      .flip-zone { width: 80px; }
     }
   </style>
 <script type="importmap">
@@ -167,9 +171,8 @@
   <script>
     const MENU_DATA = [
       { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
-      // LADO ESQUERDO 1: Imagem
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas Selecionadas' },
-      // LADO DIREITO 1: Conteúdo
+      // Folha 1
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Doses e Caipirinhas' },
       { 
         type: 'content', 
         sections: [
@@ -177,44 +180,36 @@
             title: 'Doses',
             icon: 'glass-water',
             items: [
-              { n: 'Pinga 51', p: '4,00' },
-              { n: 'Velho Barreiro', p: '4,00' },
-              { n: 'Sagatiba', p: '5,00' },
-              { n: 'Saquê', p: '6,00' },
-              { n: 'Vodka (Caipiroska)', p: '5,00' },
-              { n: 'Campari', p: '7,00' }
+              { n: 'Pinga 51', p: '4,00' }, { n: 'Velho Barreiro', p: '4,00' },
+              { n: 'Sagatiba', p: '5,00' }, { n: 'Saquê', p: '6,00' },
+              { n: 'Vodka (Caipiroska)', p: '5,00' }, { n: 'Campari', p: '7,00' }
             ]
           },
           {
             title: 'Caipirinhas',
             icon: 'martini',
             items: [
-              { n: 'Pinga 51', p: '20,00' },
-              { n: 'Velho Barreiro', p: '15,00' },
-              { n: 'Sagatiba', p: '25,00' },
-              { n: 'Saquê', p: '18,00' },
+              { n: 'Pinga 51', p: '20,00' }, { n: 'Velho Barreiro', p: '15,00' },
+              { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' },
               { n: 'Vodka (Caipiroska)', p: '25,00' }
-            ]
-          },
-          {
-            title: 'Cervejas',
-            icon: 'beer',
-            items: [
-              { n: 'Skol', p: '7,00' },
-              { n: 'Brahma', p: '7,00' },
-              { n: 'Brahma Malzbier', p: '9,00' },
-              { n: 'Heineken', p: '10,00' },
-              { n: 'Heineken sem álcool', p: '10,00' }
             ]
           }
         ]
       },
-      // LADO ESQUERDO 2: Imagem
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Nossa Adega' },
-      // LADO DIREITO 2: Conteúdo
+      // Folha 2
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Cervejas e Chopp' },
       { 
         type: 'content', 
         sections: [
+          {
+            title: 'Cervejas',
+            icon: 'beer',
+            items: [
+              { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' },
+              { n: 'Brahma Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' },
+              { n: 'Heineken sem álcool', p: '10,00' }
+            ]
+          },
           {
             title: 'Chopp',
             icon: 'beer',
@@ -223,13 +218,19 @@
               { n: 'Chopp Claro', p: '13,50', d: '500ml' },
               { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' }
             ]
-          },
+          }
+        ]
+      },
+      // Folha 3
+      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos e Batidas' },
+      { 
+        type: 'content', 
+        sections: [
           {
             title: 'Vinhos',
             icon: 'wine',
             items: [
-              { n: 'Vinho Tinto Seco', p: '8,00' },
-              { n: 'Vinho Tinto Suave', p: '8,00' },
+              { n: 'Vinho Tinto Seco', p: '8,00' }, { n: 'Vinho Tinto Suave', p: '8,00' },
               { n: 'Concha y Toro Tinto Meio Seco', p: '50,00' },
               { n: 'Periquita Tinto Meio Seco', p: '90,00' },
               { n: 'Santa Helena Chardonnay', p: '52,00' }
@@ -239,19 +240,15 @@
             title: 'Batidas',
             icon: 'martini',
             items: [
-              { n: 'Pinga 51', p: '20,00' },
-              { n: 'Velho Barreiro', p: '20,00' },
-              { n: 'Sagatiba', p: '25,00' },
-              { n: 'Saquê', p: '20,00' },
-              { n: 'Vodka (Caipiroska)', p: '25,00' },
-              { n: 'Espanhola (Morango)', p: '18,00' }
+              { n: 'Pinga 51', p: '20,00' }, { n: 'Velho Barreiro', p: '20,00' },
+              { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '20,00' },
+              { n: 'Vodka (Caipiroska)', p: '25,00' }, { n: 'Espanhola (Morango)', p: '18,00' }
             ]
           }
         ]
       },
-      // LADO ESQUERDO 3: Imagem
-      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Refresco Gelado' },
-      // LADO DIREITO 3: Conteúdo
+      // Folha 4
+      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Bebidas não Alcoólicas' },
       { 
         type: 'content', 
         sections: [
@@ -259,24 +256,18 @@
             title: 'Bebidas não alcoólicas',
             icon: 'glass-water',
             items: [
-              { n: 'Água com gás', p: '5,00' },
-              { n: 'Água sem gás', p: '5,00' },
-              { n: 'Coca-Cola', p: '7,00' },
-              { n: 'Coca-Cola Zero', p: '7,00' },
-              { n: 'Guaraná', p: '6,00' },
-              { n: 'Guaraná Zero', p: '6,00' },
-              { n: 'Schweppes', p: '7,00' },
-              { n: 'Água Tônica', p: '6,00' },
-              { n: 'Água Tônica Zero', p: '6,00' },
-              { n: 'H2O Limão', p: '7,00' },
+              { n: 'Água com gás', p: '5,00' }, { n: 'Água sem gás', p: '5,00' },
+              { n: 'Coca-Cola', p: '7,00' }, { n: 'Coca-Cola Zero', p: '7,00' },
+              { n: 'Guaraná', p: '6,00' }, { n: 'Guaraná Zero', p: '6,00' },
+              { n: 'Schweppes', p: '7,00' }, { n: 'Água Tônica', p: '6,00' },
+              { n: 'Água Tônica Zero', p: '6,00' }, { n: 'H2O Limão', p: '7,00' },
               { n: 'Pacote de Gelo (3kg)', p: '6,00' }
             ]
           }
         ]
       },
-      // LADO ESQUERDO 4: Imagem
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Pura Fruta' },
-      // LADO DIREITO 4: Conteúdo
+      // Folha 5
+      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Sucos Naturais' },
       { 
         type: 'content', 
         sections: [
@@ -284,8 +275,7 @@
             title: 'Sucos Naturais',
             icon: 'glass-water',
             items: [
-              { n: 'Suco de Laranja', p: '10,00' },
-              { n: 'Suco de Limão', p: '10,00' },
+              { n: 'Suco de Laranja', p: '10,00' }, { n: 'Suco de Limão', p: '10,00' },
               { n: 'Suco de Melancia', p: '10,00' },
               { n: 'Suco de Laranja', p: '18,00', d: 'Jarra' },
               { n: 'Suco de Limão', p: '18,00', d: 'Jarra' },
@@ -300,43 +290,44 @@
               { n: 'Suco de Uva', p: '8,00', d: 'Del Valle – Lata' },
               { n: 'Suco de Pêssego', p: '8,00', d: 'Del Valle – Lata' }
             ]
-          },
-          {
-            title: 'Especiais',
-            icon: 'coffee',
-            items: [
-              { n: 'Copo de Leite Longo', p: '5,00' },
-              { n: 'Café Expresso Pequeno', p: '5,00' },
-              { n: 'Espanhola Sem Álcool', p: '8,00', d: 'Drink' },
-              { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' }
-            ]
           }
         ]
       },
-      // LADO ESQUERDO 5: Imagem
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos e Porções' },
-      // LADO DIREITO 5: Conteúdo
+      // Folha 6
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções e Especiais' },
       { 
         type: 'content', 
         sections: [
           {
+            title: 'Especiais',
+            icon: 'coffee',
+            items: [
+              { n: 'Copo de Leite Longo', p: '5,00' }, { n: 'Café Expresso Pequeno', p: '5,00' },
+              { n: 'Espanhola Sem Álcool', p: '8,00', d: 'Drink' },
+              { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' }
+            ]
+          },
+          {
             title: 'Porções',
             icon: 'utensils',
             items: [
-              { n: 'Batata Frita', p: '15,00', d: '200g' },
-              { n: 'Batata Frita', p: '20,00', d: '400g' },
-              { n: 'Camarão', p: '40,00', d: '250g' },
-              { n: 'Camarão', p: '55,00', d: '500g' },
-              { n: 'Isca de Peixe', p: '45,00', d: '500g' },
-              { n: 'Calabresa Acebolada', p: '18,00', d: '400g' }
+              { n: 'Batata Frita', p: '15,00', d: '200g' }, { n: 'Batata Frita', p: '20,00', d: '400g' },
+              { n: 'Camarão', p: '40,00', d: '250g' }, { n: 'Camarão', p: '55,00', d: '500g' },
+              { n: 'Isca de Peixe', p: '45,00', d: '500g' }, { n: 'Calabresa Acebolada', p: '18,00', d: '400g' }
             ]
-          },
+          }
+        ]
+      },
+      // Folha 7
+      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800', caption: 'Lanches e Extras' },
+      { 
+        type: 'content', 
+        sections: [
           {
             title: 'Lanches',
             icon: 'utensils',
             items: [
-              { n: 'Misto Quente', p: '7,00' },
-              { n: 'Misto Frio', p: '10,00' },
+              { n: 'Misto Quente', p: '7,00' }, { n: 'Misto Frio', p: '10,00' },
               { n: 'Queijo Quente', p: '10,00' }
             ]
           },
@@ -344,12 +335,9 @@
             title: 'Pratos Extras',
             icon: 'utensils',
             items: [
-              { n: 'Omelete', p: '4,00' },
-              { n: 'Omelete com Queijo', p: '5,00' },
-              { n: 'Ovo Cozido', p: '2,00' },
-              { n: 'Ovo Frito', p: '3,00' },
-              { n: 'Filé de Frango', p: '5,00' },
-              { n: 'Bife Grelhado', p: '9,00' }
+              { n: 'Omelete', p: '4,00' }, { n: 'Omelete com Queijo', p: '5,00' },
+              { n: 'Ovo Cozido', p: '2,00' }, { n: 'Ovo Frito', p: '3,00' },
+              { n: 'Filé de Frango', p: '5,00' }, { n: 'Bife Grelhado', p: '9,00' }
             ]
           }
         ]
@@ -364,13 +352,12 @@
     function initBook() {
       book.innerHTML = '';
       sheets.length = 0;
-      // Reorganização: i=0 é capa. Próximas folhas i+=2 são pares de Imagem(Verso) e Conteúdo(Frente da próxima)
       for (let i = 0; i < MENU_DATA.length; i += 2) {
         const sheet = document.createElement('div');
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente
+        // Frente (Visível quando a página está à direita)
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
@@ -381,19 +368,23 @@
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso (Lado esquerdo do livro aberto)
+        // Verso (Visível quando a página está à esquerda após virar)
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
         back.style.transform = 'rotateY(180deg)';
-        back.style.pointerEvents = 'none'; 
+        back.style.pointerEvents = 'none'; // Inicialmente desativado (atrás do front)
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // No verso rotacionado, a borda externa esquerda é visualmente a 'right:0' do elemento HTML original
-        const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-right'; 
-        flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
-        back.appendChild(flipL);
+        // Zona de clique para voltar (no verso rotacionado, a borda externa é flip-zone-right no HTML)
+        const flipBack = document.createElement('div');
+        flipBack.className = 'flip-zone flip-zone-right'; // Visualmente à esquerda da tela quando aberto
+        flipBack.style.zIndex = "5000";
+        flipBack.onclick = (e) => { 
+          e.stopPropagation(); 
+          prevPage(); 
+        };
+        back.appendChild(flipBack);
 
         sheet.appendChild(front);
         sheet.appendChild(back);
@@ -408,15 +399,19 @@
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
         const isBack = data.type === 'back';
-        const titleClass = isBack ? 'text-2xl sm:text-4xl' : 'text-3xl sm:text-5xl';
         
+        // Ajuste de fontes para a contra-capa não cortar
+        const titleSize = isBack ? 'text-2xl sm:text-4xl' : 'text-3xl sm:text-5xl';
+        const subtitleSize = isBack ? 'text-[12px] sm:text-sm' : 'text-xs sm:text-sm';
+        const subtitleClass = isBack ? 'max-w-[80%] mx-auto' : 'whitespace-nowrap';
+
         return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-4 py-10 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
                   <div class="relative z-10 flex flex-col items-center w-full max-w-[95%]">
                     <i data-lucide="${icon}" class="w-16 h-16 mb-6"></i>
-                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full leading-tight text-center">${data.title}</h1>
+                    <h1 class="font-serif ${titleSize} font-bold uppercase mb-4 w-full leading-tight text-center">${data.title}</h1>
                     <div class="w-16 h-1 bg-[#c5a059] mb-8"></div>
-                    <p class="font-serif text-sm opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
+                    <p class="font-serif ${subtitleSize} opacity-80 uppercase tracking-[0.2em] ${subtitleClass}">${data.subtitle}</p>
                   </div>
                 </div>`;
       }
@@ -461,11 +456,12 @@
       if (currentSheet < sheets.length) {
         const sheet = sheets[currentSheet];
         sheet.classList.add('flipped');
-        sheet.style.zIndex = 100 + currentSheet;
         
+        // Ativa os cliques no verso da página que acabou de virar
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'none';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'auto';
         
+        sheet.style.zIndex = 100 + currentSheet;
         currentSheet++;
         updateIndicator();
       }
@@ -476,11 +472,12 @@
         currentSheet--;
         const sheet = sheets[currentSheet];
         sheet.classList.remove('flipped');
-        sheet.style.zIndex = 200 - currentSheet;
-
+        
+        // Desativa os cliques no verso e reativa na frente
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'auto';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'none';
         
+        sheet.style.zIndex = 200 - currentSheet;
         updateIndicator();
       }
     }
@@ -488,7 +485,7 @@
     function updateIndicator() {
       const indicator = document.getElementById('page-indicator');
       if (indicator) {
-        indicator.innerText = `${currentSheet + 1} / ${sheets.length + 1}`;
+        indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
       }
     }
 
