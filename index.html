@@ -25,7 +25,6 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      user-select: none;
     }
 
     html, body {
@@ -44,17 +43,18 @@
     }
     
     .transform-style-3d { transform-style: preserve-3d; }
-    .perspective-3000 { perspective: 2000px; }
+    .perspective-3000 { perspective: 2500px; }
     
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem Invisível - Aparece no Scroll */
+    /* Barra de rolagem Invisível - Aparece apenas no Scroll/Touch */
     .custom-scrollbar {
-      overflow-y: auto !important;
+      overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
-      transform: translateZ(0); /* Força renderização indepedente no celular */
+      will-change: transform, scroll-position;
+      transform: translate3d(0,0,0); /* Estabiliza renderização no mobile */
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -62,13 +62,13 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); /* Invisível */
+      background: rgba(197, 160, 89, 0); /* Totalmente invisível inicial */
       border-radius: 10px;
       transition: background 0.3s ease;
     }
 
     .custom-scrollbar.scrolling::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0.8); /* Visível ao rolar */
+      background: rgba(197, 160, 89, 0.8); /* Visível apenas quando houver a classe .scrolling */
     }
 
     .top-bar {
@@ -101,10 +101,10 @@
       height: 100%;
       transform-origin: left;
       transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-      pointer-events: none;
+      pointer-events: none; /* Permite toques passarem para o conteúdo */
     }
     
-    .sheet > div { pointer-events: auto; }
+    .sheet > div { pointer-events: auto; } /* Reativa toques no conteúdo real */
     .sheet.flipped { transform: rotateY(-180deg); }
 
     .shadow-page-left { box-shadow: inset -1.5rem 0 3rem -1.25rem rgba(0,0,0,0.4); }
@@ -123,17 +123,17 @@
 
     .item-dots {
       flex-grow: 1;
-      border-bottom: 2px dotted rgba(0, 0, 0, 0.1);
+      border-bottom: 2px dotted rgba(0, 0, 0, 0.08);
       margin: 0 8px;
       position: relative;
       top: -4px;
     }
 
-    /* Zonas de clique para virar página - Ficam nas bordas externas */
+    /* Zonas de clique para virar página - Ficam apenas nas pontas extremas */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 35px; 
+      width: 40px; 
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -144,6 +144,7 @@
     @media (max-width: 600px) {
       .sheet { width: 50%; }
       #book-container { width: 95%; }
+      .flip-zone { width: 30px; } /* Menor ainda no mobile para não travar scroll */
     }
   </style>
 <script type="importmap">
@@ -304,13 +305,16 @@
     function setupScrollDetect() {
         document.querySelectorAll('.custom-scrollbar').forEach(el => {
             let timeout;
-            const handler = () => {
+            const showScrollbar = () => {
                 el.classList.add('scrolling');
                 clearTimeout(timeout);
-                timeout = setTimeout(() => el.classList.remove('scrolling'), 800);
+                timeout = setTimeout(() => el.classList.remove('scrolling'), 1000);
             };
-            el.addEventListener('scroll', handler, { passive: true });
-            el.addEventListener('touchmove', handler, { passive: true });
+            
+            // Ativa no scroll e no toque
+            el.addEventListener('scroll', showScrollbar, { passive: true });
+            el.addEventListener('touchmove', showScrollbar, { passive: true });
+            el.addEventListener('touchstart', showScrollbar, { passive: true });
         });
     }
 
@@ -359,7 +363,7 @@
         `).join('');
 
         return `<div class="h-full w-full bg-texture-paper p-6 sm:p-10 flex flex-col shadow-inner">
-            <div class="flex-grow custom-scrollbar pr-1">
+            <div class="flex-grow custom-scrollbar pr-1 pb-10">
                 ${sections}
             </div>
             <div class="text-center font-serif text-[8px] mt-4 opacity-20">PÁGINA ${index}</div>
