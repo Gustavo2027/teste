@@ -13,6 +13,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
   
   <style>
+    :root {
+      --gold: #c5a059;
+      --dark-brown: #3d241f;
+    }
+
     #root {
       height: calc(100dvh - 130px);
       display: flex;
@@ -20,6 +25,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      user-select: none;
     }
 
     html, body {
@@ -38,18 +44,17 @@
     }
     
     .transform-style-3d { transform-style: preserve-3d; }
-    .perspective-3000 { perspective: 180rem; }
+    .perspective-3000 { perspective: 2000px; }
     
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem Invisível que aparece no movimento */
+    /* Barra de rolagem Invisível - Aparece no Scroll */
     .custom-scrollbar {
-      overflow-y: scroll !important; /* Força scroll */
-      -webkit-overflow-scrolling: touch !important; /* Inércia iOS */
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-      touch-action: pan-y !important; /* Permite rolagem vertical */
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-y !important;
+      transform: translateZ(0); /* Força renderização indepedente no celular */
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -57,21 +62,13 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); /* Invisível por padrão */
+      background: rgba(197, 160, 89, 0); /* Invisível */
       border-radius: 10px;
-      transition: background 0.4s ease;
+      transition: background 0.3s ease;
     }
 
-    /* Classe ativada via JS durante a rolagem */
     .custom-scrollbar.scrolling::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0.7);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Lato', sans-serif;
+      background: rgba(197, 160, 89, 0.8); /* Visível ao rolar */
     }
 
     .top-bar {
@@ -81,45 +78,20 @@
       display: flex;
       align-items: center;
       padding: 0 20px;
-      position: relative;
       z-index: 100;
     }
 
-    .logo-box {
-      background-color: #000;
-      padding: 6px 10px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-    }
-
-    .logo {
-      height: 32px;
-      width: auto;
-    }
-
-    .site-name {
-      color: #ffffff;
-      font-size: 20px;
-      font-weight: bold;
-      margin-left: 10px;
-    }
+    .logo { height: 32px; width: auto; }
+    .site-name { color: #fff; font-size: 18px; font-weight: bold; margin-left: 10px; }
 
     .title-bar {
       width: 100%;
       background-color: #333436;
-      padding: 15px 10px;
+      padding: 12px 10px;
       text-align: center;
-      position: relative;
-      z-index: 100;
+      z-index: 90;
     }
-
-    .title-bar h1 {
-      color: #00ff00;
-      font-size: 20px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
+    .title-bar h1 { color: #00ff00; font-size: 18px; font-weight: bold; text-transform: uppercase; }
 
     .sheet {
       position: absolute;
@@ -128,64 +100,50 @@
       width: 50%;
       height: 100%;
       transform-origin: left;
-      transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
       pointer-events: none;
     }
     
-    .sheet > div {
-      pointer-events: auto;
-    }
+    .sheet > div { pointer-events: auto; }
+    .sheet.flipped { transform: rotateY(-180deg); }
 
-    .sheet.flipped {
-      transform: rotateY(-180deg);
-    }
+    .shadow-page-left { box-shadow: inset -1.5rem 0 3rem -1.25rem rgba(0,0,0,0.4); }
+    .shadow-page-right { box-shadow: inset 1.5rem 0 3rem -1.25rem rgba(0,0,0,0.4); }
 
-    .shadow-page-left { box-shadow: inset -1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5); }
-    .shadow-page-right { box-shadow: inset 1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5); }
-
-    .bg-marrom-capa { background-color: #3d241f; }
     .font-serif { font-family: 'Cinzel', serif; }
-    .text-gold { color: #c5a059; }
+    .text-gold { color: var(--gold); }
 
     .menu-item {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       width: 100%;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .item-dots {
       flex-grow: 1;
-      border-bottom: 2px dotted rgba(75, 85, 99, 0.2);
+      border-bottom: 2px dotted rgba(0, 0, 0, 0.1);
       margin: 0 8px;
-      min-width: 10px;
       position: relative;
       top: -4px;
     }
 
-    .item-price {
-      flex-shrink: 0;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    /* Zonas de clique estreitas para não interferir na rolagem central */
+    /* Zonas de clique para virar página - Ficam nas bordas externas */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 50px; 
+      width: 35px; 
       height: 100%;
-      z-index: 60;
+      z-index: 100;
       cursor: pointer;
     }
     .flip-zone-right { right: 0; }
     .flip-zone-left { left: 0; }
 
     @media (max-width: 600px) {
-      .title-bar h1 { font-size: 16px; }
       .sheet { width: 50%; }
-      .flip-zone { width: 40px; }
+      #book-container { width: 95%; }
     }
   </style>
 <script type="importmap">
@@ -200,9 +158,7 @@
 
   <header class="top-bar">
     <div class="flex items-center">
-      <div class="logo-box">
-        <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" class="logo" />
-      </div>
+      <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" class="logo" />
       <span class="site-name">AFPESP Peruíbe II</span>
     </div>
   </header>
@@ -215,20 +171,20 @@
     <div id="book-container" class="relative w-full max-w-5xl perspective-3000" style="aspect-ratio: 2.1/1;">
       <div id="book" class="relative w-full h-full transform-style-3d"></div>
       
-      <!-- Botões para Desktop -->
-      <button onclick="prevPage()" id="btn-prev" class="hidden sm:flex absolute -left-16 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
+      <!-- Navegação Desktop -->
+      <button onclick="prevPage()" id="btn-prev" class="hidden sm:flex absolute -left-20 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
         <i data-lucide="arrow-left" size="32"></i>
       </button>
-      <button onclick="nextPage()" id="btn-next" class="hidden sm:flex absolute -right-16 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
+      <button onclick="nextPage()" id="btn-next" class="hidden sm:flex absolute -right-20 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
         <i data-lucide="arrow-right" size="32"></i>
       </button>
     </div>
 
-    <!-- Controles Mobile -->
-    <div class="flex items-center justify-center gap-6 mt-4 sm:hidden">
-      <button onclick="prevPage()" class="p-2 text-gold"> <i data-lucide="arrow-left"></i> </button>
-      <span id="page-indicator" class="text-gold/60 font-serif text-[10px] tracking-widest uppercase">1 / 1</span>
-      <button onclick="nextPage()" class="p-2 text-gold"> <i data-lucide="arrow-right"></i> </button>
+    <!-- Navegação Mobile -->
+    <div class="flex items-center justify-center gap-8 mt-4 sm:hidden">
+      <button onclick="prevPage()" class="p-2 text-gold"> <i data-lucide="chevron-left" size="32"></i> </button>
+      <span id="page-indicator" class="text-gold/80 font-serif text-[12px] tracking-widest">1 / 1</span>
+      <button onclick="nextPage()" class="p-2 text-gold"> <i data-lucide="chevron-right" size="32"></i> </button>
     </div>
   </div>
 
@@ -236,7 +192,7 @@
     const MENU_DATA = [
       { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II - AFPESP' },
       
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Bebidas' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Bebidas & Doses' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
               {n:'Pinga 51', p:'4,00'}, {n:'Velho Barreiro', p:'4,00'}, {n:'Sagatiba', p:'5,00'},
@@ -268,14 +224,14 @@
           ]}
       ]},
 
-      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Batidas' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Batidas Refrescantes' },
       { type: 'content', sections: [
           { title: 'Batidas', icon: 'martini', items: [
               {n:'Pinga 51', p:'20,00'}, {n:'Velho Barreiro', p:'20,00'},
               {n:'Sagatiba', p:'25,00'}, {n:'Saquê', p:'20,00'},
               {n:'Vodka (Caipiroska)', p:'25,00'}, {n:'Espanhola (Morango)', p:'18,00'}
           ]},
-          { title: 'Bebidas não alcoólicas', icon: 'cup-soda', items: [
+          { title: 'Não Alcoólicas', icon: 'cup-soda', items: [
               {n:'Água com gás', p:'5,00'}, {n:'Água sem gás', p:'5,00'},
               {n:'Coca-cola / Zero', p:'7,00'}, {n:'Guaraná / Zero', p:'6,00'},
               {n:'Schweppes / Tônica', p:'7,00'}, {n:'H2O Limão', p:'7,00'},
@@ -283,23 +239,7 @@
           ]}
       ]},
 
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Sucos' },
-      { type: 'content', sections: [
-          { title: 'Suco Natural', icon: 'glass-water', items: [
-              {n:'Laranja / Limão / Melancia', p:'10,00'},
-              {n:'Laranja / Limão / Melancia (Jarra)', p:'18,00'}
-          ]},
-          { title: 'Sucos (Outros)', icon: 'glass-water', items: [
-              {n:'Suco de Uva Integral (Copo)', p:'15,00'},
-              {n:'Del Valle Lata (Uva/Pêssego)', p:'8,00'}
-          ]},
-          { title: 'Especiais', icon: 'coffee', items: [
-              {n:'Leite Longo', p:'5,00'}, {n:'Café Expresso', p:'5,00'},
-              {n:'Espanhola Sem Álcool', p:'8,00'}, {n:'Especial Peruíbe II', p:'8,00'}
-          ]}
-      ]},
-
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções' },
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos & Porções' },
       { type: 'content', sections: [
           { title: 'Porções', icon: 'utensils', items: [
               {n:'Batata Frita (200g)', p:'15,00'},
@@ -308,23 +248,11 @@
               {n:'Camarão (500g)', p:'55,00'},
               {n:'Isca de Peixe (500g)', p:'45,00'},
               {n:'Calabresa Acebolada', p:'18,00'}
-          ]}
-      ]},
-
-      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', caption: 'Lanches' },
-      { type: 'content', sections: [
+          ]},
           { title: 'Lanches', icon: 'utensils', items: [
               {n:'Misto Quente', p:'7,00'},
               {n:'Misto Frio', p:'10,00'},
               {n:'Queijo Quente', p:'10,00'}
-          ]},
-          { title: 'Pratos Extras', icon: 'utensils', items: [
-              {n:'Omelete', p:'4,00'},
-              {n:'Omelete com Queijo', p:'5,00'},
-              {n:'Ovo Cozido', p:'2,00'},
-              {n:'Ovo Frito', p:'3,00'},
-              {n:'Filé de Frango', p:'5,00'},
-              {n:'Bife Grelhado', p:'9,00'}
           ]}
       ]},
       
@@ -343,30 +271,25 @@
             sheet.className = 'sheet transform-style-3d';
             sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
             
-            const frontData = MENU_DATA[i];
-            const backData = MENU_DATA[i+1];
-
-            // FRENTE
             const front = document.createElement('div');
-            front.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[2px] border-r-[2px] border-[#5d4037] rounded-r-lg overflow-hidden shadow-page-right';
-            front.innerHTML = renderPage(frontData, i);
-            front.style.transform = 'translateZ(2px)';
+            front.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[1px] border-r-[1px] border-[#5d4037] rounded-r-lg overflow-hidden shadow-page-right';
+            front.innerHTML = renderPage(MENU_DATA[i], i);
+            front.style.transform = 'translateZ(1px)';
 
-            const flipZoneFront = document.createElement('div');
-            flipZoneFront.className = 'flip-zone flip-zone-right';
-            flipZoneFront.onclick = (e) => { e.stopPropagation(); nextPage(); };
-            front.appendChild(flipZoneFront);
+            const flipFront = document.createElement('div');
+            flipFront.className = 'flip-zone flip-zone-right';
+            flipFront.onclick = (e) => { e.stopPropagation(); nextPage(); };
+            front.appendChild(flipFront);
 
-            // VERSO
             const back = document.createElement('div');
-            back.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[2px] border-l-[2px] border-[#5d4037] rounded-l-lg overflow-hidden shadow-page-left';
-            back.style.transform = 'rotateY(180deg) translateZ(2px)';
-            back.innerHTML = backData ? renderPage(backData, i + 1) : '<div class="w-full h-full bg-marrom-capa"></div>';
+            back.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[1px] border-l-[1px] border-[#5d4037] rounded-l-lg overflow-hidden shadow-page-left';
+            back.style.transform = 'rotateY(180deg) translateZ(1px)';
+            back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="w-full h-full bg-[#3d241f]"></div>';
 
-            const flipZoneBack = document.createElement('div');
-            flipZoneBack.className = 'flip-zone flip-zone-left';
-            flipZoneBack.onclick = (e) => { e.stopPropagation(); prevPage(); };
-            back.appendChild(flipZoneBack);
+            const flipBack = document.createElement('div');
+            flipBack.className = 'flip-zone flip-zone-left';
+            flipBack.onclick = (e) => { e.stopPropagation(); prevPage(); };
+            back.appendChild(flipBack);
 
             sheet.appendChild(front);
             sheet.appendChild(back);
@@ -379,85 +302,74 @@
     }
 
     function setupScrollDetect() {
-        const containers = document.querySelectorAll('.custom-scrollbar');
-        containers.forEach(el => {
-            let scrollTimeout;
-            
-            const showScroll = () => {
+        document.querySelectorAll('.custom-scrollbar').forEach(el => {
+            let timeout;
+            const handler = () => {
                 el.classList.add('scrolling');
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    el.classList.remove('scrolling');
-                }, 1000);
+                clearTimeout(timeout);
+                timeout = setTimeout(() => el.classList.remove('scrolling'), 800);
             };
-
-            // Eventos para detectar interação
-            el.addEventListener('scroll', showScroll, { passive: true });
-            el.addEventListener('touchmove', showScroll, { passive: true });
-            el.addEventListener('touchstart', showScroll, { passive: true });
+            el.addEventListener('scroll', handler, { passive: true });
+            el.addEventListener('touchmove', handler, { passive: true });
         });
     }
 
     function renderPage(data, index) {
         if (data.type === 'cover' || data.type === 'back') {
-            return `
-                <div class="h-full w-full flex flex-col items-center justify-center bg-marrom-capa text-gold p-6 relative">
-                    <div class="absolute inset-0 bg-texture-leather opacity-30 mix-blend-multiply pointer-events-none"></div>
-                    <div class="relative z-10 flex flex-col items-center text-center">
-                        <i data-lucide="${data.type === 'cover' ? 'chef-hat' : 'heart'}" class="w-12 h-12 mb-4"></i>
-                        <h1 class="font-serif text-2xl sm:text-4xl font-bold mb-4 uppercase tracking-widest">${data.title}</h1>
-                        <div class="w-16 h-1 bg-gold mb-6"></div>
-                        <p class="font-serif text-[10px] tracking-widest opacity-80 uppercase">${data.subtitle || data.footer}</p>
-                    </div>
-                </div>`;
+            return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-gold p-6 relative">
+                <div class="absolute inset-0 bg-texture-leather opacity-20 pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <i data-lucide="${data.type === 'cover' ? 'chef-hat' : 'heart'}" class="w-12 h-12 mb-4"></i>
+                    <h1 class="font-serif text-2xl sm:text-3xl font-bold mb-4 uppercase tracking-widest">${data.title}</h1>
+                    <div class="w-12 h-1 bg-gold mb-6"></div>
+                    <p class="font-serif text-[10px] tracking-widest opacity-80 uppercase">${data.subtitle || data.footer}</p>
+                </div>
+            </div>`;
         }
         if (data.type === 'image') {
-            return `
-                <div class="h-full w-full relative">
-                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${data.url}')"></div>
-                    <div class="absolute inset-0 bg-black/30"></div>
-                    <div class="absolute bottom-8 left-0 right-0 text-center px-4">
-                        <h3 class="font-serif text-lg sm:text-xl text-white tracking-widest uppercase">${data.caption}</h3>
-                        <div class="w-10 h-0.5 bg-gold mx-auto mt-2"></div>
-                    </div>
-                </div>`;
+            return `<div class="h-full w-full relative">
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${data.url}')"></div>
+                <div class="absolute inset-0 bg-black/40"></div>
+                <div class="absolute bottom-8 left-0 right-0 text-center px-4">
+                    <h3 class="font-serif text-lg text-white tracking-widest uppercase">${data.caption}</h3>
+                    <div class="w-8 h-0.5 bg-gold mx-auto mt-2"></div>
+                </div>
+            </div>`;
         }
         
-        let sectionsHtml = data.sections.map(s => `
-            <div class="mb-5">
-                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-3">
-                    <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#8b4513]"></i>
-                    <h3 class="font-serif text-[12px] sm:text-[14px] font-bold text-gray-800 uppercase">${s.title}</h3>
+        let sections = data.sections.map(s => `
+            <div class="mb-8">
+                <div class="flex items-center gap-2 border-b border-gold/30 pb-1 mb-4">
+                    <i data-lucide="${s.icon}" class="w-4 h-4 text-[#8b4513]"></i>
+                    <h3 class="font-serif text-[13px] font-bold text-gray-800 uppercase">${s.title}</h3>
                 </div>
-                <ul class="space-y-5">
+                <ul class="space-y-4">
                     ${s.items.map(item => `
                         <li class="menu-item">
-                            <div class="item-name-group">
-                                <span class="font-bold text-gray-900 text-[11px] sm:text-[13px] leading-tight">${item.n}</span>
-                                ${item.d ? `<br><span class="text-[9px] text-gray-500 italic font-normal">${item.d}</span>` : ''}
+                            <div class="flex flex-col flex-grow min-w-0">
+                                <span class="font-bold text-gray-900 text-[12px] leading-tight">${item.n}</span>
+                                ${item.d ? `<span class="text-[9px] text-gray-500 italic mt-0.5">${item.d}</span>` : ''}
                             </div>
                             <div class="item-dots"></div>
-                            <span class="item-price font-serif text-gray-900 text-[11px] sm:text-[13px]">R$ ${item.p}</span>
+                            <span class="font-serif text-gray-900 text-[12px] font-bold">R$ ${item.p}</span>
                         </li>
                     `).join('')}
                 </ul>
             </div>
         `).join('');
 
-        return `
-            <div class="h-full w-full bg-paper p-6 sm:p-10 relative bg-texture-paper flex flex-col shadow-inner">
-                <div class="flex-grow custom-scrollbar pr-2 pb-6" style="min-height: 0;">
-                    ${sectionsHtml}
-                </div>
-                <div class="text-center font-serif text-[8px] mt-2 opacity-30">PÁGINA ${index}</div>
-            </div>`;
+        return `<div class="h-full w-full bg-texture-paper p-6 sm:p-10 flex flex-col shadow-inner">
+            <div class="flex-grow custom-scrollbar pr-1">
+                ${sections}
+            </div>
+            <div class="text-center font-serif text-[8px] mt-4 opacity-20">PÁGINA ${index}</div>
+        </div>`;
     }
 
     function nextPage() {
         if (currentSheet < sheets.length) {
-            const sheet = sheets[currentSheet];
-            sheet.classList.add('flipped');
-            sheet.style.zIndex = 20 + currentSheet;
+            sheets[currentSheet].classList.add('flipped');
+            sheets[currentSheet].style.zIndex = 20 + currentSheet;
             currentSheet++;
             updateIndicator();
         }
@@ -466,9 +378,8 @@
     function prevPage() {
         if (currentSheet > 0) {
             currentSheet--;
-            const sheet = sheets[currentSheet];
-            sheet.classList.remove('flipped');
-            sheet.style.zIndex = (sheets.length - currentSheet) + 20;
+            sheets[currentSheet].classList.remove('flipped');
+            sheets[currentSheet].style.zIndex = (sheets.length - currentSheet) + 20;
             updateIndicator();
         }
     }
