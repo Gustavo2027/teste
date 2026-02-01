@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -158,9 +159,6 @@
       </div>
       <span class="site-name">AFPESP Peruíbe II</span>
     </div>
-    <button onclick="resetBook()" class="ml-auto p-2 text-gold">
-      <i data-lucide="home"></i>
-    </button>
   </header>
 
   <section class="title-bar">
@@ -237,6 +235,8 @@
               {n:'H2O Limão', p:'7,00'}, {n:'Gelo (3kg)', p:'6,00'}
           ]}
       ]},
+
+      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Drinks & Coquetéis' },
       
       { type: 'back', title: 'VOLTE SEMPRE', footer: 'Obrigado pela preferência' }
     ];
@@ -315,8 +315,8 @@
                     ${s.items.map(item => `
                         <li class="flex justify-between items-baseline">
                             <span class="font-bold text-gray-900 text-xs sm:text-sm">${item.n}</span>
-                            <span class="flex-grow border-b border-dotted border-gray-400 mx-2 opacity-20 relative -top-1"></span>
-                            <span class="font-serif font-bold text-gray-900 text-xs sm:text-sm">R$ ${item.p}</span>
+                            <span class="flex-grow border-b border-dotted border-gray-600 mx-2 opacity-60 relative -top-1"></span>
+                            <span class="font-serif font-bold text-gray-900 text-xs sm:text-sm whitespace-nowrap">R$ ${item.p}</span>
                         </li>
                     `).join('')}
                 </ul>
