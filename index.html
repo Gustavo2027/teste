@@ -36,7 +36,7 @@
       justify-content: center;
     }
 
-    /* BARRA DE ROLAGEM DOURADA E LARGA */
+    /* BARRA DE ROLAGEM DOURADA */
     .custom-scrollbar {
       overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
@@ -46,7 +46,6 @@
       width: 100%;
       scrollbar-width: auto;
       scrollbar-color: var(--gold) rgba(0,0,0,0.1);
-      z-index: 50;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -81,7 +80,6 @@
 
     .sheet.flipped {
       transform: rotateY(-180deg);
-      z-index: 1;
     }
 
     .backface-hidden { 
@@ -122,11 +120,10 @@
       margin: 0 8px;
     }
 
-    /* ZONAS DE CLIQUE */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 50px;
+      width: 55px;
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -138,7 +135,7 @@
 
     @media (max-width: 600px) {
       #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 40px; }
+      .flip-zone { width: 45px; }
     }
   </style>
 <script type="importmap">
@@ -223,8 +220,9 @@
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente (Front)
+        // Frente
         const front = document.createElement('div');
+        front.id = `front-${i/2}`;
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg';
         front.innerHTML = renderPage(MENU_DATA[i], i);
         
@@ -233,13 +231,15 @@
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso (Back)
+        // Verso
         const back = document.createElement('div');
+        back.id = `back-${i/2}`;
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg';
         back.style.transform = 'rotateY(180deg)';
+        back.style.pointerEvents = 'none'; // Começa desativado pois está "atrás"
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // No verso, devido à rotação de 180°, a borda externa visual (esquerda do livro) é o 'right' do elemento
+        // No verso, 'right: 0' visualmente é a borda externa esquerda do livro aberto
         const flipL = document.createElement('div');
         flipL.className = 'flip-zone flip-zone-right'; 
         flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
@@ -257,12 +257,13 @@
     function renderPage(data, index) {
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
-        const titleClass = data.type === 'back' ? 'text-2xl sm:text-3xl' : 'text-3xl';
-        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-8 py-6 text-center relative overflow-hidden">
+        const titleClass = data.type === 'back' ? 'text-2xl sm:text-3xl tracking-normal' : 'text-3xl tracking-widest';
+        const paddingClass = data.type === 'back' ? 'px-14' : 'px-8';
+        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] ${paddingClass} py-6 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
                   <div class="relative z-10 flex flex-col items-center w-full">
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
-                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 tracking-widest w-full">${data.title}</h1>
+                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
                     <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em]">${data.subtitle}</p>
                   </div>
@@ -304,8 +305,14 @@
 
     function nextPage() {
       if (currentSheet < sheets.length) {
-        sheets[currentSheet].classList.add('flipped');
-        sheets[currentSheet].style.zIndex = 20 + currentSheet;
+        const sheet = sheets[currentSheet];
+        sheet.classList.add('flipped');
+        sheet.style.zIndex = 20 + currentSheet;
+        
+        // Gerencia pointer events para evitar cliques fantasma
+        document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'none';
+        document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'auto';
+        
         currentSheet++;
         updateIndicator();
       }
@@ -314,8 +321,14 @@
     function prevPage() {
       if (currentSheet > 0) {
         currentSheet--;
-        sheets[currentSheet].classList.remove('flipped');
-        sheets[currentSheet].style.zIndex = (sheets.length - currentSheet) + 20;
+        const sheet = sheets[currentSheet];
+        sheet.classList.remove('flipped');
+        sheet.style.zIndex = (sheets.length - currentSheet) + 20;
+
+        // Restaura pointer events
+        document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'auto';
+        document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'none';
+        
         updateIndicator();
       }
     }
