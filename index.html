@@ -1,97 +1,373 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Cardápio Bar - AFPESP Peruíbe II</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
   <style>
-    body {
-      font-family: 'Lato', sans-serif;
-      overscroll-behavior-y: contain;
-      background-color: #1a1110;
+    /* CSS BASE FORNECIDO */
+    #root {
+      height: calc(100dvh - 130px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100dvh;
+      background-color: #1a1110;
       overflow-x: hidden;
+      overscroll-behavior: none;
+      touch-action: pan-x pan-y;
     }
-    .font-serif {
-      font-family: 'Cinzel', serif;
+
+    .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .-rotate-y-180 { transform: rotateY(-180deg); }
+    .rotate-y-0 { transform: rotateY(0deg); }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .perspective-3000 { perspective: 180rem; }
+    
+    .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
+    .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 0.2rem; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #c5a059; border-radius: 1.25rem; }
+    .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #c5a059 rgba(0, 0, 0, 0.02); }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
     }
-    .perspective-3000 {
-      perspective: 3000px;
+
+    /* Barra preta superior */
+    .top-bar {
+      width: 100%;
+      height: 55px;
+      background: linear-gradient(to bottom, #000, #000000);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 100;
     }
-    .transform-style-3d {
-      transform-style: preserve-3d;
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .backface-hidden {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
+
+    .logo-box {
+      background-color: #000;
+      padding: 6px 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
     }
-    .rotate-y-180 {
+
+    .logo {
+      height: 32px;
+      width: auto;
+    }
+
+    .site-name {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Faixa do título */
+    .title-bar {
+      width: 100%;
+      background-color: #333436;
+      padding: 25px 10px;
+      text-align: center;
+      position: relative;
+      z-index: 100;
+    }
+
+    .title-bar h1 {
+      color: #00ff00;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    /* ESTRUTURA DO LIVRO */
+    .sheet {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      transform-origin: left;
+      transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+      cursor: pointer;
+    }
+
+    .sheet.flipped {
       transform: rotateY(-180deg);
     }
-    .rotate-y-0 {
-      transform: rotateY(0deg);
+
+    .shadow-page-left { box-shadow: inset -1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5); }
+    .shadow-page-right { box-shadow: inset 1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5); }
+
+    /* Estilo Marrom Marroquino para a Capa */
+    .bg-marrom-capa {
+      background-color: #3d241f; /* Marrom escuro */
     }
-    .bg-paper-texture {
-      background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
-    }
-    .bg-leather-texture {
-      background-image: url('https://www.transparenttextures.com/patterns/leather.png');
-    }
-    .shadow-page-left {
-      box-shadow: inset -1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5);
-    }
-    .shadow-page-right {
-      box-shadow: inset 1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5);
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.05);
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #c5a059;
-      border-radius: 10px;
-    }
-    /* Suaviza a troca de z-index */
-    .transform-style-3d > div {
-      transition-property: transform, z-index;
+
+    .font-serif { font-family: 'Cinzel', serif; }
+    .text-gold { color: #c5a059; }
+
+    @media (max-width: 600px) {
+      .title-bar h1 { font-size: 22px; }
+      .site-name { font-size: 16px; }
+      .sheet { width: 50%; }
     }
   </style>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            paper: '#fdfbf7',
-            'paper-aged': '#e8e4d9',
-            gold: '#c5a059',
-            'gold-dark': '#8a6e36',
-            leather: '#3e2723',
-            'leather-light': '#5d4037',
-          }
-        }
-      }
-    }
-  </script>
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/"
+    "react": "https://esm.sh/react@^19.2.4"
   }
 }
 </script>
 </head>
-<body class="text-gray-100 min-h-screen">
-  <div id="root"></div>
+<body>
+
+  <header class="top-bar">
+    <div class="logo-area">
+      <div class="logo-box">
+        <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" class="logo" />
+      </div>
+      <span class="site-name">AFPESP Peruíbe II</span>
+    </div>
+    <button onclick="resetBook()" class="ml-auto p-2 text-gold">
+      <i data-lucide="home"></i>
+    </button>
+  </header>
+
+  <section class="title-bar">
+    <h1>Cardápio Bar - AFPESP Peruíbe II</h1>
+  </section>
+
+  <div id="root">
+    <div id="book-container" class="relative w-full max-w-5xl perspective-3000" style="aspect-ratio: 2.1/1;">
+      <div id="book" class="relative w-full h-full transform-style-3d">
+        <!-- Páginas inseridas pelo JS -->
+      </div>
+      
+      <!-- Botões Desktop -->
+      <button onclick="prevPage()" id="btn-prev" class="hidden sm:flex absolute -left-16 top-1/2 -translate-y-1/2 z-[200] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
+        <i data-lucide="arrow-left" size="32"></i>
+      </button>
+      <button onclick="nextPage()" id="btn-next" class="hidden sm:flex absolute -right-16 top-1/2 -translate-y-1/2 z-[200] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
+        <i data-lucide="arrow-right" size="32"></i>
+      </button>
+    </div>
+
+    <!-- Indicador Mobile -->
+    <div class="flex items-center justify-center gap-6 mt-6 sm:hidden">
+      <button onclick="prevPage()" class="p-3 text-gold"> <i data-lucide="arrow-left"></i> </button>
+      <span id="page-indicator" class="text-gold/60 font-serif text-xs tracking-widest uppercase">1 / 1</span>
+      <button onclick="nextPage()" class="p-3 text-gold"> <i data-lucide="arrow-right"></i> </button>
+    </div>
+  </div>
+
+  <script>
+    const MENU_DATA = [
+      { type: 'cover', title: 'MENU', subtitle: 'Bebidas e Porções' },
+      
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Alegria Brasileira' },
+      
+      { type: 'content', sections: [
+          { title: 'Doses', icon: 'glass-water', items: [
+              {n:'Pinga 51', p:'4,00'}, {n:'Velho Barreiro', p:'4,00'}, {n:'Sagatiba', p:'5,00'},
+              {n:'Saquê', p:'6,00'}, {n:'Vodka (Caipiroska)', p:'5,00'}, {n:'Campari', p:'7,00'}
+          ]},
+          { title: 'Caipirinhas', icon: 'martini', items: [
+              {n:'Pinga 51', p:'20,00'}, {n:'Velho Barreiro', p:'15,00'}, {n:'Sagatiba', p:'25,00'},
+              {n:'Saquê', p:'18,00'}, {n:'Vodka (Caipiroska)', p:'25,00'}
+          ]}
+      ]},
+
+      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos Selecionados' },
+
+      { type: 'content', sections: [
+          { title: 'Cervejas', icon: 'beer', items: [
+              {n:'Skol / Brahma', p:'7,00'}, {n:'Brahma Malzbier', p:'9,00'},
+              {n:'Heineken / Sem Álcool', p:'10,00'}
+          ]},
+          { title: 'Chopp', icon: 'beer', items: [
+              {n:'Chopp Claro (330ml)', p:'9,00'}, {n:'Chopp Claro (500ml)', p:'13,50'},
+              {n:'Chopp Escuro (Garrafa 1L)', p:'30,00'}
+          ]}
+      ]},
+
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções da Casa' },
+
+      { type: 'content', sections: [
+          { title: 'Porções', icon: 'utensils', items: [
+              {n:'Batata Frita (200g)', p:'15,00'}, {n:'Batata Frita (400g)', p:'20,00'},
+              {n:'Camarão (250g)', p:'40,00'}, {n:'Camarão (500g)', p:'55,00'},
+              {n:'Isca de Peixe (500g)', p:'45,00'}, {n:'Calabresa Acebolada', p:'18,00'}
+          ]}
+      ]},
+
+      { type: 'content', sections: [
+          { title: 'Bebidas não alcoólicas', icon: 'cup-soda', items: [
+              {n:'Água (c/ ou s/ gás)', p:'5,00'}, {n:'Coca-cola / Zero', p:'7,00'},
+              {n:'Guaraná / Zero', p:'6,00'}, {n:'Schweppes / Tônica', p:'7,00'},
+              {n:'H2O Limão', p:'7,00'}, {n:'Gelo (3kg)', p:'6,00'}
+          ]}
+      ]},
+      
+      { type: 'back', title: 'VOLTE SEMPRE', footer: 'Obrigado pela preferência' }
+    ];
+
+    let currentSheet = 0;
+    const book = document.getElementById('book');
+    const sheets = [];
+
+    function initBook() {
+        book.innerHTML = '';
+        sheets.length = 0;
+        for (let i = 0; i < MENU_DATA.length; i += 2) {
+            const sheet = document.createElement('div');
+            sheet.className = 'sheet transform-style-3d';
+            sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
+            
+            const frontData = MENU_DATA[i];
+            const backData = MENU_DATA[i+1];
+
+            const front = document.createElement('div');
+            front.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[2px] border-r-[2px] border-[#5d4037] rounded-r-lg overflow-hidden shadow-page-right';
+            front.innerHTML = renderPage(frontData, i);
+            front.style.transform = 'translateZ(1px)';
+
+            const back = document.createElement('div');
+            back.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[2px] border-l-[2px] border-[#5d4037] rounded-l-lg overflow-hidden shadow-page-left';
+            back.style.transform = 'rotateY(180deg) translateZ(1px)';
+            back.innerHTML = backData ? renderPage(backData, i + 1) : '<div class="w-full h-full bg-marrom-capa relative overflow-hidden"><div class="absolute inset-0 bg-texture-leather opacity-30 mix-blend-multiply"></div></div>';
+
+            sheet.appendChild(front);
+            sheet.appendChild(back);
+            sheet.onclick = () => {
+                if (sheet.classList.contains('flipped')) prevPage();
+                else nextPage();
+            };
+
+            book.appendChild(sheet);
+            sheets.push(sheet);
+        }
+        updateIndicator();
+        lucide.createIcons();
+    }
+
+    function renderPage(data, index) {
+        if (data.type === 'cover' || data.type === 'back') {
+            return `
+                <div class="h-full w-full flex flex-col items-center justify-center bg-marrom-capa text-gold p-6 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-texture-leather opacity-40 mix-blend-multiply pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col items-center text-center">
+                        <i data-lucide="${data.type === 'cover' ? 'chef-hat' : 'info'}" class="w-16 h-16 mb-4"></i>
+                        <h1 class="font-serif text-3xl sm:text-5xl font-bold mb-4 uppercase tracking-widest">${data.title}</h1>
+                        <div class="w-24 h-1 bg-gold mb-6"></div>
+                        <p class="font-serif text-sm tracking-widest opacity-80">${data.subtitle || data.footer || ''}</p>
+                    </div>
+                </div>`;
+        }
+        if (data.type === 'image') {
+            return `
+                <div class="h-full w-full relative overflow-hidden">
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${data.url}')"></div>
+                    <div class="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-12 left-0 right-0 text-center px-4">
+                        <h3 class="font-serif text-xl sm:text-2xl text-white tracking-widest uppercase">${data.caption}</h3>
+                        <div class="w-12 h-0.5 bg-gold mx-auto mt-2"></div>
+                    </div>
+                </div>`;
+        }
+        
+        let sectionsHtml = data.sections.map(s => `
+            <div class="mb-8">
+                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-4">
+                    <i data-lucide="${s.icon}" class="w-4 h-4 text-gold-dark"></i>
+                    <h3 class="font-serif text-sm sm:text-base font-bold text-gray-900 uppercase">${s.title}</h3>
+                </div>
+                <ul class="space-y-2">
+                    ${s.items.map(item => `
+                        <li class="flex justify-between items-baseline">
+                            <span class="font-bold text-gray-900 text-xs sm:text-sm">${item.n}</span>
+                            <span class="flex-grow border-b border-dotted border-gray-400 mx-2 opacity-20 relative -top-1"></span>
+                            <span class="font-serif font-bold text-gray-900 text-xs sm:text-sm">R$ ${item.p}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `).join('');
+
+        return `
+            <div class="h-full w-full bg-paper p-6 sm:p-10 relative bg-texture-paper flex flex-col shadow-inner">
+                <div class="flex-grow overflow-y-auto custom-scrollbar pr-2">
+                    ${sectionsHtml}
+                </div>
+                <div class="text-center font-serif text-[10px] mt-4 opacity-40">/ PÁGINA ${index} /</div>
+            </div>`;
+    }
+
+    function nextPage() {
+        if (currentSheet < sheets.length) {
+            sheets[currentSheet].classList.add('flipped');
+            sheets[currentSheet].style.zIndex = 20 + currentSheet;
+            currentSheet++;
+            updateIndicator();
+        }
+    }
+
+    function prevPage() {
+        if (currentSheet > 0) {
+            currentSheet--;
+            sheets[currentSheet].classList.remove('flipped');
+            sheets[currentSheet].style.zIndex = (sheets.length - currentSheet) + 20;
+            updateIndicator();
+        }
+    }
+
+    function resetBook() {
+        while (currentSheet > 0) prevPage();
+    }
+
+    function updateIndicator() {
+        document.getElementById('page-indicator').innerText = `${currentSheet + 1} / ${sheets.length + 1}`;
+        document.getElementById('btn-prev').disabled = currentSheet === 0;
+        document.getElementById('btn-next').disabled = currentSheet === sheets.length;
+    }
+
+    function adjustRatio() {
+        const container = document.getElementById('book-container');
+        container.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2.1/1";
+    }
+
+    window.addEventListener('resize', adjustRatio);
+    adjustRatio();
+    initBook();
+  </script>
 </body>
 </html>
