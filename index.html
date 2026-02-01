@@ -36,7 +36,6 @@
       justify-content: center;
     }
 
-    /* BARRA DE ROLAGEM DOURADA */
     .custom-scrollbar {
       overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
@@ -44,24 +43,17 @@
       overscroll-behavior-y: contain;
       height: 100%;
       width: 100%;
-      scrollbar-width: auto;
+      scrollbar-width: thin;
       scrollbar-color: var(--gold) rgba(0,0,0,0.1);
     }
 
     .custom-scrollbar::-webkit-scrollbar {
-      width: 10px;
-      display: block;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
+      width: 6px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: var(--gold);
-      border-radius: 5px;
-      border: 2px solid #fdfbf7;
+      border-radius: 3px;
     }
 
     .perspective-3000 { perspective: 2500px; }
@@ -114,15 +106,15 @@
       align-items: center;
       width: 100%;
       flex-wrap: nowrap;
-      gap: 4px;
+      gap: 6px;
     }
     .item-dots {
       flex-grow: 1;
       border-bottom: 2px dotted rgba(0, 0, 0, 0.1);
       min-width: 5px;
+      margin-bottom: 3px;
     }
 
-    /* ZONAS DE CLIQUE OTIMIZADAS */
     .flip-zone {
       position: absolute;
       top: 0;
@@ -130,6 +122,7 @@
       height: 100%;
       z-index: 2000;
       cursor: pointer;
+      /* background: rgba(255,0,0,0.1); /* DEBUG */
     }
     .flip-zone-right { right: 0; }
     .flip-zone-left { left: 0; }
@@ -165,7 +158,6 @@
       <div id="book" class="relative w-full h-full transform-style-3d"></div>
     </div>
 
-    <!-- Navegação Mobile -->
     <div class="flex items-center justify-center gap-10 mt-6 sm:hidden">
       <button onclick="prevPage()" class="p-3 bg-[#3d241f] rounded-full text-[#c5a059]"> <i data-lucide="chevron-left"></i> </button>
       <span id="page-indicator" class="text-[#c5a059] font-bold font-serif text-sm tracking-widest">1 / 1</span>
@@ -188,7 +180,7 @@
               { n: 'Sagatiba', p: '5,00' },
               { n: 'Saquê', p: '6,00' },
               { n: 'Vodka (Caipiroska)', p: '5,00' },
-              { n: 'Campari', p: '7,00' },
+              { n: 'Campari', p: '7,00' }
             ]
           },
           {
@@ -199,7 +191,7 @@
               { n: 'Velho Barreiro', p: '15,00' },
               { n: 'Sagatiba', p: '25,00' },
               { n: 'Saquê', p: '18,00' },
-              { n: 'Vodka (Caipiroska)', p: '25,00' },
+              { n: 'Vodka (Caipiroska)', p: '25,00' }
             ]
           },
           {
@@ -210,12 +202,12 @@
               { n: 'Brahma', p: '7,00' },
               { n: 'Brahma Malzbier', p: '9,00' },
               { n: 'Heineken', p: '10,00' },
-              { n: 'Heineken sem ácool', p: '10,00' },
+              { n: 'Heineken sem álcool', p: '10,00' }
             ]
           }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos Selecionados' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Chopp e Cervejas' },
       { 
         type: 'content', 
         sections: [
@@ -223,9 +215,9 @@
             title: 'Chopp',
             icon: 'beer',
             items: [
-              { n: 'Chopp Claro', p: '9,00', d: '330ML' },
-              { n: 'Chopp Claro', p: '13,50', d: '500ML' },
-              { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' },
+              { n: 'Chopp Claro', p: '9,00', d: '330ml' },
+              { n: 'Chopp Claro', p: '13,50', d: '500ml' },
+              { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' }
             ]
           },
           {
@@ -236,7 +228,19 @@
               { n: 'Vinho Tinto Suave', p: '8,00' },
               { n: 'Concha y Toro Tinto Meio Seco', p: '50,00' },
               { n: 'Periquita Tinto Meio Seco', p: '90,00' },
-              { n: 'Santa Helena Chardonay', p: '52,00' },
+              { n: 'Santa Helena Chardonnay', p: '52,00' }
+            ]
+          },
+          {
+            title: 'Batidas',
+            icon: 'martini',
+            items: [
+              { n: 'Pinga 51', p: '20,00' },
+              { n: 'Velho Barreiro', p: '20,00' },
+              { n: 'Sagatiba', p: '25,00' },
+              { n: 'Saquê', p: '20,00' },
+              { n: 'Vodka (Caipiroska)', p: '25,00' },
+              { n: 'Espanhola (Morango)', p: '18,00' }
             ]
           }
         ]
@@ -246,50 +250,38 @@
         type: 'content', 
         sections: [
           {
-            title: 'Batidas',
-            icon: 'martini',
-            items: [
-              { n: 'Pinga 51', p: '20,00' },
-              { n: 'Velho Barreiro', p: '20,00' },
-              { n: 'Sagatiba', p: '25,00' },
-              { n: 'Saque', p: '20,00' },
-              { n: 'Vodka (Caipiroska)', p: '25,00' },
-              { n: 'Espanhola (Morango)', p: '18,00' },
-            ]
-          },
-          {
             title: 'Bebidas não alcoólicas',
             icon: 'glass-water',
             items: [
               { n: 'Água com gás', p: '5,00' },
-              { n: 'Àgua sem gás', p: '5,00' },
-              { n: 'Coca-cola', p: '7,00' },
-              { n: 'Coca-cola zero', p: '7,00' },
+              { n: 'Água sem gás', p: '5,00' },
+              { n: 'Coca-Cola', p: '7,00' },
+              { n: 'Coca-Cola Zero', p: '7,00' },
               { n: 'Guaraná', p: '6,00' },
-              { n: 'Guaraná zero', p: '6,00' },
+              { n: 'Guaraná Zero', p: '6,00' },
               { n: 'Schweppes', p: '7,00' },
-              { n: 'Água tônica', p: '6,00' },
-              { n: 'Água tônica zero', p: '6,00' },
+              { n: 'Água Tônica', p: '6,00' },
+              { n: 'Água Tônica Zero', p: '6,00' },
               { n: 'H2O Limão', p: '7,00' },
-              { n: 'Pacote de Gelo (3kg)', p: '6,00' },
+              { n: 'Pacote de Gelo (3kg)', p: '6,00' }
             ]
           }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Natural' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Sucos Naturais' },
       { 
         type: 'content', 
         sections: [
           {
-            title: 'Suco Natural',
+            title: 'Sucos Naturais',
             icon: 'glass-water',
             items: [
               { n: 'Suco de Laranja', p: '10,00' },
               { n: 'Suco de Limão', p: '10,00' },
               { n: 'Suco de Melancia', p: '10,00' },
               { n: 'Suco de Laranja', p: '18,00', d: 'Jarra' },
-              { n: 'Suco de Melancia', p: '18,00', d: 'Jarra' },
               { n: 'Suco de Limão', p: '18,00', d: 'Jarra' },
+              { n: 'Suco de Melancia', p: '18,00', d: 'Jarra' }
             ]
           },
           {
@@ -298,7 +290,7 @@
             items: [
               { n: 'Suco de Uva', p: '15,00', d: 'Integral – Copo' },
               { n: 'Suco de Uva', p: '8,00', d: 'Del Valle – Lata' },
-              { n: 'Suco de Pêssego', p: '8,00', d: 'Del Valle – Lata' },
+              { n: 'Suco de Pêssego', p: '8,00', d: 'Del Valle – Lata' }
             ]
           },
           {
@@ -307,13 +299,13 @@
             items: [
               { n: 'Copo de Leite Longo', p: '5,00' },
               { n: 'Café Expresso Pequeno', p: '5,00' },
-              { n: 'Espanhola Sem Ácool', p: '8,00', d: 'Drink' },
-              { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' },
+              { n: 'Espanhola Sem Álcool', p: '8,00', d: 'Drink' },
+              { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' }
             ]
           }
         ]
       },
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porção de Camarão' },
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos e Porções' },
       { 
         type: 'content', 
         sections: [
@@ -321,27 +313,21 @@
             title: 'Porções',
             icon: 'utensils',
             items: [
-              { n: 'Batata Frita', p: '15,00', d: '200 gramas' },
-              { n: 'Batata Frita', p: '20,00', d: '400 gramas' },
-              { n: 'Camarão', p: '40,00', d: '250 gramas' },
-              { n: 'Camarão', p: '55,00', d: '500 gramas' },
-              { n: 'Isca de Peixe', p: '45,00', d: '500 gramas' },
-              { n: 'Calabresa Acebolada', p: '18,00', d: '400 gramas' },
+              { n: 'Batata Frita', p: '15,00', d: '200g' },
+              { n: 'Batata Frita', p: '20,00', d: '400g' },
+              { n: 'Camarão', p: '40,00', d: '250g' },
+              { n: 'Camarão', p: '55,00', d: '500g' },
+              { n: 'Isca de Peixe', p: '45,00', d: '500g' },
+              { n: 'Calabresa Acebolada', p: '18,00', d: '400g' }
             ]
-          }
-        ]
-      },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800', caption: 'Pratos & Extras' },
-      { 
-        type: 'content', 
-        sections: [
+          },
           {
             title: 'Lanches',
             icon: 'utensils',
             items: [
               { n: 'Misto Quente', p: '7,00' },
               { n: 'Misto Frio', p: '10,00' },
-              { n: 'Queijo Quente', p: '10,00' },
+              { n: 'Queijo Quente', p: '10,00' }
             ]
           },
           {
@@ -350,10 +336,10 @@
             items: [
               { n: 'Omelete', p: '4,00' },
               { n: 'Omelete com Queijo', p: '5,00' },
-              { n: 'Ovo cozido', p: '2,00' },
+              { n: 'Ovo Cozido', p: '2,00' },
               { n: 'Ovo Frito', p: '3,00' },
               { n: 'Filé de Frango', p: '5,00' },
-              { n: 'Bife Grelhado', p: '9,00' },
+              { n: 'Bife Grelhado', p: '9,00' }
             ]
           }
         ]
@@ -373,7 +359,6 @@
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente (Fica visível quando a página está no lado direito)
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
@@ -384,7 +369,6 @@
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso (Fica visível quando a página está no lado esquerdo após virar)
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
@@ -392,9 +376,9 @@
         back.style.pointerEvents = 'none'; 
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // No verso rodado 180deg, a borda externa esquerda é o 'left: 0' do elemento original.
+        // No verso rotacionado, a borda "externa" é flip-zone-right visualmente no div
         const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-left'; 
+        flipL.className = 'flip-zone flip-zone-right'; 
         flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
         back.appendChild(flipL);
 
@@ -413,7 +397,7 @@
         const isBack = data.type === 'back';
         
         const titleClass = isBack 
-          ? 'text-lg sm:text-2xl tracking-normal whitespace-nowrap' 
+          ? 'text-xl sm:text-2xl tracking-normal whitespace-nowrap' 
           : 'text-3xl tracking-widest';
         
         return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-4 py-10 text-center relative overflow-hidden">
@@ -422,7 +406,7 @@
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
                     <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full leading-tight text-center">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
-                    <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
+                    <p class="font-serif text-[10px] sm:text-xs opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
                   </div>
                 </div>`;
       }
@@ -438,18 +422,18 @@
       }
       
       const sectionsHtml = data.sections.map(s => `
-        <div class="mb-8">
-          <h3 class="font-serif text-[11px] font-bold text-gray-500 mb-4 border-b border-[#c5a059]/40 pb-1 flex items-center gap-2 uppercase tracking-wider">
-            <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#3d241f]"></i> ${s.title}
+        <div class="mb-6">
+          <h3 class="font-serif text-[10px] font-bold text-gray-500 mb-3 border-b border-[#c5a059]/40 pb-1 flex items-center gap-2 uppercase tracking-wider">
+            <i data-lucide="${s.icon}" class="w-3 h-3 text-[#3d241f]"></i> ${s.title}
           </h3>
           ${s.items.map(item => `
-            <div class="mb-4">
+            <div class="mb-3">
               <div class="menu-item">
                 <span class="font-bold text-gray-800 text-[11px] sm:text-[13px] whitespace-nowrap truncate overflow-hidden max-w-[65%]">${item.n}</span>
                 <div class="item-dots"></div>
                 <span class="font-serif font-bold text-gray-900 text-[11px] sm:text-[13px] whitespace-nowrap flex-shrink-0">R$ ${item.p}</span>
               </div>
-              ${item.d ? `<div class="text-[9px] text-gray-500 italic mt-[-2px]">${item.d}</div>` : ''}
+              ${item.d ? `<div class="text-[9px] text-gray-500 italic mt-[-1px] opacity-80">${item.d}</div>` : ''}
             </div>
           `).join('')}
         </div>
