@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -43,10 +44,20 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { 
-      -ms-overflow-style: none;  
-      scrollbar-width: none;  
+    /* Barra de rolagem personalizada e visível */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c5a059;
+      border-radius: 10px;
+    }
+    .custom-scrollbar { 
+      scrollbar-width: thin;
+      scrollbar-color: #c5a059 rgba(0, 0, 0, 0.05);
     }
 
     * {
@@ -90,7 +101,7 @@
     .title-bar {
       width: 100%;
       background-color: #333436;
-      padding: 20px 10px;
+      padding: 15px 10px;
       text-align: center;
       position: relative;
       z-index: 100;
@@ -98,7 +109,7 @@
 
     .title-bar h1 {
       color: #00ff00;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: bold;
       text-transform: uppercase;
     }
@@ -125,31 +136,37 @@
     .font-serif { font-family: 'Cinzel', serif; }
     .text-gold { color: #c5a059; }
 
-    /* Estilo de preço com linha pontilhada */
+    /* Estilo de preço com linha pontilhada corrigido */
     .menu-item {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 8px;
+      width: 100%;
+      margin-bottom: 6px;
     }
 
     .item-name-group {
-      max-width: 70%;
-      display: flex;
-      flex-direction: column;
+      flex-shrink: 1;
+      min-width: 0; /* Permite que o texto quebre ou encolha */
     }
 
     .item-dots {
       flex-grow: 1;
-      border-bottom: 2px dotted rgba(75, 85, 99, 0.4);
-      margin: 0 8px;
-      min-width: 20px;
+      border-bottom: 2px dotted rgba(75, 85, 99, 0.3);
+      margin: 0 6px;
+      min-width: 15px;
       position: relative;
       top: -4px;
     }
 
+    .item-price {
+      flex-shrink: 0; /* Garante que o preço NUNCA suma */
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
     @media (max-width: 600px) {
-      .title-bar h1 { font-size: 18px; }
+      .title-bar h1 { font-size: 16px; }
       .site-name { font-size: 14px; }
       .sheet { width: 50%; }
     }
@@ -181,7 +198,7 @@
     <div id="book-container" class="relative w-full max-w-5xl perspective-3000" style="aspect-ratio: 2.1/1;">
       <div id="book" class="relative w-full h-full transform-style-3d"></div>
       
-      <!-- Botões -->
+      <!-- Botões de navegação -->
       <button onclick="prevPage()" id="btn-prev" class="hidden sm:flex absolute -left-16 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
         <i data-lucide="arrow-left" size="32"></i>
       </button>
@@ -190,10 +207,11 @@
       </button>
     </div>
 
-    <div class="flex items-center justify-center gap-6 mt-6 sm:hidden">
-      <button onclick="prevPage()" class="p-3 text-gold"> <i data-lucide="arrow-left"></i> </button>
-      <span id="page-indicator" class="text-gold/60 font-serif text-xs tracking-widest uppercase">1 / 1</span>
-      <button onclick="nextPage()" class="p-3 text-gold"> <i data-lucide="arrow-right"></i> </button>
+    <!-- Indicador Mobile -->
+    <div class="flex items-center justify-center gap-6 mt-4 sm:hidden">
+      <button onclick="prevPage()" class="p-2 text-gold"> <i data-lucide="arrow-left"></i> </button>
+      <span id="page-indicator" class="text-gold/60 font-serif text-[10px] tracking-widest uppercase">1 / 1</span>
+      <button onclick="nextPage()" class="p-2 text-gold"> <i data-lucide="arrow-right"></i> </button>
     </div>
   </div>
 
@@ -201,7 +219,7 @@
     const MENU_DATA = [
       { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II - AFPESP' },
       
-      // Folha 1
+      // Página 1: Doses, Caipirinhas, Cervejas
       { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Alegria Brasileira' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
@@ -218,74 +236,90 @@
           ]}
       ]},
 
-      // Folha 2
+      // Página 2: Chopp e Vinhos
       { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinho' },
       { type: 'content', sections: [
           { title: 'Chopp', icon: 'beer', items: [
-              {n:'Chopp Claro (330ml)', p:'9,00'}, {n:'Chopp Claro (500ml)', p:'13,50'},
-              {n:'Chopp Escuro (Garrafa 1L)', p:'30,00'}
+              {n:'Chopp Claro', d:'330ML', p:'9,00'},
+              {n:'Chopp Claro', d:'500ML', p:'13,50'},
+              {n:'Chopp Escuro', d:'Garrafa 1L', p:'30,00'}
           ]},
           { title: 'Vinhos', icon: 'wine', items: [
-              {n:'Vinho Tinto Seco', p:'8,00'}, {n:'Vinho Tinto Suave', p:'8,00'},
-              {n:'Concha y Toro Meio Seco', p:'50,00'}, {n:'Periquita Meio Seco', p:'90,00'},
+              {n:'Vinho Tinto Seco', p:'8,00'},
+              {n:'Vinho Tinto Suave', p:'8,00'},
+              {n:'Concha y Toro Tinto Meio Seco', p:'50,00'},
+              {n:'Periquita Tinto Meio Seco', p:'90,00'},
               {n:'Santa Helena Chardonay', p:'52,00'}
           ]}
       ]},
 
-      // Folha 3
+      // Página 3: Batidas e Não Alcoólicos
       { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Refrescância' },
       { type: 'content', sections: [
           { title: 'Batidas', icon: 'martini', items: [
-              {n:'Pinga 51', p:'20,00'}, {n:'Velho Barreiro', p:'20,00'}, {n:'Sagatiba', p:'25,00'},
-              {n:'Saquê', p:'20,00'}, {n:'Vodka (Caipiroska)', p:'25,00'}, {n:'Espanhola (Morango)', p:'18,00'}
+              {n:'Pinga 51', p:'20,00'}, {n:'Velho Barreiro', p:'20,00'},
+              {n:'Sagatiba', p:'25,00'}, {n:'Saquê', p:'20,00'},
+              {n:'Vodka (Caipiroska)', p:'25,00'}, {n:'Espanhola (Morango)', p:'18,00'}
           ]},
           { title: 'Bebidas não alcoólicas', icon: 'cup-soda', items: [
-              {n:'Água com gás', p:'5,00'}, {n:'Água sem gás', p:'5,00'}, {n:'Coca-cola / Zero', p:'7,00'},
-              {n:'Guaraná / Zero', p:'6,00'}, {n:'Schweppes / Tônica', p:'7,00'}, {n:'H2O Limão', p:'7,00'},
-              {n:'Pacote de Gelo (3kg)', p:'6,00'}
+              {n:'Água com gás', p:'5,00'}, {n:'Água sem gás', p:'5,00'},
+              {n:'Coca-cola / Zero', p:'7,00'}, {n:'Guaraná / Zero', p:'6,00'},
+              {n:'Schweppes', p:'7,00'}, {n:'Água Tônica / Zero', p:'6,00'},
+              {n:'H2O Limão', p:'7,00'}, {n:'Pacote de Gelo (3kg)', p:'6,00'}
           ]}
       ]},
 
-      // Folha 4
+      // Página 4: Sucos e Especiais
       { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Natural' },
       { type: 'content', sections: [
           { title: 'Suco Natural', icon: 'glass-water', items: [
-              {n:'Copo (Laranja/Limão/Melancia)', p:'10,00'},
-              {n:'Jarra (Laranja/Limão/Melancia)', p:'18,00'}
+              {n:'Laranja / Limão / Melancia', p:'10,00'},
+              {n:'Laranja / Limão / Melancia (Jarra)', p:'18,00'}
           ]},
           { title: 'Sucos (Outros)', icon: 'glass-water', items: [
               {n:'Suco de Uva Integral (Copo)', p:'15,00'},
-              {n:'Del Valle (Uva/Pêssego)', p:'8,00'}
+              {n:'Del Valle Lata (Uva/Pêssego)', p:'8,00'}
           ]},
           { title: 'Especiais', icon: 'coffee', items: [
-              {n:'Leite Longo', p:'5,00'}, {n:'Café Expresso', p:'5,00'},
-              {n:'Espanhola Sem Álcool', p:'8,00'}, {n:'Especial Peruíbe II', p:'8,00'}
+              {n:'Copo de Leite Longo', p:'5,00'},
+              {n:'Café Expresso Pequeno', p:'5,00'},
+              {n:'Espanhola Sem Álcool', p:'8,00'},
+              {n:'Especial Peruíbe II (Sem Álcool)', p:'8,00'}
           ]}
       ]},
 
-      // Folha 5
+      // Página 5: Porções
       { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções' },
       { type: 'content', sections: [
           { title: 'Porções', icon: 'utensils', items: [
-              {n:'Batata Frita (200g)', p:'15,00'}, {n:'Batata Frita (400g)', p:'20,00'},
-              {n:'Camarão (250g)', p:'40,00'}, {n:'Camarão (500g)', p:'55,00'},
-              {n:'Isca de Peixe (500g)', p:'45,00'}, {n:'Calabresa Acebolada', p:'18,00'}
+              {n:'Batata Frita', d:'200 gramas', p:'15,00'},
+              {n:'Batata Frita', d:'400 gramas', p:'20,00'},
+              {n:'Camarão', d:'250 gramas', p:'40,00'},
+              {n:'Camarão', d:'500 gramas', p:'55,00'},
+              {n:'Isca de Peixe', d:'500 gramas', p:'45,00'},
+              {n:'Calabresa Acebolada', d:'400 gramas', p:'18,00'}
           ]}
       ]},
 
-      // Folha 6
-      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', caption: 'Pratos' },
+      // Página 6: Lanches e Extras
+      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', caption: 'Lanches' },
       { type: 'content', sections: [
           { title: 'Lanches', icon: 'utensils', items: [
-              {n:'Misto Quente / Frio', p:'7,00 / 10,00'}, {n:'Queijo Quente', p:'10,00'}
+              {n:'Misto Quente', p:'7,00'},
+              {n:'Misto Frio', p:'10,00'},
+              {n:'Queijo Quente', p:'10,00'}
           ]},
           { title: 'Pratos Extras', icon: 'utensils', items: [
-              {n:'Omelete Simples / Queijo', p:'4,00 / 5,00'}, {n:'Ovo Cozido / Frito', p:'2,00 / 3,00'},
-              {n:'Filé de Frango', p:'5,00'}, {n:'Bife Grelhado', p:'9,00'}
+              {n:'Omelete', p:'4,00'},
+              {n:'Omelete com Queijo', p:'5,00'},
+              {n:'Ovo Cozido', p:'2,00'},
+              {n:'Ovo Frito', p:'3,00'},
+              {n:'Filé de Frango', p:'5,00'},
+              {n:'Bife Grelhado', p:'9,00'}
           ]}
       ]},
       
-      { type: 'back', title: 'VOLTE SEMPRE', footer: 'AFPESP Peruíbe II agradece' }
+      { type: 'back', title: 'VOLTE SEMPRE', footer: 'AFPESP Peruíbe II' }
     ];
 
     let currentSheet = 0;
@@ -295,7 +329,6 @@
     function initBook() {
         book.innerHTML = '';
         sheets.length = 0;
-        // Agrupamos em pares para cada "folha" (frente e verso)
         for (let i = 0; i < MENU_DATA.length; i += 2) {
             const sheet = document.createElement('div');
             sheet.className = 'sheet transform-style-3d';
@@ -336,10 +369,10 @@
                 <div class="h-full w-full flex flex-col items-center justify-center bg-marrom-capa text-gold p-6 relative">
                     <div class="absolute inset-0 bg-texture-leather opacity-30 mix-blend-multiply pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col items-center text-center">
-                        <i data-lucide="${data.type === 'cover' ? 'chef-hat' : 'star'}" class="w-16 h-16 mb-4"></i>
-                        <h1 class="font-serif text-3xl sm:text-5xl font-bold mb-4 uppercase tracking-widest">${data.title}</h1>
-                        <div class="w-24 h-1 bg-gold mb-6"></div>
-                        <p class="font-serif text-sm tracking-widest opacity-80 uppercase">${data.subtitle || data.footer}</p>
+                        <i data-lucide="${data.type === 'cover' ? 'chef-hat' : 'heart'}" class="w-12 h-12 mb-4"></i>
+                        <h1 class="font-serif text-2xl sm:text-4xl font-bold mb-4 uppercase tracking-widest">${data.title}</h1>
+                        <div class="w-16 h-1 bg-gold mb-6"></div>
+                        <p class="font-serif text-[10px] tracking-widest opacity-80 uppercase">${data.subtitle || data.footer}</p>
                     </div>
                 </div>`;
         }
@@ -347,29 +380,29 @@
             return `
                 <div class="h-full w-full relative">
                     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${data.url}')"></div>
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="absolute bottom-10 left-0 right-0 text-center px-4">
-                        <h3 class="font-serif text-xl sm:text-2xl text-white tracking-widest uppercase">${data.caption}</h3>
-                        <div class="w-12 h-0.5 bg-gold mx-auto mt-2"></div>
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <div class="absolute bottom-8 left-0 right-0 text-center px-4">
+                        <h3 class="font-serif text-lg sm:text-xl text-white tracking-widest uppercase">${data.caption}</h3>
+                        <div class="w-10 h-0.5 bg-gold mx-auto mt-2"></div>
                     </div>
                 </div>`;
         }
         
         let sectionsHtml = data.sections.map(s => `
-            <div class="mb-6">
-                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-3">
-                    <i data-lucide="${s.icon}" class="w-4 h-4 text-[#8b4513]"></i>
-                    <h3 class="font-serif text-[11px] sm:text-[14px] font-bold text-gray-800 uppercase">${s.title}</h3>
+            <div class="mb-5">
+                <div class="flex items-center gap-2 border-b border-gold/40 pb-1 mb-2">
+                    <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#8b4513]"></i>
+                    <h3 class="font-serif text-[11px] sm:text-[13px] font-bold text-gray-800 uppercase">${s.title}</h3>
                 </div>
-                <ul class="space-y-3">
+                <ul class="space-y-2">
                     ${s.items.map(item => `
                         <li class="menu-item">
                             <div class="item-name-group">
-                                <span class="font-bold text-gray-900 text-[10px] sm:text-[13px] leading-tight">${item.n}</span>
-                                ${item.d ? `<span class="text-[9px] text-gray-500 italic font-normal">${item.d}</span>` : ''}
+                                <span class="font-bold text-gray-900 text-[10px] sm:text-[12px] leading-tight">${item.n}</span>
+                                ${item.d ? `<br><span class="text-[8px] text-gray-500 italic font-normal">${item.d}</span>` : ''}
                             </div>
                             <div class="item-dots"></div>
-                            <span class="font-serif font-bold text-gray-900 text-[10px] sm:text-[13px] whitespace-nowrap">R$ ${item.p}</span>
+                            <span class="item-price font-serif text-gray-900 text-[10px] sm:text-[12px]">R$ ${item.p}</span>
                         </li>
                     `).join('')}
                 </ul>
@@ -377,11 +410,11 @@
         `).join('');
 
         return `
-            <div class="h-full w-full bg-paper p-4 sm:p-10 relative bg-texture-paper flex flex-col shadow-inner">
-                <div class="flex-grow overflow-y-auto no-scrollbar">
+            <div class="h-full w-full bg-paper p-3 sm:p-8 relative bg-texture-paper flex flex-col shadow-inner">
+                <div class="flex-grow overflow-y-auto custom-scrollbar pr-1">
                     ${sectionsHtml}
                 </div>
-                <div class="text-center font-serif text-[9px] mt-2 opacity-30">PÁGINA ${index}</div>
+                <div class="text-center font-serif text-[8px] mt-2 opacity-30">PÁGINA ${index}</div>
             </div>`;
     }
 
