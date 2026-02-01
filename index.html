@@ -173,7 +173,7 @@
 
   <script>
     const MENU_DATA = [
-      { type: 'cover', title: 'MENU BAR', subtitle: 'Bar Peruíbe II - AFPESP' },
+      { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
       { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas & Doses' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
@@ -240,9 +240,9 @@
         back.style.pointerEvents = 'none'; // Desativado até virar
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // No verso, após rodar 180°, o lado "esquerdo" do livro é o LEFT original do elemento.
+        // No verso, após rodar 180°, a borda externa esquerda visual do livro é o "RIGHT" do elemento original.
         const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-left'; 
+        flipL.className = 'flip-zone flip-zone-right'; 
         flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
         back.appendChild(flipL);
 
@@ -259,17 +259,19 @@
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
         
-        // Ajuste para evitar quebra no 'OBRIGADO!' e incluir 'BAR' na capa
         const isBack = data.type === 'back';
+        // Ajuste de tamanho e espaçamento para o 'OBRIGADO!' não quebrar linha
         const titleClass = isBack 
-          ? 'text-xl sm:text-2xl tracking-normal whitespace-nowrap' 
+          ? 'text-lg sm:text-2xl tracking-normal whitespace-nowrap' 
           : 'text-3xl tracking-widest';
+        
+        const contentWidthClass = isBack ? 'max-w-[95%]' : 'max-w-[90%]';
         
         return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-4 py-10 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center w-full max-w-[90%]">
+                  <div class="relative z-10 flex flex-col items-center w-full ${contentWidthClass}">
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
-                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full leading-tight">${data.title}</h1>
+                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full leading-tight text-center">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
                     <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
                   </div>
