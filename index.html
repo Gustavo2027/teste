@@ -23,7 +23,7 @@
       padding: 0;
       height: 100%;
       background-color: #1a1110;
-      overflow: hidden; /* Impede que a página inteira role, focando o scroll só no livro */
+      overflow: hidden;
       overscroll-behavior: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -36,32 +36,32 @@
       justify-content: center;
     }
 
-    /* BARRA DE ROLAGEM DOURADA E VISÍVEL */
+    /* BARRA DE ROLAGEM DOURADA E LARGA PARA O DEDO */
     .custom-scrollbar {
       overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
-      touch-action: pan-y !important; /* Força o scroll vertical no mobile */
+      touch-action: pan-y !important;
       overscroll-behavior-y: contain;
       height: 100%;
       width: 100%;
-      padding-right: 12px;
       scrollbar-width: auto;
       scrollbar-color: var(--gold) rgba(0,0,0,0.1);
+      z-index: 50;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
-      width: 8px; /* Mais larga para o dedo pegar */
+      width: 10px;
       display: block;
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
+      border-radius: 5px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: var(--gold);
-      border-radius: 4px;
+      border-radius: 5px;
       border: 2px solid #fdfbf7;
     }
 
@@ -92,7 +92,6 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
 
-    /* CABEÇALHOS */
     .top-bar {
       width: 100%;
       height: 50px;
@@ -100,22 +99,22 @@
       display: flex;
       align-items: center;
       padding: 0 15px;
+      z-index: 100;
     }
     .title-bar {
       width: 100%;
       background-color: #333436;
       padding: 10px;
       text-align: center;
+      z-index: 90;
     }
     .title-bar h1 { color: #00ff00; font-size: 16px; font-weight: bold; text-transform: uppercase; }
 
-    /* ITENS DO MENU */
     .menu-item {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       margin-bottom: 15px;
-      padding-bottom: 5px;
     }
     .item-dots {
       flex-grow: 1;
@@ -123,11 +122,10 @@
       margin: 0 8px;
     }
 
-    /* ZONAS DE CLIQUE NAS BORDAS */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 40px;
+      width: 45px;
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -135,10 +133,11 @@
     .flip-zone-right { right: 0; }
     .flip-zone-left { left: 0; }
 
+    .font-serif { font-family: 'Cinzel', serif; }
+
     @media (max-width: 600px) {
-      #book-container { width: 92%; height: 80%; }
-      .sheet { width: 50%; }
-      .flip-zone { width: 30px; }
+      #book-container { width: 95%; height: 85%; }
+      .flip-zone { width: 35px; }
     }
   </style>
 <script type="importmap">
@@ -167,16 +166,16 @@
 
     <!-- Navegação Mobile -->
     <div class="flex items-center justify-center gap-10 mt-6 sm:hidden">
-      <button onclick="prevPage()" class="p-3 bg-[#3d241f] rounded-full text-gold"> <i data-lucide="chevron-left"></i> </button>
-      <span id="page-indicator" class="text-gold font-bold font-serif">1 / 1</span>
-      <button onclick="nextPage()" class="p-3 bg-[#3d241f] rounded-full text-gold"> <i data-lucide="chevron-right"></i> </button>
+      <button onclick="prevPage()" class="p-3 bg-[#3d241f] rounded-full text-[#c5a059]"> <i data-lucide="chevron-left"></i> </button>
+      <span id="page-indicator" class="text-[#c5a059] font-bold font-serif text-sm tracking-widest">1 / 1</span>
+      <button onclick="nextPage()" class="p-3 bg-[#3d241f] rounded-full text-[#c5a059]"> <i data-lucide="chevron-right"></i> </button>
     </div>
   </div>
 
   <script>
     const MENU_DATA = [
-      { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II' },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas' },
+      { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II - AFPESP' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas & Doses' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
               {n:'Pinga 51', p:'4,00'}, {n:'Velho Barreiro', p:'4,00'}, {n:'Sagatiba', p:'5,00'},
@@ -188,7 +187,7 @@
               {n:'Stella Artois', p:'9,00'}, {n:'Amstel', p:'8,00'}
           ]}
       ]},
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=800', caption: 'Vinhos' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=800', caption: 'Vinhos Selecionados' },
       { type: 'content', sections: [
           { title: 'Vinhos', icon: 'wine', items: [
               {n:'Vinho da Casa', p:'8,00'}, {n:'Concha y Toro', p:'50,00'},
@@ -199,16 +198,16 @@
               {n:'Água Mineral', p:'5,00'}, {n:'H2O', p:'7,00'}
           ]}
       ]},
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos' },
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos & Porções' },
       { type: 'content', sections: [
           { title: 'Porções', icon: 'utensils', items: [
-              {n:'Batata Frita', p:'20,00'}, {n:'Camarão (500g)', p:'55,00'},
-              {n:'Isca de Peixe', p:'45,00'}, {n:'Calabresa', p:'18,00'},
+              {n:'Batata Frita (400g)', p:'20,00'}, {n:'Camarão (500g)', p:'55,00'},
+              {n:'Isca de Peixe (500g)', p:'45,00'}, {n:'Calabresa Acebolada', p:'18,00'},
               {n:'Frango a Passarinho', p:'35,00'}, {n:'Pastéis Misto', p:'22,00'},
               {n:'Bolinho de Bacalhau', p:'28,00'}
           ]}
       ]},
-      { type: 'back', title: 'OBRIGADO!', subtitle: 'Volte Sempre' }
+      { type: 'back', title: 'OBRIGADO!', subtitle: 'VOLTE SEMPRE' }
     ];
 
     let currentSheet = 0;
@@ -217,6 +216,7 @@
 
     function initBook() {
       book.innerHTML = '';
+      sheets.length = 0;
       for (let i = 0; i < MENU_DATA.length; i += 2) {
         const sheet = document.createElement('div');
         sheet.className = 'sheet transform-style-3d';
@@ -229,18 +229,18 @@
         
         const flipR = document.createElement('div');
         flipR.className = 'flip-zone flip-zone-right';
-        flipR.onclick = nextPage;
+        flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
         // Verso
         const back = document.createElement('div');
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg';
         back.style.transform = 'rotateY(180deg)';
-        back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '';
+        back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
         const flipL = document.createElement('div');
         flipL.className = 'flip-zone flip-zone-left';
-        flipL.onclick = prevPage;
+        flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
         back.appendChild(flipL);
 
         sheet.appendChild(front);
@@ -254,46 +254,55 @@
 
     function renderPage(data, index) {
       if (data.type === 'cover' || data.type === 'back') {
-        return `<div class="h-full flex flex-col items-center justify-center bg-[#3d241f] text-gold p-6 text-center">
-                  <div class="absolute inset-0 bg-texture-leather opacity-30"></div>
-                  <h1 class="font-serif text-3xl font-bold uppercase mb-2 relative z-10">${data.title}</h1>
-                  <p class="font-serif text-sm opacity-80 relative z-10">${data.subtitle}</p>
+        const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
+        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] p-6 text-center relative overflow-hidden">
+                  <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
+                  <div class="relative z-10 flex flex-col items-center">
+                    <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
+                    <h1 class="font-serif text-3xl font-bold uppercase mb-4 tracking-widest">${data.title}</h1>
+                    <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
+                    <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em]">${data.subtitle}</p>
+                  </div>
                 </div>`;
       }
       if (data.type === 'image') {
         return `<div class="h-full relative overflow-hidden">
                   <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('${data.url}')"></div>
-                  <div class="absolute inset-0 bg-black/30"></div>
-                  <div class="absolute bottom-6 left-0 right-0 text-center text-white font-serif uppercase tracking-widest text-sm">${data.caption}</div>
+                  <div class="absolute inset-0 bg-black/40"></div>
+                  <div class="absolute bottom-8 left-0 right-0 text-center text-white px-4">
+                    <h3 class="font-serif text-lg tracking-widest uppercase mb-2">${data.caption}</h3>
+                    <div class="w-8 h-0.5 bg-[#c5a059] mx-auto"></div>
+                  </div>
                 </div>`;
       }
       
       const sectionsHtml = data.sections.map(s => `
-        <div class="mb-6">
-          <h3 class="font-serif text-xs font-bold text-gray-500 mb-4 border-b border-gold/40 pb-1 flex items-center gap-2">
-            <i data-lucide="${s.icon}" class="w-3 h-3"></i> ${s.title}
+        <div class="mb-8">
+          <h3 class="font-serif text-[11px] font-bold text-gray-500 mb-4 border-b border-[#c5a059]/40 pb-1 flex items-center gap-2 uppercase tracking-wider">
+            <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#3d241f]"></i> ${s.title}
           </h3>
           ${s.items.map(item => `
             <div class="menu-item">
-              <span class="font-bold text-gray-800 text-sm">${item.n}</span>
+              <span class="font-bold text-gray-800 text-xs sm:text-sm">${item.n}</span>
               <div class="item-dots"></div>
-              <span class="font-serif font-bold text-gray-800 text-sm">R$ ${item.p}</span>
+              <span class="font-serif font-bold text-gray-900 text-xs sm:text-sm">R$ ${item.p}</span>
             </div>
           `).join('')}
         </div>
       `).join('');
 
-      return `<div class="h-full bg-texture-paper flex flex-col p-4 sm:p-8">
-                <div class="custom-scrollbar">
-                  <div class="pb-12 pt-2">${sectionsHtml}</div>
+      return `<div class="h-full bg-texture-paper flex flex-col p-4 sm:p-10 relative">
+                <div class="custom-scrollbar pr-2">
+                  <div class="pb-16 pt-2">${sectionsHtml}</div>
                 </div>
-                <div class="absolute bottom-1 left-0 right-0 text-center text-[8px] opacity-20 font-serif">PAG ${index}</div>
+                <div class="absolute bottom-2 left-0 right-0 text-center text-[8px] opacity-20 font-serif tracking-widest uppercase">PÁGINA ${index}</div>
               </div>`;
     }
 
     function nextPage() {
       if (currentSheet < sheets.length) {
         sheets[currentSheet].classList.add('flipped');
+        sheets[currentSheet].style.zIndex = 20 + currentSheet;
         currentSheet++;
         updateIndicator();
       }
@@ -303,12 +312,16 @@
       if (currentSheet > 0) {
         currentSheet--;
         sheets[currentSheet].classList.remove('flipped');
+        sheets[currentSheet].style.zIndex = (sheets.length - currentSheet) + 20;
         updateIndicator();
       }
     }
 
     function updateIndicator() {
-      document.getElementById('page-indicator').innerText = `${currentSheet + 1} / ${sheets.length + 1}`;
+      const indicator = document.getElementById('page-indicator');
+      if (indicator) {
+        indicator.innerText = `${currentSheet + 1} / ${sheets.length + 1}`;
+      }
     }
 
     window.addEventListener('resize', () => {
@@ -316,7 +329,6 @@
       cont.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2.1/1";
     });
     
-    // Dispara o resize inicial
     window.dispatchEvent(new Event('resize'));
     initBook();
   </script>
