@@ -120,12 +120,13 @@
       margin: 0 8px;
     }
 
+    /* ZONAS DE CLIQUE MAIS LARGAS PARA MELHOR TOQUE */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 55px;
+      width: 65px;
       height: 100%;
-      z-index: 100;
+      z-index: 1000;
       cursor: pointer;
     }
     .flip-zone-right { right: 0; }
@@ -135,7 +136,7 @@
 
     @media (max-width: 600px) {
       #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 45px; }
+      .flip-zone { width: 50px; }
     }
   </style>
 <script type="importmap">
@@ -223,7 +224,7 @@
         // Frente
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
-        front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg';
+        front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
         front.innerHTML = renderPage(MENU_DATA[i], i);
         
         const flipR = document.createElement('div');
@@ -234,14 +235,14 @@
         // Verso
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
-        back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg';
+        back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
         back.style.transform = 'rotateY(180deg)';
-        back.style.pointerEvents = 'none'; // Começa desativado pois está "atrás"
+        back.style.pointerEvents = 'none'; // Desativado até virar
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // No verso, 'right: 0' visualmente é a borda externa esquerda do livro aberto
+        // No verso, após rodar 180°, o lado "esquerdo" do livro é o LEFT original do elemento.
         const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-right'; 
+        flipL.className = 'flip-zone flip-zone-left'; 
         flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
         back.appendChild(flipL);
 
@@ -257,15 +258,18 @@
     function renderPage(data, index) {
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
-        const titleClass = data.type === 'back' ? 'text-2xl sm:text-3xl tracking-normal' : 'text-3xl tracking-widest';
-        const paddingClass = data.type === 'back' ? 'px-14' : 'px-8';
-        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] ${paddingClass} py-6 text-center relative overflow-hidden">
+        // Ajuste fino para 'OBRIGADO!' não cortar
+        const titleClass = data.type === 'back' 
+          ? 'text-2xl sm:text-3xl tracking-tight' 
+          : 'text-3xl tracking-widest';
+        
+        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-6 py-10 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center w-full">
+                  <div class="relative z-10 flex flex-col items-center w-full max-w-[80%]">
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
-                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full">${data.title}</h1>
+                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full break-words leading-tight">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
-                    <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em]">${data.subtitle}</p>
+                    <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
                   </div>
                 </div>`;
       }
@@ -295,7 +299,7 @@
         </div>
       `).join('');
 
-      return `<div class="h-full bg-texture-paper flex flex-col p-4 sm:p-10 relative">
+      return `<div class="h-full bg-texture-paper flex flex-col p-4 sm:p-10 relative overflow-hidden">
                 <div class="custom-scrollbar pr-2">
                   <div class="pb-16 pt-2">${sectionsHtml}</div>
                 </div>
@@ -307,9 +311,9 @@
       if (currentSheet < sheets.length) {
         const sheet = sheets[currentSheet];
         sheet.classList.add('flipped');
-        sheet.style.zIndex = 20 + currentSheet;
+        sheet.style.zIndex = 100 + currentSheet;
         
-        // Gerencia pointer events para evitar cliques fantasma
+        // Habilita cliques no verso e desabilita na frente
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'none';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'auto';
         
@@ -323,9 +327,9 @@
         currentSheet--;
         const sheet = sheets[currentSheet];
         sheet.classList.remove('flipped');
-        sheet.style.zIndex = (sheets.length - currentSheet) + 20;
+        sheet.style.zIndex = 200 - currentSheet;
 
-        // Restaura pointer events
+        // Habilita cliques na frente e desabilita no verso
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'auto';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'none';
         
