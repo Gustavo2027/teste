@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-   <link rel="stylesheet" href="index.css">
-     <script type="text/babel" src="index.js"></script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cardápio Bar </title>
-  
+  <title>Cardápio Bar</title>
+
+  <link rel="stylesheet" href="index.css">
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
-  
-  <!-- Babel for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -44,317 +42,162 @@
       }
     }
   </script>
-  
 
+  <!-- React & ReactDOM ESM -->
+  <script type="module">
+    import React, { useState, useEffect } from "https://esm.sh/react@18.2.0";
+    import { createRoot } from "https://esm.sh/react-dom@18.2.0/client";
+    import { Wine, Beer, Martini, GlassWater, Utensils, Coffee, Snowflake, ChefHat, Info, ArrowLeft, ArrowRight } from "https://esm.sh/lucide-react@0.344.0";
 
-
-  <script type="importmap">
-
-    
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.344.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-</head>
-<body class="bg-[#1a1110] text-gray-100 overflow-hidden overscroll-none">
-
-
-    <header class="top-bar">
-    <div class="logo-area">
-      <!-- Logo da AFPESP -->
-      
-  <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" class="logo">
-      
-</div>
-
-      <span class="site-name">AFPESP Peruíbe II</span>
-    </div>
-  </header>
-
-  <!-- Título -->
-  <section class="title-bar">
-    <h1>Cardápio Bar - AFPESP Peruíbe II</h1>
-  </section>
-
-  <div id="root"></div>
-
-  <script type="text/babel" data-type="module">
-    import React, { useState, useEffect } from 'react';
-    import { createRoot } from 'react-dom/client';
-    import { Wine, Beer, Martini, GlassWater, Utensils, Coffee, Snowflake, ChefHat, Info, ArrowLeft, ArrowRight } from 'lucide-react';
-
-    // --- DATA ---
+    // --- MENU DATA ---
     const MENU_PAGES = [
-      // 0: CAPA
-      {
-        id: 'cover',
-        type: 'cover',
-        title: 'MENU',
-        footer: 'Bem-vindo'
-      },
-      
-      // 1: Visual 1 (Esquerda)
-      {
-        id: 'visual-1',
-        type: 'image',
-        imageUrl: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop',
-        imageCaption: 'Alegria Brasileira'
-      },
-      // 2: Conteúdo 1 (Direita) - Doses, Caipirinhas, Cervejas
-      {
-        id: 'p1',
-        type: 'content',
-        sections: [
-          {
-            title: 'Doses',
-            icon: <GlassWater />,
-            items: [
-              { name: 'Pinga 51', price: '4,00' },
-                { name: 'Velho Barreiro', price: '4,00' },
-               
-              { name: 'Sagatiba', price: '5,00' },
-                { name: 'Saquê', price: '6,00' },
-              { name: 'Vodka (Caipiroska)', price: '5,00' },
-                { name: 'Campari', price: '7,00' },
-            ]
-          },
-          {
-            title: 'Caipirinhas',
-            icon: <Martini />,
-            items: [
-              { name: 'Pinga 51', price: '20,00' },
-                { name: 'Velho Barreiro', price: '15,00' },
-              { name: 'Sagatiba', price: '25,00' },
-                { name: 'Saquê', price: '18,00' },
-              { name: 'Vodka (Caipiroska)', price: '25,00' },
-            ]
-          },
-          {
-            title: 'Cervejas',
-            icon: <Beer />,
-            items: [
-                { name: 'Skol', price: '7,00' },
-              { name: 'Brahma', price: '7,00' },
-                { name: 'Brahma Malzbier', price: '9,00' },
-              { name: 'Heineken', price: '10,00' },
-                { name: 'Heineken sem ácool', price: '10,00' },
-             
-            ]
-          }
-        ]
-      },
-
-      // 3: Visual 2 (Esquerda)
-      {
-        id: 'visual-2',
-        type: 'image',
-        imageUrl: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop',
-        imageCaption: 'Vinho'
-      },
-      // 4: Conteúdo 2 (Direita) - Chopp, Vinhos
-      {
-        id: 'p2',
-        type: 'content',
-        sections: [
-          {
-            title: 'Chopp',
-            icon: <Beer />,
-            items: [
-              { name: 'Chopp Claro', price: '9,00', description: '330ML' },
-               { name: 'Chopp Claro', price: '13,50', description: '500ML' },
-              { name: 'Chopp Escuro', price: '30,00', description: 'Garrafa 1L' },
-            ]
-          },
-          {
-            title: 'Vinhos',
-            icon: <Wine />,
-            items: [
-               { name: 'Vinho Tinto Seco', price: '8,00' },
-              { name: 'Vinho Tinto Suave', price: '8,00' },
-               { name: 'Concha y Toro Tinto Meio Seco', price: '50,00' },
-              
-              { name: 'Periquita Tinto Meio Seco', price: '90,00' },
-               { name: 'Santa Helena Chardonay', price: '52,00' },
-              
-            ]
-          }
-        ]
-      },
-
-      // 5: Visual 3 (Esquerda)
-      {
-        id: 'visual-3',
-        type: 'image',
-        imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop',
-        imageCaption: 'Refrescância'
-      },
-      // 6: Conteúdo 3 (Direita) - Batidas, Não Alcoólicos
-      {
-        id: 'p3',
-        type: 'content',
-        sections: [
-          {
-            title: 'Batidas',
-            icon: <Martini />,
-            items: [
-              { name: 'Pinga 51', price: '20,00' },
-                { name: 'Velho Barreiro', price: '20,00' },
-              { name: 'Sagatiba', price: '25,00' },
-                { name: 'Saque', price: '20,00' },
-              { name: 'Vodka (Caipiroska)', price: '25,00' },
-                { name: 'Eespanhola (Morango)', price: '18,00' },
-               
-            ]
-          },
-          {
-            title: 'Bebidas não alcoólicas',
-            icon: <GlassWater />,
-            items: [
-              { name: 'Água com gás', price: '5,00' },
-               { name: 'Àgua sem gás', price: '5,00' },
-              { name: 'Coca-cola', price: '7,00' },
-               { name: 'Coca-cola zero', price: '7,00' },
-              { name: 'Guaraná', price: '6,00' },
-               { name: 'Guaraná zero', price: '6,00' },
-              { name: 'Schweppes', price: '7,00' },
-               { name: 'Água tônica', price: '6,00' },
-              { name: 'Água tônica zero', price: '6,00' },
-               { name: 'H2O Limão', price: '7,00' },
-               { name: 'Pacote de Gelo (3kg)', price: '6,00' },
-            ]
-          }
-        ]
-      },
-
-      // 7: Visual 4 (Esquerda)
-      {
-        id: 'visual-4',
-        type: 'image',
-        imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000&auto=format&fit=crop',
-        imageCaption: 'Natural'
-      },
-      // 8: Conteúdo 4 (Direita) - Sucos, Diversos
-      {
-        id: 'p4',
-        type: 'content',
-        sections: [
-          {
-            title: 'Suco Natural ',
-            icon: <GlassWater />,
-            items: [
-              { name: 'Suco de Laranja', price: '10,00' },
-              { name: 'Suco de Limão', price: '10,00' },
-              { name: 'Suco de Melancia', price: '10,00' },
-               { name: 'Suco de Laranja', price: '18,00', description: 'Jarra' },
-               { name: 'Suco de Melancia', price: '18,00', description: 'Jarra' },
-               { name: 'Suco de Limão', price: '18,00', description: 'Jarra' },
-               
-            ]
-          },
-          {
-            title: 'Sucos (Outros)',
-            icon: <GlassWater />,
-            items: [
-              { name: 'Suco de Uva', price: '15,00', description: 'Integral – Copo' },
-               { name: 'Suco de Uva', price: '8,00', description: 'Del Valle – Lata' },
-              { name: 'Suco de Pêssego', price: '8,00', description: 'Del Valle – Lata' },
-            ]
-          },
-          {
-            title: 'Especiais',
-            icon: <Coffee />,
-            items: [
-              { name: 'Copo de Leite Longo', price: '5,00' },
-               { name: 'Café Expresso Pequeno', price: '5,00' },
-              { name: 'Espanhola Sem Ácool', price: '8,00', description: 'Drink' },
-               { name: 'Especial Peruíbe II', price: '8,00', description: 'Drink sem álcool' },
-                
-               
-               
-            ]
-          }
-        ]
-      },
-
-      // 9: Visual 5 (Esquerda) - Camarão
-      {
-        id: 'visual-5',
-        type: 'image',
-      //  imageUrl: 'https://images.unsplash.com/photo-1535400255456-984241443b29?q=80&w=1000&auto=format&fit=crop',
-        imageUrl: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg',
-        imageCaption: 'Porção de Camarão',
-      },
-      // 10: Conteúdo 5 (Direita) - PORÇÕES
-      {
-        id: 'p5',
-        type: 'content',
-        sections: [
-          {
-            title: 'Porções',
-            icon: <Utensils />,
-            items: [
-              { name: 'Batata Frita', price: '15,00', description: '200 gramas' },
-              { name: 'Batata Frita', price: '20,00', description: '400 gramas' },
-              { name: 'Camarão', price: '40,00', description: '250 gramas' },
-              { name: 'Camarão', price: '55,00', description: '500 gramas' },
-              { name: 'Isca de Peixe', price: '45,00', description: '500 gramas' },
-              { name: 'Calabresa Acebolada', price: '18,00', description: '400 gramas' },
-            ]
-          }
-        ]
-      },
-
-      // 11: Visual 6 (Esquerda) - Pratos
-      {
-        id: 'visual-6',
-        type: 'image',
-        imageUrl: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80',
-        imageCaption: 'Pratos'
-      },
-
-      // 12: Conteúdo 6 (Direita) - LANCHES E EXTRAS
-      {
-        id: 'p6',
-        type: 'content',
-        sections: [
-           {
-            title: 'Lanches',
-            icon: <Utensils />,
-            items: [
-              { name: 'Misto Quente', price: '7,00' },
-              { name: 'Misto Frio', price: '10,00' },
-               { name: 'Queijo Quente', price: '10,00' },
-            ]
-          },
-          {
-            title: 'Pratos Extras',
-            icon: <Utensils />,
-            items: [
-               { name: 'Omelete', price: '4,00' },
-              { name: 'Omelete com Queijo', price: '5,00' },
-               { name: 'Ovo cozido', price: '2,00' },
-              { name: 'Ovo Frito', price: '3,00' },
-               { name: 'Filé de Frango', price: '5,00' },
-              { name: 'Bife Grelhado', price: '9,00' },
-            ]
-          }
-        ]
-      },
-
-      // 13: CONTRACAPA
-      {
-        id: 'back',
-        type: 'back',
-        title: 'Volte Sempre',
-        footer: 'Obrigado pela preferência'
-      }
+      { id: 'cover', type: 'cover', title: 'MENU', footer: 'Bem-vindo' },
+      { id: 'visual-1', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Alegria Brasileira' },
+      { id: 'p1', type: 'content', sections: [
+        { title: 'Doses', icon: GlassWater, items: [ {name:'Pinga 51',price:'4,00'},{name:'Velho Barreiro',price:'4,00'},{name:'Sagatiba',price:'5,00'},{name:'Saquê',price:'6,00'},{name:'Vodka (Caipiroska)',price:'5,00'},{name:'Campari',price:'7,00'} ]},
+        { title: 'Caipirinhas', icon: Martini, items: [ {name:'Pinga 51',price:'20,00'},{name:'Velho Barreiro',price:'15,00'},{name:'Sagatiba',price:'25,00'},{name:'Saquê',price:'18,00'},{name:'Vodka (Caipiroska)',price:'25,00'} ]},
+        { title: 'Cervejas', icon: Beer, items: [ {name:'Skol',price:'7,00'},{name:'Brahma',price:'7,00'},{name:'Brahma Malzbier',price:'9,00'},{name:'Heineken',price:'10,00'},{name:'Heineken sem ácool',price:'10,00'} ]}
+      ]},
+      { id: 'visual-2', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Vinho' },
+      { id: 'p2', type: 'content', sections: [
+        { title: 'Chopp', icon: Beer, items: [ {name:'Chopp Claro',price:'9,00',description:'330ML'},{name:'Chopp Claro',price:'13,50',description:'500ML'},{name:'Chopp Escuro',price:'30,00',description:'Garrafa 1L'} ]},
+        { title: 'Vinhos', icon: Wine, items: [ {name:'Vinho Tinto Seco',price:'8,00'},{name:'Vinho Tinto Suave',price:'8,00'},{name:'Concha y Toro Tinto Meio Seco',price:'50,00'},{name:'Periquita Tinto Meio Seco',price:'90,00'},{name:'Santa Helena Chardonay',price:'52,00'} ]}
+      ]},
+      { id: 'visual-3', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Refrescância' },
+      { id: 'p3', type: 'content', sections: [
+        { title: 'Batidas', icon: Martini, items:[ {name:'Pinga 51',price:'20,00'},{name:'Velho Barreiro',price:'20,00'},{name:'Sagatiba',price:'25,00'},{name:'Saque',price:'20,00'},{name:'Vodka (Caipiroska)',price:'25,00'},{name:'Eespanhola (Morango)',price:'18,00'} ]},
+        { title: 'Bebidas não alcoólicas', icon: GlassWater, items:[ {name:'Água com gás',price:'5,00'},{name:'Àgua sem gás',price:'5,00'},{name:'Coca-cola',price:'7,00'},{name:'Coca-cola zero',price:'7,00'},{name:'Guaraná',price:'6,00'},{name:'Guaraná zero',price:'6,00'},{name:'Schweppes',price:'7,00'},{name:'Água tônica',price:'6,00'},{name:'Água tônica zero',price:'6,00'},{name:'H2O Limão',price:'7,00'},{name:'Pacote de Gelo (3kg)',price:'6,00'} ]}
+      ]},
+      { id: 'visual-4', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Natural' },
+      { id: 'p4', type: 'content', sections: [
+        { title:'Suco Natural', icon: GlassWater, items:[ {name:'Suco de Laranja',price:'10,00'},{name:'Suco de Limão',price:'10,00'},{name:'Suco de Melancia',price:'10,00'},{name:'Suco de Laranja',price:'18,00',description:'Jarra'},{name:'Suco de Melancia',price:'18,00',description:'Jarra'},{name:'Suco de Limão',price:'18,00',description:'Jarra'} ]},
+        { title:'Sucos (Outros)', icon: GlassWater, items:[ {name:'Suco de Uva',price:'15,00',description:'Integral – Copo'},{name:'Suco de Uva',price:'8,00',description:'Del Valle – Lata'},{name:'Suco de Pêssego',price:'8,00',description:'Del Valle – Lata'} ]},
+        { title:'Especiais', icon: Coffee, items:[ {name:'Copo de Leite Longo',price:'5,00'},{name:'Café Expresso Pequeno',price:'5,00'},{name:'Espanhola Sem Álcool',price:'8,00',description:'Drink'},{name:'Especial Peruíbe II',price:'8,00',description:'Drink sem álcool'} ]}
+      ]},
+      { id: 'visual-5', type:'image', imageUrl:'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', imageCaption:'Porção de Camarão' },
+      { id:'p5', type:'content', sections:[{title:'Porções', icon:Utensils, items:[{name:'Batata Frita',price:'15,00',description:'200 gramas'},{name:'Batata Frita',price:'20,00',description:'400 gramas'},{name:'Camarão',price:'40,00',description:'250 gramas'},{name:'Camarão',price:'55,00',description:'500 gramas'},{name:'Isca de Peixe',price:'45,00',description:'500 gramas'},{name:'Calabresa Acebolada',price:'18,00',description:'400 gramas'}]}]},
+      { id:'visual-6', type:'image', imageUrl:'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', imageCaption:'Pratos' },
+      { id:'p6', type:'content', sections:[{title:'Lanches', icon:Utensils, items:[{name:'Misto Quente',price:'7,00'},{name:'Misto Frio',price:'10,00'},{name:'Queijo Quente',price:'10,00'}]},{title:'Pratos Extras', icon:Utensils, items:[{name:'Omelete',price:'4,00'},{name:'Omelete com Queijo',price:'5,00'},{name:'Ovo cozido',price:'2,00'},{name:'Ovo Frito',price:'3,00'},{name:'Filé de Frango',price:'5,00'},{name:'Bife Grelhado',price:'9,00'}]}]},
+      { id:'back', type:'back', title:'Volte Sempre', footer:'Obrigado pela preferência' }
     ];
-  </script>   
+
+    // --- RENDER FUNCTIONS ---
+    const h = React.createElement;
+
+    function MenuContent({ page, pageIndex }) {
+      if (!page || page.type === 'cover' || page.type === 'back') return null;
+
+      const PageNumber = ({ isImage=false }) => {
+        const textColor = isImage ? 'text-white' : 'text-gray-800';
+        const numColor = isImage ? 'text-gold' : 'text-gold-dark';
+        return h('div', { className: `absolute bottom-[0.5rem] sm:bottom-[1rem] left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-[0.5rem] font-serif font-bold text-[0.75rem] sm:text-[1rem] tracking-[0.2em] w-full pointer-events-none` },
+          h('span', { className: `${numColor} opacity-70 text-[0.625rem] sm:text-[0.75rem]` }, '—'),
+          h('span', { className:textColor }, pageIndex),
+          h('span', { className: `${numColor} opacity-70 text-[0.625rem] sm:text-[0.75rem]` }, '—')
+        );
+      };
+
+      if (page.type==='image') {
+        return h('div', { className:'h-full w-full relative overflow-hidden group bg-zinc-900' },
+          h('div',{className:'absolute inset-0 bg-cover bg-center transition-transform duration-[3500ms] ease-in-out group-hover:scale-110', style:{backgroundImage:`url(${page.imageUrl})`}}),
+          h('div',{className:'absolute inset-0 bg-black/30 bg-gradient-to-t from-black/90 via-transparent to-transparent'}),
+          page.imageCaption && h('div',{className:'absolute bottom-[2rem] sm:bottom-[3.5rem] left-0 right-0 text-center px-[1rem]'},
+            h('h3',{className:'font-serif text-[1rem] sm:text-[2rem] text-paper tracking-wider sm:tracking-widest uppercase opacity-90 drop-shadow-md px-2 leading-relaxed'}, page.imageCaption),
+            h('div',{className:'w-[4rem] h-[0.125rem] bg-gold mx-auto mt-[0.5rem] shadow-[0_0_0.625rem_rgba(197,160,89,0.8)]'})
+          ),
+          h(PageNumber,{isImage:true})
+        );
+      }
+
+      return h('div',{className:'h-full flex flex-col px-[0.5rem] sm:px-[2rem] py-[1rem] sm:py-[1.25rem] text-gray-800 relative z-10'},
+        h('div',{className:'flex-grow space-y-[0.5rem] sm:space-y-[1rem] overflow-y-auto custom-scrollbar pr-[0.1rem] sm:pr-[1rem]'},
+          page.sections.map((section, idx) =>
+            h('div',{key:idx,className:'space-y-[0.35rem] sm:space-y-[0.75rem]'},
+              h('div',{className:'flex items-center gap-[0.35rem] sm:gap-[0.75rem] border-b border-gold-dark/30 pb-[0.25rem] sm:pb-[0.5rem] mb-[0.5rem] sm:mb-[0.75rem]'},
+                h('span',{className:'text-gold-dark bg-paper-aged p-[0.25rem] rounded-full border border-gold/30 shadow-sm shrink-0'},
+                  h(section.icon,{className:'w-[0.85rem] h-[0.85rem] sm:w-[1.25rem] sm:h-[1.25rem]'})
+                ),
+                h('h3',{className:'flex-1 min-w-0 font-serif text-[0.75rem] sm:text-[1.25rem] font-bold text-gray-900 tracking-tight uppercase drop-shadow-sm leading-tight'},section.title)
+              ),
+              h('ul',{className:'space-y-[0.35rem] sm:space-y-[0.5rem]'},
+                section.items.map((item,i)=>
+                  h('li',{key:i,className:'flex justify-between items-baseline text-[0.75rem] sm:text-[1rem] group'},
+                    h('div',{className:'flex flex-col relative pr-[0.25rem]'},
+                      h('span',{className:'font-semibold text-gray-900 transition-colors group-hover:text-gold-dark leading-tight'},item.name),
+                      item.description && h('span',{className:'text-[0.65rem] sm:text-[0.75rem] text-gray-600 italic font-medium mt-[0.1rem] transform origin-left sm:scale-100 leading-tight'},item.description)
+                    ),
+                    h('div',{className:'flex-grow mx-[0.15rem] sm:mx-[0.5rem] border-b border-dotted border-gray-400 opacity-40 relative top-[-0.2rem] min-w-[0.25rem] sm:min-w-[1.25rem]'}),
+                    h('span',{className:'font-serif font-bold text-gray-900 whitespace-nowrap bg-paper/50 pl-[0.15rem] rounded text-[0.75rem] sm:text-[1rem]'},`R$ ${item.price}`)
+                  )
+                )
+              )
+            )
+          )
+        ),
+        page.footer && h('div',{className:'mt-auto pt-[0.5rem] sm:pt-[0.75rem] border-t border-gold/20 flex flex-col items-center justify-center relative mb-[0.5rem] sm:mb-[1rem]'},
+          h('span',{className:'font-serif text-[0.6rem] sm:text-[0.625rem] text-gold-dark/70 tracking-wide uppercase text-center px-1'},page.footer)
+        ),
+        h(PageNumber,null)
+      );
+    }
+
+    function MenuBook() {
+      const [currentSheetIndex, setCurrentSheetIndex] = useState(0);
+      const totalSheets = Math.ceil(MENU_PAGES.length / 2);
+
+      const handleNext = ()=>{ if(currentSheetIndex<totalSheets)setCurrentSheetIndex(prev=>prev+1) };
+      const handlePrev = ()=>{ if(currentSheetIndex>0)setCurrentSheetIndex(prev=>prev-1) };
+
+      useEffect(()=>{
+        const handleKeyDown=e=>{ if(e.key==='ArrowRight')handleNext(); if(e.key==='ArrowLeft')handlePrev() };
+        window.addEventListener('keydown',handleKeyDown);
+        return ()=>window.removeEventListener('keydown',handleKeyDown);
+      },[currentSheetIndex]);
+
+      const [aspectRatio,setAspectRatio]=useState('0.95/1');
+      useEffect(()=>{
+        const updateRatio=()=>setAspectRatio(window.innerWidth<640?'0.95/1':'2.1/1');
+        updateRatio();
+        window.addEventListener('resize',updateRatio);
+        return ()=>window.removeEventListener('resize',updateRatio);
+      },[]);
+
+      const getZIndex=index=>index<currentSheetIndex?50+index:totalSheets-index;
+
+      return h('div',{className:'relative w-[90%] sm:w-full max-w-md sm:max-w-5xl perspective-3000 mx-auto flex justify-center items-center', style:{aspectRatio}},
+        h('div',{className:'absolute inset-0 z-50 flex justify-between pointer-events-none sm:pointer-events-auto'},
+          h('div',{onClick:handlePrev,className:'w-1/4 h-full pointer-events-auto sm:hidden'}),
+          h('div',{onClick:handleNext,className:'w-1/4 h-full pointer-events-auto sm:hidden'})
+        ),
+        MENU_PAGES.reduce((acc,page,index)=>{
+          if(index%2===0){
+            const left=page,right=MENU_PAGES[index+1];
+            acc.push(
+              h('div',{key:index,className:'absolute w-full h-full origin-left transform-gpu transition-transform duration-[1500ms] ease-in-out', style:{zIndex:getZIndex(index), transform: `rotateY(${currentSheetIndex>index/2?180:0}deg)`}},
+                h('div',{className:'w-1/2 h-full absolute left-0 top-0 bg-paper shadow-page-left backface-hidden overflow-hidden'},h(MenuContent,{page:left,pageIndex:index+1})),
+                right && h('div',{className:'w-1/2 h-full absolute right-0 top-0 bg-paper shadow-page-right backface-hidden overflow-hidden rotate-y-180'},h(MenuContent,{page:right,pageIndex:index+2}))
+              )
+            )
+          }
+          return acc;
+        },[])
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(h(MenuBook));
+  </script>
+
+  <style>
+    html,body,#root{height:100%;margin:0;padding:0;overflow-x:hidden;background-color:#1a1110;}
+    .perspective-3000{perspective:3000px;}
+    .backface-hidden{backface-visibility:hidden;}
+    .rotate-y-180{transform:rotateY(180deg);}
+    .custom-scrollbar::-webkit-scrollbar{width:0.4rem;height:0.4rem;}
+    .custom-scrollbar::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,0.2);border-radius:0.25rem;}
+  </style>
+</head>
+<body>
+  <div id="root" class="h-full w-full flex justify-center items-center"></div>
 </body>
 </html>
