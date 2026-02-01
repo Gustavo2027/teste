@@ -51,10 +51,6 @@
       width: 6px;
     }
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: var(--gold);
       border-radius: 3px;
@@ -107,24 +103,23 @@
     .menu-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
       width: 100%;
-      flex-wrap: nowrap;
       gap: 6px;
     }
     .item-dots {
       flex-grow: 1;
       border-bottom: 2px dotted rgba(0, 0, 0, 0.1);
-      min-width: 5px;
+      min-width: 10px;
       margin-bottom: 3px;
     }
 
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 120px;
+      width: 100px;
       height: 100%;
-      z-index: 4000;
+      z-index: 5000;
       cursor: pointer;
     }
     .flip-zone-right { right: 0; }
@@ -134,7 +129,7 @@
 
     @media (max-width: 600px) {
       #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 80px; }
+      .flip-zone { width: 70px; }
     }
   </style>
 <script type="importmap">
@@ -171,8 +166,9 @@
   <script>
     const MENU_DATA = [
       { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
-      // Folha 1
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Doses e Caipirinhas' },
+      // LADO ESQUERDO 1: Imagem
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas Geladas' },
+      // LADO DIREITO 1: Conteúdo
       { 
         type: 'content', 
         sections: [
@@ -193,14 +189,7 @@
               { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' },
               { n: 'Vodka (Caipiroska)', p: '25,00' }
             ]
-          }
-        ]
-      },
-      // Folha 2
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Cervejas e Chopp' },
-      { 
-        type: 'content', 
-        sections: [
+          },
           {
             title: 'Cervejas',
             icon: 'beer',
@@ -209,7 +198,15 @@
               { n: 'Brahma Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' },
               { n: 'Heineken sem álcool', p: '10,00' }
             ]
-          },
+          }
+        ]
+      },
+      // LADO ESQUERDO 2: Imagem
+      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos & Momentos' },
+      // LADO DIREITO 2: Conteúdo
+      { 
+        type: 'content', 
+        sections: [
           {
             title: 'Chopp',
             icon: 'beer',
@@ -218,14 +215,7 @@
               { n: 'Chopp Claro', p: '13,50', d: '500ml' },
               { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' }
             ]
-          }
-        ]
-      },
-      // Folha 3
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos e Batidas' },
-      { 
-        type: 'content', 
-        sections: [
+          },
           {
             title: 'Vinhos',
             icon: 'wine',
@@ -247,8 +237,9 @@
           }
         ]
       },
-      // Folha 4
-      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Bebidas não Alcoólicas' },
+      // LADO ESQUERDO 3: Imagem
+      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Refresco Gelado' },
+      // LADO DIREITO 3: Conteúdo
       { 
         type: 'content', 
         sections: [
@@ -266,8 +257,9 @@
           }
         ]
       },
-      // Folha 5
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Sucos Naturais' },
+      // LADO ESQUERDO 4: Imagem
+      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Energia Natural' },
+      // LADO DIREITO 4: Conteúdo
       { 
         type: 'content', 
         sections: [
@@ -290,14 +282,7 @@
               { n: 'Suco de Uva', p: '8,00', d: 'Del Valle – Lata' },
               { n: 'Suco de Pêssego', p: '8,00', d: 'Del Valle – Lata' }
             ]
-          }
-        ]
-      },
-      // Folha 6
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções e Especiais' },
-      { 
-        type: 'content', 
-        sections: [
+          },
           {
             title: 'Especiais',
             icon: 'coffee',
@@ -306,7 +291,15 @@
               { n: 'Espanhola Sem Álcool', p: '8,00', d: 'Drink' },
               { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' }
             ]
-          },
+          }
+        ]
+      },
+      // LADO ESQUERDO 5: Imagem
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos Deliciosos' },
+      // LADO DIREITO 5: Conteúdo
+      { 
+        type: 'content', 
+        sections: [
           {
             title: 'Porções',
             icon: 'utensils',
@@ -315,14 +308,7 @@
               { n: 'Camarão', p: '40,00', d: '250g' }, { n: 'Camarão', p: '55,00', d: '500g' },
               { n: 'Isca de Peixe', p: '45,00', d: '500g' }, { n: 'Calabresa Acebolada', p: '18,00', d: '400g' }
             ]
-          }
-        ]
-      },
-      // Folha 7
-      { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800', caption: 'Lanches e Extras' },
-      { 
-        type: 'content', 
-        sections: [
+          },
           {
             title: 'Lanches',
             icon: 'utensils',
@@ -357,7 +343,7 @@
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente (Visível quando a página está à direita)
+        // Frente (Lado direito do livro quando aberto)
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
@@ -368,23 +354,23 @@
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso (Visível quando a página está à esquerda após virar)
+        // Verso (Lado esquerdo do livro quando aberto)
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
         back.style.transform = 'rotateY(180deg)';
-        back.style.pointerEvents = 'none'; // Inicialmente desativado (atrás do front)
+        back.style.pointerEvents = 'none'; 
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
-        // Zona de clique para voltar (no verso rotacionado, a borda externa é flip-zone-right no HTML)
-        const flipBack = document.createElement('div');
-        flipBack.className = 'flip-zone flip-zone-right'; // Visualmente à esquerda da tela quando aberto
-        flipBack.style.zIndex = "5000";
-        flipBack.onclick = (e) => { 
+        // Zona de clique para voltar (no verso rotacionado, a borda externa esquerda visual é a borda esquerda do div)
+        const flipL = document.createElement('div');
+        flipL.className = 'flip-zone flip-zone-left'; 
+        flipL.style.zIndex = "6000";
+        flipL.onclick = (e) => { 
           e.stopPropagation(); 
           prevPage(); 
         };
-        back.appendChild(flipBack);
+        back.appendChild(flipL);
 
         sheet.appendChild(front);
         sheet.appendChild(back);
@@ -400,10 +386,8 @@
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
         const isBack = data.type === 'back';
         
-        // Ajuste de fontes para a contra-capa não cortar
-        const titleSize = isBack ? 'text-2xl sm:text-4xl' : 'text-3xl sm:text-5xl';
-        const subtitleSize = isBack ? 'text-[12px] sm:text-sm' : 'text-xs sm:text-sm';
-        const subtitleClass = isBack ? 'max-w-[80%] mx-auto' : 'whitespace-nowrap';
+        const titleSize = isBack ? 'text-3xl sm:text-5xl' : 'text-3xl sm:text-5xl';
+        const subtitleSize = isBack ? 'text-[14px] sm:text-[18px]' : 'text-xs sm:text-sm';
 
         return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-4 py-10 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
@@ -411,7 +395,7 @@
                     <i data-lucide="${icon}" class="w-16 h-16 mb-6"></i>
                     <h1 class="font-serif ${titleSize} font-bold uppercase mb-4 w-full leading-tight text-center">${data.title}</h1>
                     <div class="w-16 h-1 bg-[#c5a059] mb-8"></div>
-                    <p class="font-serif ${subtitleSize} opacity-80 uppercase tracking-[0.2em] ${subtitleClass}">${data.subtitle}</p>
+                    <p class="font-serif ${subtitleSize} opacity-90 uppercase tracking-[0.15em] px-2 leading-relaxed">${data.subtitle}</p>
                   </div>
                 </div>`;
       }
@@ -428,17 +412,17 @@
       
       const sectionsHtml = data.sections.map(s => `
         <div class="mb-8">
-          <h3 class="font-serif text-[12px] font-bold text-gray-500 mb-4 border-b border-[#c5a059]/40 pb-1 flex items-center gap-2 uppercase tracking-wider">
+          <h3 class="font-serif text-[13px] font-bold text-gray-500 mb-4 border-b border-[#c5a059]/40 pb-1 flex items-center gap-2 uppercase tracking-wider">
             <i data-lucide="${s.icon}" class="w-4 h-4 text-[#3d241f]"></i> ${s.title}
           </h3>
           ${s.items.map(item => `
             <div class="mb-4">
               <div class="menu-item">
-                <span class="font-bold text-gray-800 text-[12px] sm:text-[14px] whitespace-nowrap truncate overflow-hidden max-w-[65%]">${item.n}</span>
+                <span class="font-bold text-gray-800 text-[12px] sm:text-[14px] leading-tight flex-1 pr-1">${item.n}</span>
                 <div class="item-dots"></div>
                 <span class="font-serif font-bold text-gray-900 text-[12px] sm:text-[14px] whitespace-nowrap flex-shrink-0">R$ ${item.p}</span>
               </div>
-              ${item.d ? `<div class="text-[10px] text-gray-500 italic mt-[-2px] opacity-80">${item.d}</div>` : ''}
+              ${item.d ? `<div class="text-[10px] text-gray-500 italic mt-[-1px] opacity-80">${item.d}</div>` : ''}
             </div>
           `).join('')}
         </div>
@@ -457,7 +441,6 @@
         const sheet = sheets[currentSheet];
         sheet.classList.add('flipped');
         
-        // Ativa os cliques no verso da página que acabou de virar
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'none';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'auto';
         
@@ -473,7 +456,6 @@
         const sheet = sheets[currentSheet];
         sheet.classList.remove('flipped');
         
-        // Desativa os cliques no verso e reativa na frente
         document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'auto';
         document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'none';
         
