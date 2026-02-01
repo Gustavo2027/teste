@@ -36,7 +36,7 @@
       justify-content: center;
     }
 
-    /* BARRA DE ROLAGEM DOURADA E LARGA PARA O DEDO */
+    /* BARRA DE ROLAGEM DOURADA E LARGA */
     .custom-scrollbar {
       overflow-y: scroll !important;
       -webkit-overflow-scrolling: touch !important;
@@ -122,10 +122,11 @@
       margin: 0 8px;
     }
 
+    /* ZONAS DE CLIQUE */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 45px;
+      width: 50px;
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -137,7 +138,7 @@
 
     @media (max-width: 600px) {
       #book-container { width: 95%; height: 85%; }
-      .flip-zone { width: 35px; }
+      .flip-zone { width: 40px; }
     }
   </style>
 <script type="importmap">
@@ -222,7 +223,7 @@
         sheet.className = 'sheet transform-style-3d';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
-        // Frente
+        // Frente (Front)
         const front = document.createElement('div');
         front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg';
         front.innerHTML = renderPage(MENU_DATA[i], i);
@@ -232,14 +233,15 @@
         flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
         front.appendChild(flipR);
 
-        // Verso
+        // Verso (Back)
         const back = document.createElement('div');
         back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg';
         back.style.transform = 'rotateY(180deg)';
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1], i+1) : '<div class="h-full bg-[#3d241f]"></div>';
         
+        // No verso, devido à rotação de 180°, a borda externa visual (esquerda do livro) é o 'right' do elemento
         const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-left';
+        flipL.className = 'flip-zone flip-zone-right'; 
         flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
         back.appendChild(flipL);
 
@@ -255,11 +257,12 @@
     function renderPage(data, index) {
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
-        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] p-6 text-center relative overflow-hidden">
+        const titleClass = data.type === 'back' ? 'text-2xl sm:text-3xl' : 'text-3xl';
+        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-8 py-6 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center">
+                  <div class="relative z-10 flex flex-col items-center w-full">
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
-                    <h1 class="font-serif text-3xl font-bold uppercase mb-4 tracking-widest">${data.title}</h1>
+                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 tracking-widest w-full">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
                     <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em]">${data.subtitle}</p>
                   </div>
@@ -326,7 +329,9 @@
 
     window.addEventListener('resize', () => {
       const cont = document.getElementById('book-container');
-      cont.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2.1/1";
+      if (cont) {
+        cont.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2.1/1";
+      }
     });
     
     window.dispatchEvent(new Event('resize'));
