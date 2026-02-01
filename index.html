@@ -1,14 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cardápio Bar</title>
-
-  <link rel="stylesheet" href="index.css">
+  <title>Cardápio Digital - AFPESP Peruíbe II</title>
   
-  <!-- Tailwind -->
+  <!-- Estilos Externos -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
   <script>
     tailwind.config = {
       theme: {
@@ -29,154 +32,241 @@
             'page-left': 'inset -1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5)',
             'page-right': 'inset 1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5)',
           },
-          transitionDuration: { '1500': '1500ms' }
         }
       }
     }
   </script>
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    .perspective-3000 { perspective: 3000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(-180deg); }
+    .rotate-y-0 { transform: rotateY(0deg); }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #c5a059; border-radius: 10px; }
 
-  <!-- React + Babel -->
+    .bg-texture-paper { background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png"); }
+    .bg-texture-leather { background-image: url("https://www.transparenttextures.com/patterns/leather.png"); }
+    
+    body { background-color: #1a1110; margin: 0; overflow-x: hidden; }
+    #root { min-height: 100vh; display: flex; flex-direction: column; }
+  </style>
+
+  <!-- Import Map para React e Lucide via ESM -->
   <script type="importmap">
-  {
-    "imports": {
-      "react": "https://esm.sh/react@18.2.0",
-      "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-      "lucide-react": "https://esm.sh/lucide-react@0.344.0"
-    }
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
-  </script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-</head>
-
-<body class="bg-[#1a1110] text-gray-100 overflow-hidden overscroll-none">
-
-<header class="top-bar">
-  <div class="logo-area">
-    <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" class="logo">
-  </div>
-  <span class="site-name">AFPESP Peruíbe II</span>
-</header>
-
-<section class="title-bar">
-  <h1>Cardápio Bar - AFPESP Peruíbe II</h1>
-</section>
-
-<div id="root"></div>
-
-<script type="text/babel" data-type="module">
-import React, { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
-import * as LucideIcons from "lucide-react";
-
-// --- MENU DATA ---
-// Ícones são guardados como string, vamos mapear no render
-const MENU_PAGES = [
-  { id: "cover", type: "cover", title: "MENU", footer: "Bem-vindo" },
-  
-  { id: "visual-1", type: "image", imageUrl: "https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop", imageCaption: "Alegria Brasileira" },
-
-  { id: "p1", type: "content", sections: [
-    { title: "Doses", icon: "GlassWater", items: [
-      { name: "Pinga 51", price: "4,00" }, { name: "Velho Barreiro", price: "4,00" },
-      { name: "Sagatiba", price: "5,00" }, { name: "Saquê", price: "6,00" },
-      { name: "Vodka (Caipiroska)", price: "5,00" }, { name: "Campari", price: "7,00" }
-    ]},
-    { title: "Caipirinhas", icon: "Martini", items: [
-      { name: "Pinga 51", price: "20,00" }, { name: "Velho Barreiro", price: "15,00" },
-      { name: "Sagatiba", price: "25,00" }, { name: "Saquê", price: "18,00" },
-      { name: "Vodka (Caipiroska)", price: "25,00" }
-    ]},
-    { title: "Cervejas", icon: "Beer", items: [
-      { name: "Skol", price: "7,00" }, { name: "Brahma", price: "7,00" },
-      { name: "Brahma Malzbier", price: "9,00" }, { name: "Heineken", price: "10,00" },
-      { name: "Heineken sem ácool", price: "10,00" }
-    ]}
-  ]},
-
-  { id: "visual-2", type: "image", imageUrl: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop", imageCaption: "Vinho" },
-
-  { id: "p2", type: "content", sections: [
-    { title: "Chopp", icon: "Beer", items: [
-      { name: "Chopp Claro", price: "9,00", description: "330ML" },
-      { name: "Chopp Claro", price: "13,50", description: "500ML" },
-      { name: "Chopp Escuro", price: "30,00", description: "Garrafa 1L" }
-    ]},
-    { title: "Vinhos", icon: "Wine", items: [
-      { name: "Vinho Tinto Seco", price: "8,00" },
-      { name: "Vinho Tinto Suave", price: "8,00" },
-      { name: "Concha y Toro Tinto Meio Seco", price: "50,00" },
-      { name: "Periquita Tinto Meio Seco", price: "90,00" },
-      { name: "Santa Helena Chardonay", price: "52,00" }
-    ]}
-  ]},
-
-  // --- Continue todas as páginas do seu cardápio exatamente igual ---
-];
-
-// --- COMPONENT --- 
-const MenuContent = ({ page, pageIndex }) => {
-  if (!page.sections) return null;
-
-  const PageNumber = ({ isImage=false }) => (
-    <div className={`absolute bottom-1 left-1/2 -translate-x-1/2 text-center z-30`}>
-      <span className={`${isImage ? "text-gold" : "text-gold-dark"}`}>{pageIndex}</span>
-    </div>
-  );
-
-  return (
-    <div className="h-full flex flex-col px-2 py-2 text-gray-800 relative z-10">
-      <div className="flex-grow space-y-2 overflow-y-auto pr-1">
-        {page.sections.map((section, idx) => {
-          const IconComp = LucideIcons[section.icon];
-          return (
-            <div key={idx} className="space-y-1">
-              <div className="flex items-center gap-2 border-b border-gold-dark/30 pb-1 mb-2">
-                <span className="text-gold-dark bg-paper-aged p-1 rounded-full border border-gold/30 shadow-sm shrink-0">
-                  {IconComp && <IconComp className="w-5 h-5"/>}
-                </span>
-                <h3 className="font-serif font-bold text-gray-900 uppercase">{section.title}</h3>
-              </div>
-              <ul>
-                {section.items.map((item, iidx) => (
-                  <li key={iidx} className="flex justify-between items-baseline text-sm sm:text-base group">
-                    <span className="font-semibold text-gray-900">{item.name}</span>
-                    {item.description && <span className="text-xs text-gray-600 italic">{item.description}</span>}
-                    <span className="font-serif font-bold text-gray-900">R$ {item.price}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-        })}
-      </div>
-      <PageNumber />
-    </div>
-  );
-};
-
-// --- APP ---
-const App = () => {
-  return (
-    <div className="w-full h-full">
-      {MENU_PAGES.map((page, idx) => (
-        <div key={page.id} className="border rounded mb-4 p-2 bg-paper">
-          <h2 className="font-serif text-lg mb-2">{page.type === "image" ? page.imageCaption : page.title}</h2>
-          <MenuContent page={page} pageIndex={idx} />
-        </div>
-      ))}
-    </div>
-  )
 }
-
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(<App />);
 </script>
+</head>
+<body>
+  <div id="root"></div>
 
+  <script type="module">
+    import React, { useState, useEffect, useCallback, useMemo } from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { Wine, Beer, Martini, GlassWater, Utensils, Coffee, ArrowLeft, ArrowRight, ChefHat, Info } from 'lucide-react';
+
+    // --- DADOS DO CARDÁPIO ---
+    const MENU_PAGES = [
+      { id: 'cover', type: 'cover', title: 'MENU', footer: 'Bem-vindo' },
+      { id: 'v1', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Alegria Brasileira' },
+      { id: 'p1', type: 'content', sections: [
+          { title: 'Doses', icon: React.createElement(GlassWater), items: [
+              { name: 'Pinga 51', price: '4,00' },
+              { name: 'Velho Barreiro', price: '4,00' },
+              { name: 'Sagatiba', price: '5,00' },
+              { name: 'Vodka', price: '5,00' },
+              { name: 'Campari', price: '7,00' },
+            ]},
+          { title: 'Cervejas', icon: React.createElement(Beer), items: [
+              { name: 'Skol / Brahma', price: '7,00' },
+              { name: 'Heineken', price: '10,00' },
+              { name: 'Heineken 0.0', price: '10,00' },
+            ]}
+      ]},
+      { id: 'v2', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Vinhos & Chopp' },
+      { id: 'p2', type: 'content', sections: [
+          { title: 'Chopp', icon: React.createElement(Beer), items: [
+              { name: 'Chopp Claro 330ml', price: '9,00' },
+              { name: 'Chopp Claro 500ml', price: '13,50' },
+              { name: 'Chopp Escuro 1L', price: '30,00' },
+            ]},
+          { title: 'Vinhos', icon: React.createElement(Wine), items: [
+              { name: 'Taça Tinto Suave/Seco', price: '8,00' },
+              { name: 'Concha y Toro (Garrafa)', price: '50,00' },
+              { name: 'Periquita (Garrafa)', price: '90,00' },
+            ]}
+      ]},
+      { id: 'v3', type: 'image', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop', imageCaption: 'Refrescos' },
+      { id: 'p3', type: 'content', sections: [
+          { title: 'Não Alcoólicos', icon: React.createElement(GlassWater), items: [
+              { name: 'Água com/sem gás', price: '5,00' },
+              { name: 'Refrigerante Lata', price: '7,00' },
+              { name: 'H2O Limão', price: '7,00' },
+            ]},
+          { title: 'Sucos Naturais', icon: React.createElement(GlassWater), items: [
+              { name: 'Laranja / Limão', price: '10,00' },
+              { name: 'Melancia', price: '10,00' },
+              { name: 'Jarra de Suco', price: '18,00' },
+            ]}
+      ]},
+      { id: 'v4', type: 'image', imageUrl: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', imageCaption: 'Nossas Porções' },
+      { id: 'p4', type: 'content', sections: [
+          { title: 'Porções', icon: React.createElement(Utensils), items: [
+              { name: 'Batata Frita 200g', price: '15,00' },
+              { name: 'Batata Frita 400g', price: '20,00' },
+              { name: 'Camarão 250g', price: '40,00' },
+              { name: 'Camarão 500g', price: '55,00' },
+              { name: 'Isca de Peixe 500g', price: '45,00' },
+              { name: 'Calabresa Acebolada', price: '18,00' },
+            ]}
+      ]},
+      { id: 'back', type: 'back', title: 'Volte Sempre', footer: 'AFPESP Peruíbe II' }
+    ];
+
+    // --- COMPONENTE DE CONTEÚDO DA PÁGINA ---
+    const MenuContent = ({ page, pageIndex }) => {
+      if (page.type === 'cover' || page.type === 'back') return null;
+
+      const PageNumber = ({ isImage = false }) => (
+        <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 font-serif font-bold text-[10px] sm:text-xs tracking-widest pointer-events-none ${isImage ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
+          <span className="text-gold">/</span> {pageIndex} <span className="text-gold">/</span>
+        </div>
+      );
+
+      if (page.type === 'image') {
+        return React.createElement('div', { className: "h-full w-full relative overflow-hidden bg-zinc-900" }, [
+          React.createElement('div', { 
+            key: 'bg',
+            className: "absolute inset-0 bg-cover bg-center",
+            style: { backgroundImage: `url(${page.imageUrl})` }
+          }),
+          React.createElement('div', { key: 'overlay', className: "absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-transparent to-transparent" }),
+          page.imageCaption && React.createElement('div', { key: 'caption', className: "absolute bottom-10 left-0 right-0 text-center px-4" }, [
+            React.createElement('h3', { className: "font-serif text-lg sm:text-2xl text-paper uppercase tracking-widest drop-shadow-lg" }, page.imageCaption),
+            React.createElement('div', { className: "w-12 h-0.5 bg-gold mx-auto mt-2 shadow-lg" })
+          ]),
+          React.createElement(PageNumber, { key: 'num', isImage: true })
+        ]);
+      }
+
+      return React.createElement('div', { className: "h-full flex flex-col p-4 sm:p-8 text-gray-800 relative z-10" }, [
+        React.createElement('div', { key: 'scroll', className: "flex-grow space-y-4 overflow-y-auto custom-scrollbar pr-2" }, 
+          page.sections.map((section, sIdx) => React.createElement('div', { key: sIdx, className: "space-y-3" }, [
+            React.createElement('div', { className: "flex items-center gap-2 border-b border-gold/30 pb-2 mb-2" }, [
+              React.createElement('span', { className: "text-gold-dark" }, React.cloneElement(section.icon, { size: 18 })),
+              React.createElement('h3', { className: "font-serif text-xs sm:text-base font-bold text-gray-900 tracking-tight uppercase" }, section.title)
+            ]),
+            React.createElement('ul', { className: "space-y-2" }, section.items.map((item, iIdx) => React.createElement('li', { key: iIdx, className: "flex justify-between items-baseline text-xs sm:text-sm" }, [
+              React.createElement('span', { className: "font-semibold text-gray-900" }, item.name),
+              React.createElement('div', { className: "flex-grow mx-2 border-b border-dotted border-gray-400 opacity-30" }),
+              React.createElement('span', { className: "font-serif font-bold text-gray-900" }, `R$ ${item.price}`)
+            ])))
+          ]))
+        ),
+        React.createElement(PageNumber, { key: 'num' })
+      ]);
+    };
+
+    // --- COMPONENTE DO LIVRO 3D ---
+    const MenuBook = () => {
+      const [currentSheet, setCurrentSheet] = useState(0);
+      const totalSheets = Math.ceil(MENU_PAGES.length / 2);
+      const [aspectRatio, setAspectRatio] = useState('0.8/1');
+
+      useEffect(() => {
+        const updateRatio = () => setAspectRatio(window.innerWidth < 640 ? '0.75/1' : '2/1');
+        updateRatio();
+        window.addEventListener('resize', updateRatio);
+        return () => window.removeEventListener('resize', updateRatio);
+      }, []);
+
+      const next = () => currentSheet < totalSheets && setCurrentSheet(s => s + 1);
+      const prev = () => currentSheet > 0 && setCurrentSheet(s => s - 1);
+
+      return React.createElement('div', { className: "relative w-[95%] sm:w-full max-w-4xl perspective-3000 mx-auto", style: { aspectRatio } }, [
+        // Botões Mobile/Desktop
+        React.createElement('button', { key: 'btn-p', onClick: prev, className: "absolute -left-4 sm:-left-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0", disabled: currentSheet === 0 }, React.createElement(ArrowLeft, { size: 32 })),
+        React.createElement('button', { key: 'btn-n', onClick: next, className: "absolute -right-4 sm:-right-16 top-1/2 -translate-y-1/2 z-50 p-2 text-gold disabled:opacity-0", disabled: currentSheet === totalSheets }, React.createElement(ArrowRight, { size: 32 })),
+
+        React.createElement('div', { className: "relative w-full h-full transform-style-3d" }, 
+          Array.from({ length: totalSheets }).map((_, i) => {
+            const flipped = i < currentSheet;
+            const p1 = MENU_PAGES[i * 2];
+            const p2 = MENU_PAGES[i * 2 + 1];
+            
+            return React.createElement('div', {
+              key: i,
+              className: `absolute top-0 w-1/2 h-full transform-style-3d origin-left transition-transform duration-[2000ms] cubic-bezier(0.645, 0.045, 0.355, 1) ${flipped ? 'rotate-y-180' : 'rotate-y-0'}`,
+              style: { zIndex: flipped ? 50 + i : totalSheets - i, left: '50%' },
+              onClick: (e) => { e.stopPropagation(); flipped ? prev() : next(); }
+            }, [
+              // Frente da Folha
+              React.createElement('div', { 
+                className: `absolute inset-0 w-full h-full backface-hidden shadow-page-right border-y-4 border-r-4 border-leather-light overflow-hidden rounded-r-lg ${p1.type === 'cover' ? 'bg-leather' : 'bg-paper'}`,
+                style: { transform: 'translateZ(1px)' }
+              }, [
+                React.createElement('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
+                p1.type === 'cover' ? React.createElement('div', { className: "h-full flex flex-col items-center justify-center p-4 border-4 border-double border-gold/50 m-2 relative bg-texture-leather" }, [
+                  React.createElement(ChefHat, { size: 48, className: "text-gold mb-4" }),
+                  React.createElement('h1', { className: "font-serif text-3xl sm:text-5xl text-gold font-bold tracking-widest text-center" }, "MENU"),
+                  React.createElement('p', { className: "text-gold/70 text-[10px] sm:text-xs tracking-[0.4em] mt-4 uppercase" }, "Bar Peruíbe II"),
+                  React.createElement('div', { className: "absolute bottom-8 animate-bounce text-gold/50 text-[10px]" }, "TOQUE PARA ABRIR")
+                ]) : React.createElement(MenuContent, { page: p1, pageIndex: i * 2 })
+              ]),
+              // Verso da Folha
+              React.createElement('div', { 
+                className: `absolute inset-0 w-full h-full backface-hidden shadow-page-left border-y-4 border-l-4 border-leather-light overflow-hidden rounded-l-lg ${p2 && p2.type === 'back' ? 'bg-leather' : 'bg-paper'}`,
+                style: { transform: 'rotateY(180deg)' }
+              }, [
+                React.createElement('div', { className: "absolute inset-0 opacity-20 bg-texture-paper pointer-events-none" }),
+                p2 ? (p2.type === 'back' ? React.createElement('div', { className: "h-full flex flex-col items-center justify-center p-4 text-gold bg-texture-leather" }, [
+                  React.createElement('h2', { className: "font-serif text-2xl mb-4" }, "Volte Sempre"),
+                  React.createElement(Info, { size: 30, className: "opacity-50" })
+                ]) : React.createElement(MenuContent, { page: p2, pageIndex: i * 2 + 1 })) : null
+              ])
+            ]);
+          })
+        )
+      ]);
+    };
+
+    // --- APP PRINCIPAL ---
+    const App = () => {
+      return React.createElement('div', { className: "relative flex-1 flex flex-col items-center" }, [
+        // Header
+        React.createElement('header', { key: 'header', className: "w-full py-6 flex flex-col items-center z-20" }, [
+          React.createElement('div', { className: "flex items-center gap-3" }, [
+            React.createElement('img', { src: "https://i.ibb.co/R4jn242d/afpesp-2.png", className: "h-10 object-contain", alt: "Logo" }),
+            React.createElement('span', { className: "text-gold font-serif font-bold text-xl tracking-widest uppercase border-b border-gold/30" }, "AFPESP Peruíbe II")
+          ]),
+          React.createElement('p', { className: "text-white/40 text-[10px] tracking-[0.5em] uppercase mt-2" }, "Cardápio do Bar")
+        ]),
+        // Book Area
+        React.createElement('main', { key: 'main', className: "flex-1 w-full flex items-center justify-center p-4" }, 
+          React.createElement(MenuBook)
+        ),
+        // Footer
+        React.createElement('footer', { key: 'footer', className: "py-6" }, 
+          React.createElement('p', { className: "text-gold/40 text-[10px] tracking-widest uppercase" }, "Toque nas páginas para navegar")
+        )
+      ]);
+    };
+
+    // Renderização Final
+    const container = document.getElementById('root');
+    const root = createRoot(container);
+    root.render(React.createElement(App));
+  </script>
 </body>
 </html>
