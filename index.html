@@ -16,6 +16,7 @@
     :root {
       --gold: #c5a059;
       --dark-brown: #3d241f;
+      --paper: #fdfbf7;
     }
 
     html, body {
@@ -65,12 +66,13 @@
       position: relative;
       width: 98%;
       max-width: 1000px;
-      height: 75vh; /* Altura fixa relativa para evitar cortes */
+      height: 75vh;
       margin: auto;
       perspective: 2000px;
       -webkit-perspective: 2000px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      opacity: 0; /* Começa invisível para evitar o flash de letras */
+      transition: opacity 0.4s ease-in-out;
+      background-color: transparent;
     }
 
     .transform-style-3d { 
@@ -88,10 +90,10 @@
       width: 50%;
       height: 100%;
       transform-origin: left;
-      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-      -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
+      -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
       z-index: 10;
-      pointer-events: none; /* Só habilita nas faces visíveis */
+      will-change: transform;
     }
 
     .sheet.flipped {
@@ -99,14 +101,19 @@
       -webkit-transform: rotateY(-180deg);
     }
 
-    .backface-hidden { 
-      backface-visibility: hidden; 
+    .face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      transform: translateZ(0); /* Força aceleração de hardware */
+      background-color: var(--paper); /* Fundo sólido para evitar transparência */
+      transform: translateZ(0);
       -webkit-transform: translateZ(0);
     }
 
-    .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
+    .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
 
     .menu-item {
@@ -145,20 +152,24 @@
     .font-serif { font-family: 'Cinzel', serif; }
 
     @media (max-width: 640px) {
-      #book-container { 
-        height: 70vh;
-      }
+      #book-container { height: 70vh; }
       .p-page { padding: 12px !important; }
       .p-header { padding: 15px 5px !important; }
     }
 
     @media (max-height: 550px) {
-      #book-container { height: 60vh; }
+      #book-container { height: 62vh; }
       header.top-bar { height: 35px; }
       section.title-bar { padding: 2px; }
-      .mt-4 { margin-top: 0.5rem; }
     }
   </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -360,7 +371,7 @@
         
         const front = document.createElement('div');
         front.id = `front-${i/2}`;
-        front.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
+        front.className = 'face bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
         front.style.pointerEvents = 'auto';
         front.innerHTML = renderPage(MENU_DATA[i]);
         
@@ -371,9 +382,9 @@
 
         const back = document.createElement('div');
         back.id = `back-${i/2}`;
-        back.className = 'absolute inset-0 w-full h-full backface-hidden bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
-        back.style.transform = 'rotateY(180deg) translateZ(0.1px)'; // Pequeno offset para evitar flicker
-        back.style.webkitTransform = 'rotateY(180deg) translateZ(0.1px)';
+        back.className = 'face bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
+        back.style.transform = 'rotateY(180deg)';
+        back.style.webkitTransform = 'rotateY(180deg)';
         back.style.pointerEvents = 'none'; 
         back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1]) : '<div class="h-full bg-[#3d241f]"></div>';
         
@@ -389,8 +400,10 @@
       }
       updateIndicator();
       lucide.createIcons();
-      // Revela o livro apenas após montar tudo para evitar flicker de ícones
-      setTimeout(() => { container.style.opacity = '1'; }, 100);
+      // Revela o livro apenas após montar tudo para evitar flicker
+      requestAnimationFrame(() => {
+        container.style.opacity = '1';
+      });
     }
 
     function renderPage(data) {
@@ -411,7 +424,7 @@
                 </div>`;
       }
       if (data.type === 'image') {
-        return `<div class="h-full relative overflow-hidden bg-[#000]">
+        return `<div class="h-full relative overflow-hidden bg-black">
                   <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('${data.url}')"></div>
                   <div class="absolute inset-0 bg-black/40"></div>
                   <div class="absolute bottom-5 left-0 right-0 text-center text-white px-2">
@@ -450,8 +463,10 @@
       if (currentSheet < sheets.length) {
         const sheet = sheets[currentSheet];
         sheet.classList.add('flipped');
-        document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'none';
-        document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'auto';
+        const front = document.getElementById(`front-${currentSheet}`);
+        const back = document.getElementById(`back-${currentSheet}`);
+        if(front) front.style.pointerEvents = 'none';
+        if(back) back.style.pointerEvents = 'auto';
         sheet.style.zIndex = 100 + currentSheet;
         currentSheet++;
         updateIndicator();
@@ -463,8 +478,10 @@
         currentSheet--;
         const sheet = sheets[currentSheet];
         sheet.classList.remove('flipped');
-        document.getElementById(`front-${currentSheet}`).style.pointerEvents = 'auto';
-        document.getElementById(`back-${currentSheet}`).style.pointerEvents = 'none';
+        const front = document.getElementById(`front-${currentSheet}`);
+        const back = document.getElementById(`back-${currentSheet}`);
+        if(front) front.style.pointerEvents = 'auto';
+        if(back) back.style.pointerEvents = 'none';
         sheet.style.zIndex = 200 - currentSheet;
         updateIndicator();
       }
