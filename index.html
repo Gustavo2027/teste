@@ -48,31 +48,33 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem Dinâmica */
+    /* Barra de Rolagem VISÍVEL e Funcional */
     .custom-scrollbar {
       overflow-y: auto !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
       height: 100%;
+      width: 100%;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) rgba(0,0,0,0.05);
       position: relative;
-      z-index: 50;
-      transform: translate3d(0,0,0); /* Força renderização no mobile */
-      scrollbar-width: none;
+      z-index: 60;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
-      width: 4px;
+      width: 6px;
+      display: block;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); /* Invisível por padrão */
+      background: var(--gold);
       border-radius: 10px;
-      transition: background 0.3s ease;
-    }
-
-    /* Mostra a barra apenas quando estiver rolando */
-    .custom-scrollbar.is-scrolling::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0.8);
+      border: 1px solid rgba(0,0,0,0.1);
     }
 
     .top-bar {
@@ -123,6 +125,7 @@
       align-items: baseline;
       width: 100%;
       margin-bottom: 12px;
+      pointer-events: none; /* Deixa o toque passar para o container de scroll */
     }
 
     .item-dots {
@@ -133,11 +136,11 @@
       top: -4px;
     }
 
-    /* Zonas de clique para virar página - Reduzidas para não travar o dedo no meio */
+    /* Zonas de clique para virar página - Movidas para não atrapalhar o scroll central */
     .flip-zone {
       position: absolute;
       top: 0;
-      width: 25px; 
+      width: 30px; 
       height: 100%;
       z-index: 100;
       cursor: pointer;
@@ -148,7 +151,7 @@
     @media (max-width: 600px) {
       #book-container { width: 95%; margin: 0 auto; }
       .sheet { width: 50%; }
-      .flip-zone { width: 20px; }
+      .flip-zone { width: 25px; }
     }
   </style>
 <script type="importmap">
@@ -303,21 +306,6 @@
         }
         updateIndicator();
         lucide.createIcons();
-        setupScrollDetect();
-    }
-
-    function setupScrollDetect() {
-        document.querySelectorAll('.custom-scrollbar').forEach(el => {
-            let timeout;
-            const activateScrollbar = () => {
-                el.classList.add('is-scrolling');
-                clearTimeout(timeout);
-                timeout = setTimeout(() => el.classList.remove('is-scrolling'), 1000);
-            };
-            
-            el.addEventListener('scroll', activateScrollbar, { passive: true });
-            el.addEventListener('touchmove', activateScrollbar, { passive: true });
-        });
     }
 
     function renderPage(data, index) {
@@ -363,9 +351,9 @@
             </div>
         `).join('');
 
-        return `<div class="h-full w-full bg-texture-paper p-4 sm:p-10 flex flex-col shadow-inner relative">
-            <div class="custom-scrollbar pr-1">
-                <div class="pb-16 pt-2">
+        return `<div class="h-full w-full bg-texture-paper flex flex-col shadow-inner relative">
+            <div class="custom-scrollbar p-6 sm:p-10">
+                <div class="pb-10">
                     ${sections}
                 </div>
             </div>
