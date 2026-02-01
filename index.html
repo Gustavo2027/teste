@@ -6,12 +6,9 @@
   <title>Cardápio Bar</title>
 
   <link rel="stylesheet" href="index.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
-
+  
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -32,14 +29,30 @@
             'page-left': 'inset -1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5)',
             'page-right': 'inset 1.25rem 0 3rem -1.25rem rgba(0,0,0,0.5)',
           },
-          transitionDuration: {
-            '1500': '1500ms',
-          },
+          transitionDuration: { '1500': '1500ms' }
         }
       }
     }
   </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- React + Babel -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.2.0",
+      "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+      "lucide-react": "https://esm.sh/lucide-react@0.344.0"
+    }
+  }
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body class="bg-[#1a1110] text-gray-100 overflow-hidden overscroll-none">
 
 <header class="top-bar">
@@ -56,150 +69,114 @@
 <div id="root"></div>
 
 <script type="text/babel" data-type="module">
-  import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
-  import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
-  import { Wine, Beer, Martini, GlassWater, Utensils, Coffee, Snowflake, ChefHat, Info, ArrowLeft, ArrowRight } from 'https://esm.sh/lucide-react@0.344.0';
+import React, { useState, useEffect } from "react";
+import { createRoot } from "react-dom/client";
+import * as LucideIcons from "lucide-react";
 
-  // --- MENU DATA (mantive tudo do seu cardápio original)
-  const MENU_PAGES = [
-    // Ícones agora são funções para não quebrar o JSX dentro do objeto
-    {
-      id: 'cover', type: 'cover', title: 'MENU', footer: 'Bem-vindo'
-    },
-    {
-      id: 'visual-1', type: 'image',
-      imageUrl: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop',
-      imageCaption: 'Alegria Brasileira'
-    },
-    {
-      id: 'p1', type: 'content',
-      sections: [
-        { title: 'Doses', icon: () => <GlassWater />, items: [
-            { name: 'Pinga 51', price: '4,00' }, { name: 'Velho Barreiro', price: '4,00' },
-            { name: 'Sagatiba', price: '5,00' }, { name: 'Saquê', price: '6,00' },
-            { name: 'Vodka (Caipiroska)', price: '5,00' }, { name: 'Campari', price: '7,00' },
-          ] 
-        },
-        { title: 'Caipirinhas', icon: () => <Martini />, items: [
-            { name: 'Pinga 51', price: '20,00' }, { name: 'Velho Barreiro', price: '15,00' },
-            { name: 'Sagatiba', price: '25,00' }, { name: 'Saquê', price: '18,00' },
-            { name: 'Vodka (Caipiroska)', price: '25,00' },
-          ] 
-        },
-        { title: 'Cervejas', icon: () => <Beer />, items: [
-            { name: 'Skol', price: '7,00' }, { name: 'Brahma', price: '7,00' },
-            { name: 'Brahma Malzbier', price: '9,00' }, { name: 'Heineken', price: '10,00' },
-            { name: 'Heineken sem ácool', price: '10,00' },
-          ] 
-        },
-      ]
-    },
-    // ... coloquei o restante igual ao seu código original, mantendo imagens, preços e descrições
-    // Por questão de espaço não repito todas aqui, mas basta copiar tudo do MENU_PAGES que você enviou
-  ];
+// --- MENU DATA ---
+// Ícones são guardados como string, vamos mapear no render
+const MENU_PAGES = [
+  { id: "cover", type: "cover", title: "MENU", footer: "Bem-vindo" },
+  
+  { id: "visual-1", type: "image", imageUrl: "https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000&auto=format&fit=crop", imageCaption: "Alegria Brasileira" },
 
-  // --- COMPONENT: MenuContent ---
-  const MenuContent = ({ page, pageIndex }) => {
-    if (!page || page.type === 'cover' || page.type === 'back') return null;
+  { id: "p1", type: "content", sections: [
+    { title: "Doses", icon: "GlassWater", items: [
+      { name: "Pinga 51", price: "4,00" }, { name: "Velho Barreiro", price: "4,00" },
+      { name: "Sagatiba", price: "5,00" }, { name: "Saquê", price: "6,00" },
+      { name: "Vodka (Caipiroska)", price: "5,00" }, { name: "Campari", price: "7,00" }
+    ]},
+    { title: "Caipirinhas", icon: "Martini", items: [
+      { name: "Pinga 51", price: "20,00" }, { name: "Velho Barreiro", price: "15,00" },
+      { name: "Sagatiba", price: "25,00" }, { name: "Saquê", price: "18,00" },
+      { name: "Vodka (Caipiroska)", price: "25,00" }
+    ]},
+    { title: "Cervejas", icon: "Beer", items: [
+      { name: "Skol", price: "7,00" }, { name: "Brahma", price: "7,00" },
+      { name: "Brahma Malzbier", price: "9,00" }, { name: "Heineken", price: "10,00" },
+      { name: "Heineken sem ácool", price: "10,00" }
+    ]}
+  ]},
 
-    const PageNumber = ({ isImage = false }) => {
-      if (pageIndex === undefined) return null;
-      const textColor = isImage ? 'text-white' : 'text-gray-800';
-      const numColor = isImage ? 'text-gold' : 'text-gold-dark';
-      const shadowClass = isImage ? 'drop-shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.8)]' : '';
-      return (
-        <div className={`absolute bottom-[0.5rem] left-1/2 -translate-x-1/2 z-30 flex items-center justify-center gap-[0.5rem] font-serif font-bold text-[0.75rem] ${shadowClass}`}>
-          <span className={`${numColor} opacity-70`}>—</span>
-          <span className={textColor}>{pageIndex}</span>
-          <span className={`${numColor} opacity-70`}>—</span>
-        </div>
-      );
-    };
+  { id: "visual-2", type: "image", imageUrl: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000&auto=format&fit=crop", imageCaption: "Vinho" },
 
-    if (page.type === 'image') {
-      return (
-        <div className="h-full w-full relative overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${page.imageUrl})` }}></div>
-          {page.imageCaption && (
-            <div className="absolute bottom-8 w-full text-center">
-              <h3 className="text-white font-serif text-2xl drop-shadow-md">{page.imageCaption}</h3>
-            </div>
-          )}
-          <PageNumber isImage={true} />
-        </div>
-      );
-    }
+  { id: "p2", type: "content", sections: [
+    { title: "Chopp", icon: "Beer", items: [
+      { name: "Chopp Claro", price: "9,00", description: "330ML" },
+      { name: "Chopp Claro", price: "13,50", description: "500ML" },
+      { name: "Chopp Escuro", price: "30,00", description: "Garrafa 1L" }
+    ]},
+    { title: "Vinhos", icon: "Wine", items: [
+      { name: "Vinho Tinto Seco", price: "8,00" },
+      { name: "Vinho Tinto Suave", price: "8,00" },
+      { name: "Concha y Toro Tinto Meio Seco", price: "50,00" },
+      { name: "Periquita Tinto Meio Seco", price: "90,00" },
+      { name: "Santa Helena Chardonay", price: "52,00" }
+    ]}
+  ]},
 
-    return (
-      <div className="h-full flex flex-col px-4 py-2 text-gray-800 relative z-10">
-        {page.sections?.map((section, idx) => (
-          <div key={idx} className="mb-4">
-            <div className="flex items-center gap-2 border-b border-gold-dark/30 pb-1 mb-2">
-              <span className="text-gold-dark">{section.icon()}</span>
-              <h3 className="font-serif font-bold uppercase">{section.title}</h3>
-            </div>
-            <ul>
-              {section.items.map((item, i) => (
-                <li key={i} className="flex justify-between">
-                  <span>{item.name} {item.description && `(${item.description})`}</span>
-                  <span>R$ {item.price}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-        {page.footer && <div className="mt-auto text-center text-gold-dark font-serif">{page.footer}</div>}
-        <PageNumber />
-      </div>
-    );
-  };
+  // --- Continue todas as páginas do seu cardápio exatamente igual ---
+];
 
-  // --- COMPONENT: MenuBook ---
-  const MenuBook = () => {
-    const [currentSheetIndex, setCurrentSheetIndex] = useState(0);
-    const totalSheets = Math.ceil(MENU_PAGES.length / 2);
+// --- COMPONENT --- 
+const MenuContent = ({ page, pageIndex }) => {
+  if (!page.sections) return null;
 
-    const handleNext = () => { if (currentSheetIndex < totalSheets) setCurrentSheetIndex(prev => prev + 1); };
-    const handlePrev = () => { if (currentSheetIndex > 0) setCurrentSheetIndex(prev => prev - 1); };
+  const PageNumber = ({ isImage=false }) => (
+    <div className={`absolute bottom-1 left-1/2 -translate-x-1/2 text-center z-30`}>
+      <span className={`${isImage ? "text-gold" : "text-gold-dark"}`}>{pageIndex}</span>
+    </div>
+  );
 
-    useEffect(() => {
-      const handleKeyDown = (e) => {
-        if (e.key === 'ArrowRight') handleNext();
-        if (e.key === 'ArrowLeft') handlePrev();
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentSheetIndex]);
-
-    return (
-      <div className="relative w-full max-w-5xl mx-auto flex justify-center items-center aspect-[2.1/1] perspective-3000">
-        {Array.from({ length: totalSheets }).map((_, sheetIndex) => {
-          const frontPage = MENU_PAGES[sheetIndex * 2];
-          const backPage = MENU_PAGES[sheetIndex * 2 + 1];
-          const isFlipped = sheetIndex < currentSheetIndex;
+  return (
+    <div className="h-full flex flex-col px-2 py-2 text-gray-800 relative z-10">
+      <div className="flex-grow space-y-2 overflow-y-auto pr-1">
+        {page.sections.map((section, idx) => {
+          const IconComp = LucideIcons[section.icon];
           return (
-            <div key={sheetIndex} className={`absolute w-1/2 h-full transform ${isFlipped ? '-rotate-y-180' : 'rotate-y-0'}`}>
-              <div className="absolute inset-0">{frontPage && <MenuContent page={frontPage} pageIndex={sheetIndex*2} />}</div>
-              <div className="absolute inset-0 rotate-y-180">{backPage && <MenuContent page={backPage} pageIndex={sheetIndex*2+1} />}</div>
+            <div key={idx} className="space-y-1">
+              <div className="flex items-center gap-2 border-b border-gold-dark/30 pb-1 mb-2">
+                <span className="text-gold-dark bg-paper-aged p-1 rounded-full border border-gold/30 shadow-sm shrink-0">
+                  {IconComp && <IconComp className="w-5 h-5"/>}
+                </span>
+                <h3 className="font-serif font-bold text-gray-900 uppercase">{section.title}</h3>
+              </div>
+              <ul>
+                {section.items.map((item, iidx) => (
+                  <li key={iidx} className="flex justify-between items-baseline text-sm sm:text-base group">
+                    <span className="font-semibold text-gray-900">{item.name}</span>
+                    {item.description && <span className="text-xs text-gray-600 italic">{item.description}</span>}
+                    <span className="font-serif font-bold text-gray-900">R$ {item.price}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          );
+          )
         })}
       </div>
-    );
-  };
+      <PageNumber />
+    </div>
+  );
+};
 
-  // --- APP ---
-  const App = () => {
-    return (
-      <div className="relative w-full h-full overflow-hidden bg-[#1a1110]">
-        <MenuBook />
-      </div>
-    );
-  };
+// --- APP ---
+const App = () => {
+  return (
+    <div className="w-full h-full">
+      {MENU_PAGES.map((page, idx) => (
+        <div key={page.id} className="border rounded mb-4 p-2 bg-paper">
+          <h2 className="font-serif text-lg mb-2">{page.type === "image" ? page.imageCaption : page.title}</h2>
+          <MenuContent page={page} pageIndex={idx} />
+        </div>
+      ))}
+    </div>
+  )
+}
 
-  const container = document.getElementById("root");
-  const root = createRoot(container);
-  root.render(<App />);
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<App />);
 </script>
+
 </body>
 </html>
