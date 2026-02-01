@@ -48,16 +48,16 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem 100% Invisível - Aparece apenas no Scroll/Touch */
+    /* Barra de rolagem Dinâmica */
     .custom-scrollbar {
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       -webkit-overflow-scrolling: touch !important;
       touch-action: pan-y !important;
-      isolation: isolate;
-      transform: translateZ(0); /* Crucial para scroll funcionar em transformações 3D no mobile */
-      scrollbar-width: none;
-      -ms-overflow-style: none;
       height: 100%;
+      position: relative;
+      z-index: 50;
+      transform: translate3d(0,0,0); /* Força renderização no mobile */
+      scrollbar-width: none;
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -65,12 +65,13 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(197, 160, 89, 0); 
+      background: rgba(197, 160, 89, 0); /* Invisível por padrão */
       border-radius: 10px;
       transition: background 0.3s ease;
     }
 
-    .custom-scrollbar.scrolling::-webkit-scrollbar-thumb {
+    /* Mostra a barra apenas quando estiver rolando */
+    .custom-scrollbar.is-scrolling::-webkit-scrollbar-thumb {
       background: rgba(197, 160, 89, 0.8);
     }
 
@@ -132,7 +133,7 @@
       top: -4px;
     }
 
-    /* Zonas de clique para virar página - Bordas bem finas no mobile */
+    /* Zonas de clique para virar página - Reduzidas para não travar o dedo no meio */
     .flip-zone {
       position: absolute;
       top: 0;
@@ -147,6 +148,7 @@
     @media (max-width: 600px) {
       #book-container { width: 95%; margin: 0 auto; }
       .sheet { width: 50%; }
+      .flip-zone { width: 20px; }
     }
   </style>
 <script type="importmap">
@@ -307,25 +309,14 @@
     function setupScrollDetect() {
         document.querySelectorAll('.custom-scrollbar').forEach(el => {
             let timeout;
-            const showScrollbar = () => {
-                el.classList.add('scrolling');
+            const activateScrollbar = () => {
+                el.classList.add('is-scrolling');
                 clearTimeout(timeout);
-                timeout = setTimeout(() => el.classList.remove('scrolling'), 1000);
+                timeout = setTimeout(() => el.classList.remove('is-scrolling'), 1000);
             };
             
-            // Ativa no scroll e no toque
-            el.addEventListener('scroll', showScrollbar, { passive: true });
-            
-            // Prevenção de conflito de gestos
-            el.addEventListener('touchstart', (e) => {
-              // Permite que o evento suba para scroll mas não para virada de página
-              showScrollbar();
-            }, { passive: true });
-
-            el.addEventListener('touchmove', (e) => {
-               // Essencial para o scroll funcionar dentro de elementos com transform 3D
-               showScrollbar();
-            }, { passive: true });
+            el.addEventListener('scroll', activateScrollbar, { passive: true });
+            el.addEventListener('touchmove', activateScrollbar, { passive: true });
         });
     }
 
@@ -363,7 +354,6 @@
                         <li class="menu-item">
                             <div class="flex flex-col flex-grow min-w-0">
                                 <span class="font-bold text-gray-900 text-[12px] leading-tight">${item.n}</span>
-                                ${item.d ? `<span class="text-[9px] text-gray-500 italic mt-0.5">${item.d}</span>` : ''}
                             </div>
                             <div class="item-dots"></div>
                             <span class="font-serif text-gray-900 text-[12px] font-bold">R$ ${item.p}</span>
@@ -373,13 +363,13 @@
             </div>
         `).join('');
 
-        return `<div class="h-full w-full bg-texture-paper p-6 sm:p-10 flex flex-col shadow-inner">
-            <div class="flex-grow overflow-hidden">
-                <div class="custom-scrollbar pr-1 pb-16">
+        return `<div class="h-full w-full bg-texture-paper p-4 sm:p-10 flex flex-col shadow-inner relative">
+            <div class="custom-scrollbar pr-1">
+                <div class="pb-16 pt-2">
                     ${sections}
                 </div>
             </div>
-            <div class="text-center font-serif text-[8px] mt-2 opacity-20">PÁGINA ${index}</div>
+            <div class="absolute bottom-2 left-0 right-0 text-center font-serif text-[8px] opacity-20 pointer-events-none">PÁGINA ${index}</div>
         </div>`;
     }
 
