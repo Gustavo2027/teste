@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,9 +27,9 @@
       padding: 0;
       height: 100dvh;
       background-color: #1a1110;
-      overflow-x: hidden;
+      overflow: hidden;
       overscroll-behavior: none;
-      touch-action: pan-x pan-y;
+      touch-action: none; /* Controlado via JS para permitir scroll interno */
     }
 
     .backface-hidden { 
@@ -44,20 +43,23 @@
     .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); background-color: #fdfbf7; }
     .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
     
-    /* Barra de rolagem personalizada e visível */
+    /* Barra de rolagem invisível inicialmente, aparece ao rolar */
+    .custom-scrollbar {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;  /* IE/Edge */
+      overflow-y: auto;
+      touch-action: pan-y; /* Permite rolagem vertical no celular */
+    }
     .custom-scrollbar::-webkit-scrollbar {
       width: 4px;
+      display: none; /* Esconde por padrão no Chrome/Safari */
     }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
+    .custom-scrollbar.scrolling::-webkit-scrollbar {
+      display: block; /* Mostra quando estamos rolando (via JS) */
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #c5a059;
       border-radius: 10px;
-    }
-    .custom-scrollbar { 
-      scrollbar-width: thin;
-      scrollbar-color: #c5a059 rgba(0, 0, 0, 0.05);
     }
 
     * {
@@ -122,7 +124,6 @@
       height: 100%;
       transform-origin: left;
       transition: transform 1.1s cubic-bezier(0.645, 0.045, 0.355, 1);
-      cursor: pointer;
     }
 
     .sheet.flipped {
@@ -136,34 +137,45 @@
     .font-serif { font-family: 'Cinzel', serif; }
     .text-gold { color: #c5a059; }
 
-    /* Estilo de preço com linha pontilhada corrigido */
     .menu-item {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       width: 100%;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .item-name-group {
       flex-shrink: 1;
-      min-width: 0; /* Permite que o texto quebre ou encolha */
+      min-width: 0;
     }
 
     .item-dots {
       flex-grow: 1;
       border-bottom: 2px dotted rgba(75, 85, 99, 0.3);
-      margin: 0 6px;
+      margin: 0 8px;
       min-width: 15px;
       position: relative;
       top: -4px;
     }
 
     .item-price {
-      flex-shrink: 0; /* Garante que o preço NUNCA suma */
+      flex-shrink: 0;
       font-weight: bold;
       white-space: nowrap;
     }
+
+    /* Área de clique para virar a página sem interferir no scroll */
+    .flip-zone {
+      position: absolute;
+      top: 0;
+      width: 40px;
+      height: 100%;
+      z-index: 50;
+      cursor: pointer;
+    }
+    .flip-zone-right { right: 0; }
+    .flip-zone-left { left: 0; }
 
     @media (max-width: 600px) {
       .title-bar h1 { font-size: 16px; }
@@ -198,7 +210,7 @@
     <div id="book-container" class="relative w-full max-w-5xl perspective-3000" style="aspect-ratio: 2.1/1;">
       <div id="book" class="relative w-full h-full transform-style-3d"></div>
       
-      <!-- Botões de navegação -->
+      <!-- Botões para Desktop -->
       <button onclick="prevPage()" id="btn-prev" class="hidden sm:flex absolute -left-16 top-1/2 -translate-y-1/2 z-[300] p-3 rounded-full bg-[#3d241f] border border-[#c5a059] text-[#c5a059] shadow-2xl disabled:opacity-30">
         <i data-lucide="arrow-left" size="32"></i>
       </button>
@@ -207,7 +219,7 @@
       </button>
     </div>
 
-    <!-- Indicador Mobile -->
+    <!-- Controles Mobile -->
     <div class="flex items-center justify-center gap-6 mt-4 sm:hidden">
       <button onclick="prevPage()" class="p-2 text-gold"> <i data-lucide="arrow-left"></i> </button>
       <span id="page-indicator" class="text-gold/60 font-serif text-[10px] tracking-widest uppercase">1 / 1</span>
@@ -219,8 +231,7 @@
     const MENU_DATA = [
       { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II - AFPESP' },
       
-      // Página 1: Doses, Caipirinhas, Cervejas
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Alegria Brasileira' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=1000', caption: 'Bebidas' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
               {n:'Pinga 51', p:'4,00'}, {n:'Velho Barreiro', p:'4,00'}, {n:'Sagatiba', p:'5,00'},
@@ -236,8 +247,7 @@
           ]}
       ]},
 
-      // Página 2: Chopp e Vinhos
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinho' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos & Chopp' },
       { type: 'content', sections: [
           { title: 'Chopp', icon: 'beer', items: [
               {n:'Chopp Claro', d:'330ML', p:'9,00'},
@@ -253,8 +263,7 @@
           ]}
       ]},
 
-      // Página 3: Batidas e Não Alcoólicos
-      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Refrescância' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Batidas' },
       { type: 'content', sections: [
           { title: 'Batidas', icon: 'martini', items: [
               {n:'Pinga 51', p:'20,00'}, {n:'Velho Barreiro', p:'20,00'},
@@ -264,13 +273,12 @@
           { title: 'Bebidas não alcoólicas', icon: 'cup-soda', items: [
               {n:'Água com gás', p:'5,00'}, {n:'Água sem gás', p:'5,00'},
               {n:'Coca-cola / Zero', p:'7,00'}, {n:'Guaraná / Zero', p:'6,00'},
-              {n:'Schweppes', p:'7,00'}, {n:'Água Tônica / Zero', p:'6,00'},
-              {n:'H2O Limão', p:'7,00'}, {n:'Pacote de Gelo (3kg)', p:'6,00'}
+              {n:'Schweppes / Tônica', p:'7,00'}, {n:'H2O Limão', p:'7,00'},
+              {n:'Pacote de Gelo (3kg)', p:'6,00'}
           ]}
       ]},
 
-      // Página 4: Sucos e Especiais
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Natural' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Sucos' },
       { type: 'content', sections: [
           { title: 'Suco Natural', icon: 'glass-water', items: [
               {n:'Laranja / Limão / Melancia', p:'10,00'},
@@ -281,14 +289,11 @@
               {n:'Del Valle Lata (Uva/Pêssego)', p:'8,00'}
           ]},
           { title: 'Especiais', icon: 'coffee', items: [
-              {n:'Copo de Leite Longo', p:'5,00'},
-              {n:'Café Expresso Pequeno', p:'5,00'},
-              {n:'Espanhola Sem Álcool', p:'8,00'},
-              {n:'Especial Peruíbe II (Sem Álcool)', p:'8,00'}
+              {n:'Leite Longo', p:'5,00'}, {n:'Café Expresso', p:'5,00'},
+              {n:'Espanhola Sem Álcool', p:'8,00'}, {n:'Especial Peruíbe II', p:'8,00'}
           ]}
       ]},
 
-      // Página 5: Porções
       { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Porções' },
       { type: 'content', sections: [
           { title: 'Porções', icon: 'utensils', items: [
@@ -301,7 +306,6 @@
           ]}
       ]},
 
-      // Página 6: Lanches e Extras
       { type: 'image', url: 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?auto=format&fit=crop&w=800&q=80', caption: 'Lanches' },
       { type: 'content', sections: [
           { title: 'Lanches', icon: 'utensils', items: [
@@ -342,25 +346,44 @@
             front.innerHTML = renderPage(frontData, i);
             front.style.transform = 'translateZ(2px)';
 
+            // Botão de flip na frente (lado direito)
+            const flipZoneFront = document.createElement('div');
+            flipZoneFront.className = 'flip-zone flip-zone-right';
+            flipZoneFront.onclick = (e) => { e.stopPropagation(); nextPage(); };
+            front.appendChild(flipZoneFront);
+
             const back = document.createElement('div');
             back.className = 'absolute inset-0 w-full h-full backface-hidden border-y-[2px] border-l-[2px] border-[#5d4037] rounded-l-lg overflow-hidden shadow-page-left';
             back.style.transform = 'rotateY(180deg) translateZ(2px)';
             back.innerHTML = backData ? renderPage(backData, i + 1) : '<div class="w-full h-full bg-marrom-capa"></div>';
 
+            // Botão de flip no verso (lado esquerdo quando aberto)
+            const flipZoneBack = document.createElement('div');
+            flipZoneBack.className = 'flip-zone flip-zone-left';
+            flipZoneBack.onclick = (e) => { e.stopPropagation(); prevPage(); };
+            back.appendChild(flipZoneBack);
+
             sheet.appendChild(front);
             sheet.appendChild(back);
             
-            sheet.onclick = (e) => {
-                e.stopPropagation();
-                if (sheet.classList.contains('flipped')) prevPage();
-                else nextPage();
-            };
-
             book.appendChild(sheet);
             sheets.push(sheet);
         }
         updateIndicator();
         lucide.createIcons();
+        setupScrollDetect();
+    }
+
+    function setupScrollDetect() {
+        // Lógica para mostrar barra de rolagem apenas ao rolar
+        document.querySelectorAll('.custom-scrollbar').forEach(el => {
+            let timeout;
+            el.addEventListener('scroll', () => {
+                el.classList.add('scrolling');
+                clearTimeout(timeout);
+                timeout = setTimeout(() => el.classList.remove('scrolling'), 1000);
+            });
+        });
     }
 
     function renderPage(data, index) {
@@ -394,15 +417,15 @@
                     <i data-lucide="${s.icon}" class="w-3.5 h-3.5 text-[#8b4513]"></i>
                     <h3 class="font-serif text-[11px] sm:text-[13px] font-bold text-gray-800 uppercase">${s.title}</h3>
                 </div>
-                <ul class="space-y-2">
+                <ul class="space-y-3">
                     ${s.items.map(item => `
                         <li class="menu-item">
                             <div class="item-name-group">
-                                <span class="font-bold text-gray-900 text-[10px] sm:text-[12px] leading-tight">${item.n}</span>
-                                ${item.d ? `<br><span class="text-[8px] text-gray-500 italic font-normal">${item.d}</span>` : ''}
+                                <span class="font-bold text-gray-900 text-[11px] sm:text-[13px] leading-tight">${item.n}</span>
+                                ${item.d ? `<br><span class="text-[9px] text-gray-500 italic font-normal">${item.d}</span>` : ''}
                             </div>
                             <div class="item-dots"></div>
-                            <span class="item-price font-serif text-gray-900 text-[10px] sm:text-[12px]">R$ ${item.p}</span>
+                            <span class="item-price font-serif text-gray-900 text-[11px] sm:text-[13px]">R$ ${item.p}</span>
                         </li>
                     `).join('')}
                 </ul>
@@ -410,8 +433,8 @@
         `).join('');
 
         return `
-            <div class="h-full w-full bg-paper p-3 sm:p-8 relative bg-texture-paper flex flex-col shadow-inner">
-                <div class="flex-grow overflow-y-auto custom-scrollbar pr-1">
+            <div class="h-full w-full bg-paper p-4 sm:p-10 relative bg-texture-paper flex flex-col shadow-inner">
+                <div class="flex-grow custom-scrollbar pr-2">
                     ${sectionsHtml}
                 </div>
                 <div class="text-center font-serif text-[8px] mt-2 opacity-30">PÁGINA ${index}</div>
