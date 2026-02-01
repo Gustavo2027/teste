@@ -173,7 +173,7 @@
 
   <script>
     const MENU_DATA = [
-      { type: 'cover', title: 'MENU', subtitle: 'Bar Peruíbe II - AFPESP' },
+      { type: 'cover', title: 'MENU BAR', subtitle: 'Bar Peruíbe II - AFPESP' },
       { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas & Doses' },
       { type: 'content', sections: [
           { title: 'Doses', icon: 'glass-water', items: [
@@ -258,16 +258,18 @@
     function renderPage(data, index) {
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
-        // Ajuste fino para 'OBRIGADO!' não cortar
-        const titleClass = data.type === 'back' 
-          ? 'text-2xl sm:text-3xl tracking-tight' 
+        
+        // Ajuste para evitar quebra no 'OBRIGADO!' e incluir 'BAR' na capa
+        const isBack = data.type === 'back';
+        const titleClass = isBack 
+          ? 'text-xl sm:text-2xl tracking-normal whitespace-nowrap' 
           : 'text-3xl tracking-widest';
         
-        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-6 py-10 text-center relative overflow-hidden">
+        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] px-4 py-10 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-30 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center w-full max-w-[80%]">
+                  <div class="relative z-10 flex flex-col items-center w-full max-w-[90%]">
                     <i data-lucide="${icon}" class="w-12 h-12 mb-4"></i>
-                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full break-words leading-tight">${data.title}</h1>
+                    <h1 class="font-serif ${titleClass} font-bold uppercase mb-4 w-full leading-tight">${data.title}</h1>
                     <div class="w-12 h-1 bg-[#c5a059] mb-6"></div>
                     <p class="font-serif text-xs opacity-80 uppercase tracking-[0.2em] whitespace-nowrap">${data.subtitle}</p>
                   </div>
