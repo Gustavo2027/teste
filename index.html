@@ -25,32 +25,32 @@
       font-family: var(--font-sans);
     }
 
-    /* BARRA SUPERIOR - CORRIGIDA */
+    /* BARRA SUPERIOR */
     .top-bar {
       flex-shrink: 0; height: 65px; background: #000;
-      display: flex; align-items: center; padding: 0 20px; z-index: 100;
+      display: flex; align-items: center; padding: 0 20px; z-index: 1000;
       border-bottom: 2px solid #222;
     }
-    .top-bar .logo-container { height: 50px; display: flex; align-items: center; justify-content: center; }
-    .top-bar img { height: 100%; width: auto; display: block; filter: drop-shadow(0 0 2px rgba(255,255,255,0.2)); }
+    .top-bar .logo-container { height: 45px; display: flex; align-items: center; justify-content: center; min-width: 60px; }
+    .top-bar img { height: 100%; width: auto; display: block; object-fit: contain; }
     .top-bar span { color: white; font-weight: bold; margin-left: 15px; font-size: 15px; letter-spacing: 0.5px; }
 
     .title-bar {
       flex-shrink: 0; background-color: #333436; padding: 6px 10px;
-      text-align: center; z-index: 90;
+      text-align: center; z-index: 900;
     }
     .title-bar h1 { color: #00ff00; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
 
     /* CONTAINER DO LIVRO */
     #root {
       flex-grow: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 5px;
+      align-items: center; justify-content: center; padding: 10px;
       position: relative; overflow: hidden;
     }
 
     #book-container {
       position: relative; 
-      width: 98%; 
+      width: 96%; 
       max-width: 900px; 
       height: 60vh;
       aspect-ratio: 2 / 1.3;
@@ -58,7 +58,6 @@
       perspective: 2500px;
       opacity: 0; 
       transition: opacity 0.5s ease-in-out;
-      cursor: pointer;
     }
 
     .book-wrapper {
@@ -69,8 +68,8 @@
       position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
       transform-origin: left;
       transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-      z-index: 10; transform-style: preserve-3d;
-      will-change: transform;
+      transform-style: preserve-3d;
+      will-change: transform, z-index;
     }
 
     .sheet.flipped { transform: rotateY(-180deg); }
@@ -79,7 +78,7 @@
       position: absolute; inset: 0; width: 100%; height: 100%;
       backface-visibility: hidden; background-color: var(--paper);
       display: flex; flex-direction: column; overflow: hidden;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.15);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.1);
       border: 1px solid rgba(0,0,0,0.05);
     }
 
@@ -91,9 +90,8 @@
       color: var(--gold) !important;
     }
 
-    /* PÁGINA COM ROLAGEM */
     .page-content { 
-      padding: 18px 12px; 
+      padding: 20px 15px; 
       height: 100%; 
       overflow-y: auto; 
       display: flex; 
@@ -102,67 +100,59 @@
       scrollbar-color: var(--gold) transparent;
     }
     
-    .page-content::-webkit-scrollbar { width: 4px; }
-    .page-content::-webkit-scrollbar-track { background: transparent; }
-    .page-content::-webkit-scrollbar-thumb { background-color: var(--gold); border-radius: 10px; }
-    
-    .menu-section { margin-bottom: 14px; }
+    .menu-section { margin-bottom: 15px; }
     .section-title {
-      font-family: var(--font-serif); font-size: 12px; font-weight: bold;
+      font-family: var(--font-serif); font-size: 13px; font-weight: bold;
       color: #222; border-bottom: 1px solid var(--gold);
-      padding-bottom: 4px; margin-bottom: 10px; display: flex; align-items: center;
-      gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+      padding-bottom: 5px; margin-bottom: 12px; display: flex; align-items: center;
+      gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .menu-item-wrapper { margin-bottom: 7px; }
-    .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
+    .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 5px; margin-bottom: 8px; }
     .item-name { font-weight: 700; color: #111; font-size: 11px; flex: 1; line-height: 1.2; }
-    .item-dots { flex-grow: 1; border-bottom: 1px dotted #bbb; margin-bottom: 3px; margin: 0 4px; }
+    .item-dots { flex-grow: 1; border-bottom: 1px dotted #bbb; margin-bottom: 3px; }
     .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 11px; white-space: nowrap; }
-    .item-desc { font-size: 9px; color: #555; font-style: italic; margin-top: 1px; line-height: 1.1; }
 
     /* CAPA */
     .cover-content {
       height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 15px; border: 2px double var(--gold); margin: 12px;
-      background: rgba(0,0,0,0.6);
+      text-align: center; padding: 20px; border: 3px double var(--gold); margin: 15px;
+      background: rgba(0,0,0,0.65);
     }
-    .cover-content h1 { font-family: var(--font-serif); font-size: 26px; margin: 8px 0; letter-spacing: 2px; color: var(--gold); text-shadow: 2px 2px 3px black; }
-    .cover-content p { font-family: var(--font-serif); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: bold; }
-    .gold-line { width: 40px; height: 1.5px; background: var(--gold); margin: 10px 0; box-shadow: 0 0 5px var(--gold); }
+    .cover-content h1 { font-family: var(--font-serif); font-size: 28px; margin: 10px 0; letter-spacing: 2px; color: var(--gold); text-shadow: 2px 2px 4px black; }
+    .cover-content p { font-family: var(--font-serif); font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); font-weight: bold; }
+    .gold-line { width: 50px; height: 2px; background: var(--gold); margin: 15px 0; box-shadow: 0 0 8px var(--gold); }
 
-    /* IMAGENS - CORRIGIDAS */
-    .image-container { position: relative; height: 100%; background: var(--paper); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    .image-el { width: 100%; height: 100%; object-fit: cover; opacity: 1; display: block; border: none; }
+    /* IMAGENS */
+    .image-container { position: relative; height: 100%; background: var(--paper); overflow: hidden; }
+    .image-el { width: 100%; height: 100%; object-fit: cover; display: block; }
     .image-caption {
       position: absolute; bottom: 0; left: 0; right: 0; 
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-      padding: 30px 10px 15px; text-align: center; color: white;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      padding: 40px 15px 20px; text-align: center; color: white;
       font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 1px; font-size: 12px;
-      text-shadow: 1px 1px 2px black;
     }
 
     /* CONTROLES */
     .controls {
-      display: flex; align-items: center; justify-content: center; gap: 15px;
-      margin-top: 5px; padding-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      margin-top: 10px; padding-bottom: 15px;
     }
     .btn-nav {
-      background: var(--dark-brown); color: var(--gold); border: 1.5px solid var(--gold);
-      width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+      background: var(--dark-brown); color: var(--gold); border: 2px solid var(--gold);
+      width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      transition: transform 0.2s;
     }
-    .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 13px; min-width: 50px; text-align: center; }
+    .btn-nav:active { transform: scale(0.9); }
+    .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 14px; min-width: 60px; text-align: center; }
 
     @media (min-width: 641px) {
       .item-name, .item-price { font-size: 13px; }
-      .section-title { font-size: 14px; }
-      .cover-content h1 { font-size: 38px; }
+      .section-title { font-size: 15px; }
+      .cover-content h1 { font-size: 42px; }
       #book-container { height: 65vh; }
-      .top-bar { height: 75px; }
-      .top-bar .logo-container { height: 60px; }
-      .top-bar span { font-size: 18px; }
     }
   </style>
 <script type="importmap">
@@ -187,37 +177,37 @@
   </section>
 
   <div id="root">
-    <div id="book-container" onclick="handleBookClick(event)">
+    <div id="book-container">
       <div id="book" class="book-wrapper"></div>
     </div>
 
     <div class="controls">
-      <button class="btn-nav" onclick="prevPage()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <button class="btn-nav" onclick="prevPage()" aria-label="Voltar Página">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
       </button>
       <span id="page-indicator" class="page-indicator">1 / 1</span>
-      <button class="btn-nav" onclick="nextPage()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <button class="btn-nav" onclick="nextPage()" aria-label="Próxima Página">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </button>
     </div>
   </div>
 
   <script>
     const SVGS = {
-      'chef-hat': `<svg width="60" height="60" viewBox="0 0 24 24" fill="var(--gold)" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 19V20C18 20.55 17.55 21 17 21H7C6.45 21 6 20.55 6 20V19H18ZM19 14.12C20.73 13.56 22 11.93 22 10C22 7.79 20.21 6 18 6C17.72 6 17.46 6.03 17.2 6.09C16.4 4.29 14.6 3 12.5 3C10.11 3 8.08 4.67 7.59 6.89C7.4 6.84 7.21 6.81 7 6.81C4.79 6.81 3 8.6 3 10.81C3 12.5 4.05 13.93 5.54 14.54C5.19 15 5 15.58 5 16.2V18H19V16.2C19 15.39 18.61 14.67 18 14.12Z"/>
+      'chef-hat': `<svg width="70" height="70" viewBox="0 0 24 24" fill="var(--gold)" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3C10.5 3 9.1 3.6 8.1 4.6C7.1 5.6 6.5 7 6.5 8.5C6.5 9 6.6 9.5 6.7 9.9C5.1 10.4 4 11.8 4 13.5C4 15.4 5.6 17 7.5 17H16.5C18.4 17 20 15.4 20 13.5C20 11.8 18.9 10.4 17.3 9.9C17.4 9.5 17.5 9 17.5 8.5C17.5 7 16.9 5.6 15.9 4.6C14.9 3.6 13.5 3 12 3ZM7 18H17V20C17 20.6 16.6 21 16 21H8C7.4 21 7 20.6 7 20V18Z"/>
         </svg>`,
-      'heart': `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
-      'glass': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
-      'beer': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
-      'wine': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
-      'food': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
-      'coffee': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
+      'heart': `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
+      'glass': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
+      'beer': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
+      'wine': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
+      'food': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
+      'coffee': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
     };
 
     const MENU_DATA = [
       { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas de Boas-vindas' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas Selecionadas' },
       { 
         type: 'content', 
         sections: [
@@ -253,7 +243,6 @@
             { n: 'Guaraná (Zero)', p: '6,00' }, 
             { n: 'Schweppes', p: '7,00' },
             { n: 'Água tônica', p: '6,00' },
-            { n: 'Água tônica Zero', p: '6,00' },
             { n: 'H2O Limão', p: '7,00' }, 
             { n: 'Pacote de Gelo 3kg', p: '6,00' } 
           ] }
@@ -318,14 +307,16 @@
       for (let i = 0; i < MENU_DATA.length; i += 2) {
         const sheet = document.createElement('div');
         sheet.className = 'sheet';
-        sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
+        const z = Math.floor((MENU_DATA.length - i) / 2);
+        sheet.style.zIndex = z;
+        sheet.dataset.originalZ = z;
         
         const front = document.createElement('div');
-        front.className = 'face front bg-paper';
+        front.className = 'face front';
         setupFace(front, MENU_DATA[i]);
         
         const back = document.createElement('div');
-        back.className = 'face back bg-paper';
+        back.className = 'face back';
         setupFace(back, MENU_DATA[i+1]);
         
         sheet.appendChild(front);
@@ -348,7 +339,7 @@
         const svgKey = data.type === 'cover' ? 'chef-hat' : 'heart';
         faceEl.innerHTML = `
           <div class="cover-content">
-            <div style="margin-bottom: 10px;">${SVGS[svgKey]}</div>
+            <div style="margin-bottom: 15px;">${SVGS[svgKey]}</div>
             <h1>${data.title}</h1>
             <div class="gold-line"></div>
             <p>${data.subtitle}</p>
@@ -366,13 +357,10 @@
           <div class="menu-section">
             <div class="section-title">${SVGS[s.icon] || ''} ${s.title}</div>
             ${s.items.map(item => `
-              <div class="menu-item-wrapper">
-                <div class="menu-item">
-                  <span class="item-name">${item.n}</span>
-                  <div class="item-dots"></div>
-                  <span class="item-price">R$ ${item.p}</span>
-                </div>
-                ${item.d ? `<div class="item-desc">${item.d}</div>` : ''}
+              <div class="menu-item">
+                <span class="item-name">${item.n}</span>
+                <div class="item-dots"></div>
+                <span class="item-price">R$ ${item.p}</span>
               </div>
             `).join('')}
           </div>
@@ -381,22 +369,12 @@
       }
     }
 
-    function handleBookClick(e) {
-      if (isAnimating) return;
-      const rect = container.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      if (clickX < rect.width / 2) {
-        prevPage();
-      } else {
-        nextPage();
-      }
-    }
-
     function nextPage() {
       if (currentSheet < sheets.length && !isAnimating) {
         isAnimating = true;
-        sheets[currentSheet].classList.add('flipped');
-        sheets[currentSheet].style.zIndex = 100 + currentSheet;
+        const sheet = sheets[currentSheet];
+        sheet.classList.add('flipped');
+        sheet.style.zIndex = 100 + currentSheet;
         currentSheet++;
         updateIndicator();
         setTimeout(() => { isAnimating = false; }, 800);
@@ -407,10 +385,17 @@
       if (currentSheet > 0 && !isAnimating) {
         isAnimating = true;
         currentSheet--;
-        sheets[currentSheet].classList.remove('flipped');
-        sheets[currentSheet].style.zIndex = Math.floor((MENU_DATA.length - (currentSheet * 2)) / 2) + 20;
+        const sheet = sheets[currentSheet];
+        // z-index muito alto antes de começar a animação de retorno
+        sheet.style.zIndex = 200; 
+        sheet.classList.remove('flipped');
         updateIndicator();
-        setTimeout(() => { isAnimating = false; }, 800);
+        
+        setTimeout(() => { 
+          // Após a animação,  o z-index original para não quebrar a pilha
+          sheet.style.zIndex = sheet.dataset.originalZ;
+          isAnimating = false; 
+        }, 800);
       }
     }
 
@@ -418,7 +403,6 @@
       indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
     }
 
-    // Garante que o logo carregue corretamente
     window.onload = initBook;
   </script>
 </body>
