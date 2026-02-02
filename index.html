@@ -8,7 +8,7 @@
   <style>
     :root {
       --gold: #d4af37;
-      --dark-brown: #120807; /* Couro bem escuro e rico */
+      --dark-brown: #1a0d0b; /* Couro profundo */
       --paper: #fdfbf7;
       --black-bg: #050404;
       --font-serif: 'Cinzel', 'Georgia', serif;
@@ -25,13 +25,14 @@
       font-family: var(--font-sans);
     }
 
-    /* BARRA SUPERIOR */
+    /* BARRA SUPERIOR CORRIGIDA */
     .top-bar {
-      flex-shrink: 0; height: 50px; background: #000;
+      flex-shrink: 0; height: 55px; background: #000;
       display: flex; align-items: center; padding: 0 15px; z-index: 100;
       border-bottom: 1px solid #222;
     }
-    .top-bar img { height: 32px; width: auto; display: block; }
+    .top-bar .logo-container { height: 35px; display: flex; align-items: center; }
+    .top-bar img { height: 100%; width: auto; object-fit: contain; }
     .top-bar span { color: white; font-weight: bold; margin-left: 12px; font-size: 14px; letter-spacing: 0.5px; }
 
     .title-bar {
@@ -44,11 +45,11 @@
     #root {
       flex-grow: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 10px;
-      position: relative;
+      position: relative; overflow: hidden;
     }
 
     #book-container {
-      position: relative; width: 95%; max-width: 1000px; height: 75vh;
+      position: relative; width: 95%; max-width: 1000px; height: 72vh;
       margin: auto; perspective: 2500px;
       opacity: 0; transition: opacity 0.5s ease-in-out;
       cursor: pointer;
@@ -86,23 +87,23 @@
     }
 
     /* CONTEÚDO DAS PÁGINAS */
-    .page-content { padding: 22px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; scrollbar-width: none; }
+    .page-content { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; scrollbar-width: none; }
     .page-content::-webkit-scrollbar { display: none; }
     
-    .menu-section { margin-bottom: 18px; }
+    .menu-section { margin-bottom: 16px; }
     .section-title {
-      font-family: var(--font-serif); font-size: 14px; font-weight: bold;
+      font-family: var(--font-serif); font-size: 13px; font-weight: bold;
       color: #222; border-bottom: 1.5px solid var(--gold);
-      padding-bottom: 4px; margin-bottom: 10px; display: flex; align-items: center;
+      padding-bottom: 4px; margin-bottom: 8px; display: flex; align-items: center;
       gap: 8px; text-transform: uppercase; letter-spacing: 1px;
     }
 
     .menu-item-wrapper { margin-bottom: 6px; }
     .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .item-name { font-weight: 700; color: #111; font-size: 12.5px; flex: 1; }
+    .item-name { font-weight: 700; color: #111; font-size: 12px; flex: 1; }
     .item-dots { flex-grow: 1; border-bottom: 1px dotted #aaa; margin-bottom: 4px; }
-    .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 12.5px; white-space: nowrap; }
-    .item-desc { font-size: 10px; color: #666; font-style: italic; margin-top: -2px; line-height: 1.2; }
+    .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 12px; white-space: nowrap; }
+    .item-desc { font-size: 9.5px; color: #666; font-style: italic; margin-top: -2px; line-height: 1.2; }
 
     /* CAPA */
     .cover-content {
@@ -110,18 +111,18 @@
       text-align: center; padding: 25px; border: 3px double var(--gold); margin: 15px;
       background: rgba(0,0,0,0.45);
     }
-    .cover-content h1 { font-family: var(--font-serif); font-size: 38px; margin: 10px 0; letter-spacing: 4px; color: var(--gold); text-shadow: 2px 2px 4px black; }
-    .cover-content p { font-family: var(--font-serif); font-size: 18px; text-transform: uppercase; letter-spacing: 2.5px; color: var(--gold); font-weight: bold; }
-    .gold-line { width: 60px; height: 2px; background: var(--gold); margin: 15px 0; box-shadow: 0 0 8px var(--gold); }
+    .cover-content h1 { font-family: var(--font-serif); font-size: 32px; margin: 10px 0; letter-spacing: 4px; color: var(--gold); text-shadow: 2px 2px 4px black; }
+    .cover-content p { font-family: var(--font-serif); font-size: 16px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: bold; }
+    .gold-line { width: 50px; height: 2px; background: var(--gold); margin: 15px 0; box-shadow: 0 0 8px var(--gold); }
 
     /* IMAGENS */
     .image-container { position: relative; height: 100%; background: #000; overflow: hidden; }
-    .image-el { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+    .image-el { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
     .image-caption {
       position: absolute; bottom: 0; left: 0; right: 0; 
       background: linear-gradient(transparent, rgba(0,0,0,0.95));
-      padding: 40px 20px 20px; text-align: center; color: white;
-      font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 2px; font-size: 16px;
+      padding: 35px 20px 20px; text-align: center; color: white;
+      font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 2px; font-size: 15px;
     }
 
     /* CONTROLES */
@@ -131,21 +132,24 @@
     }
     .btn-nav {
       background: var(--dark-brown); color: var(--gold); border: 1.5px solid var(--gold);
-      width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
-    .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 15px; min-width: 60px; text-align: center; }
+    .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 14px; min-width: 60px; text-align: center; }
 
     /* RESPONSIVIDADE MOBILE */
     @media (max-width: 640px) {
-      #book-container { height: 70vh; aspect-ratio: 0.75/1 !important; }
+      #book-container { height: 70vh; width: 92%; aspect-ratio: auto !important; }
       .sheet { left: 0; width: 100%; transform-origin: left; }
+      /* No mobile, mostramos apenas uma face por vez. A frente ou o verso. */
       .face.back { transform: rotateY(0); display: none; }
       .sheet.flipped .face.front { display: none; }
       .sheet.flipped .face.back { display: flex; transform: rotateY(0); }
-      .cover-content h1 { font-size: 28px; }
+      .cover-content h1 { font-size: 26px; }
       .page-content { padding: 18px; }
+      .section-title { font-size: 12px; }
+      .item-name, .item-price { font-size: 11.5px; }
     }
   </style>
 <script type="importmap">
@@ -159,7 +163,9 @@
 <body>
 
   <header class="top-bar">
-    <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" />
+    <div class="logo-container">
+      <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" />
+    </div>
     <span>AFPESP Peruíbe II</span>
   </header>
 
@@ -187,16 +193,16 @@
     const SVGS = {
       'chef-hat': `<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 13.81A6 6 0 1 1 18 13.81M6 13V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6M19 13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2M7 21h10"></path></svg>`,
       'heart': `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
-      'glass': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
-      'beer': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
-      'wine': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
-      'food': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
-      'coffee': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
+      'glass': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
+      'beer': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
+      'wine': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
+      'food': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
+      'coffee': `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
     };
 
     const MENU_DATA = [
       { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas Selecionadas' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas de Boas-vindas' },
       { 
         type: 'content', 
         sections: [
@@ -209,25 +215,25 @@
         type: 'content', 
         sections: [
           { title: 'Cervejas', icon: 'beer', items: [ { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' }, { n: 'Brahma Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' }, { n: 'Heineken sem álcool', p: '10,00' } ] },
-          { title: 'Chopp', icon: 'beer', items: [ { n: 'Chopp Claro', p: '9,00', d: '330ml' }, { n: 'Chopp Claro', p: '13,50', d: '500ml' }, { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' } ] }
+          { title: 'Chopp', icon: 'beer', items: [ { n: 'Chopp Claro 330ml', p: '9,00' }, { n: 'Chopp Claro 500ml', p: '13,50' }, { n: 'Chopp Escuro Garrafa 1L', p: '30,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000', caption: 'Vinhos & Momentos' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000', caption: 'Vinhos e Momentos' },
       { 
         type: 'content', 
         sections: [
-          { title: 'Vinhos', icon: 'wine', items: [ { n: 'Vinho Tinto Seco', p: '8,00' }, { n: 'Vinho Tinto Suave', p: '8,00' }, { n: 'Concha y Toro Tinto', p: '50,00', d: 'Meio Seco' }, { n: 'Periquita Tinto', p: '90,00', d: 'Meio Seco' }, { n: 'Santa Helena Chardonnay', p: '52,00' } ] }
+          { title: 'Vinhos', icon: 'wine', items: [ { n: 'Vinho Tinto Seco', p: '8,00' }, { n: 'Vinho Tinto Suave', p: '8,00' }, { n: 'Concha y Toro Meio Seco', p: '50,00' }, { n: 'Periquita Meio Seco', p: '90,00' }, { n: 'Santa Helena Chardonnay', p: '52,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000', caption: 'Refrescos' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000', caption: 'Bebidas Geladas' },
       { 
         type: 'content', 
         sections: [
           { title: 'Não Alcoólicas', icon: 'glass', items: [ 
             { n: 'Água com gás', p: '5,00' }, 
             { n: 'Água sem gás', p: '5,00' }, 
-            { n: 'Coca-Cola (Normal/Zero)', p: '7,00' }, 
-            { n: 'Guaraná (Normal/Zero)', p: '6,00' }, 
+            { n: 'Coca-Cola (Lata/Zero)', p: '7,00' }, 
+            { n: 'Guaraná (Lata/Zero)', p: '6,00' }, 
             { n: 'Schweppes', p: '7,00' },
             { n: 'Água tônica', p: '6,00' },
             { n: 'Água tônica Zero', p: '6,00' },
@@ -241,13 +247,15 @@
         type: 'content', 
         sections: [
           { title: 'Sucos Naturais', icon: 'glass', items: [ 
-            { n: 'Suco de Laranja / Limão', p: '10,00 / 18,00', d: 'Copo / Jarra' }, 
-            { n: 'Suco de Melancia', p: '10,00 / 18,00', d: 'Copo / Jarra' }
+            { n: 'Suco Laranja/Limão (Copo)', p: '10,00' }, 
+            { n: 'Suco Melancia (Copo)', p: '10,00' },
+            { n: 'Suco Laranja/Limão (Jarra)', p: '18,00' },
+            { n: 'Suco Melancia (Jarra)', p: '18,00' }
           ] },
           { title: 'Sucos (Outros)', icon: 'glass', items: [ 
-            { n: 'Suco de Uva Integral', p: '15,00', d: 'Copo' }, 
-            { n: 'Suco de Uva Del Valle', p: '8,00', d: 'Lata' }, 
-            { n: 'Suco de Pêssego Del Valle', p: '8,00', d: 'Lata' } 
+            { n: 'Suco Uva Integral (Copo)', p: '15,00' }, 
+            { n: 'Suco Uva Del Valle (Lata)', p: '8,00' }, 
+            { n: 'Suco Pêssego Del Valle (Lata)', p: '8,00' } 
           ] }
         ]
       },
@@ -255,23 +263,23 @@
       { 
         type: 'content', 
         sections: [
-          { title: 'Especiais', icon: 'coffee', items: [ { n: 'Copo de Leite Longo', p: '5,00' }, { n: 'Café Expresso Pequeno', p: '5,00' }, { n: 'Espanhola Sem Álcool', p: '8,00' }, { n: 'Especial Peruíbe II (S/ Álcool)', p: '8,00' } ] },
+          { title: 'Especiais', icon: 'coffee', items: [ { n: 'Copo de Leite Longo', p: '5,00' }, { n: 'Café Expresso Pequeno', p: '5,00' }, { n: 'Espanhola Sem Álcool', p: '8,00' }, { n: 'Especial Peruíbe II', p: '8,00' } ] },
           { title: 'Lanches', icon: 'food', items: [ { n: 'Misto Quente', p: '7,00' }, { n: 'Misto Frio', p: '10,00' }, { n: 'Queijo Quente', p: '10,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=1000', caption: 'Para Compartilhar' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=1000', caption: 'Petiscos e Pratos' },
       { 
         type: 'content', 
         sections: [
           { title: 'Porções', icon: 'food', items: [ 
-            { n: 'Batata Frita', p: '15,00 / 20,00', d: '200g / 400g' }, 
-            { n: 'Camarão', p: '40,00 / 55,00', d: '250g / 500g' }, 
+            { n: 'Batata Frita 200g/400g', p: '15,00 / 20,00' }, 
+            { n: 'Camarão 250g/500g', p: '40,00 / 55,00' }, 
             { n: 'Isca de Peixe 500g', p: '45,00' }, 
             { n: 'Calabresa Acebolada 400g', p: '18,00' } 
           ] },
           { title: 'Pratos Extras', icon: 'food', items: [ 
-            { n: 'Omelete (Simples / Queijo)', p: '4,00 / 5,00' }, 
-            { n: 'Ovo (Cozido / Frito)', p: '2,00 / 3,00' }, 
+            { n: 'Omelete (Simples/Queijo)', p: '4,00 / 5,00' }, 
+            { n: 'Ovo (Cozido/Frito)', p: '2,00 / 3,00' }, 
             { n: 'Filé de Frango', p: '5,00' }, 
             { n: 'Bife Grelhado', p: '9,00' } 
           ] }
@@ -281,6 +289,7 @@
     ];
 
     let currentSheet = 0;
+    let isAnimating = false;
     const book = document.getElementById('book');
     const container = document.getElementById('book-container');
     const indicator = document.getElementById('page-indicator');
@@ -355,34 +364,42 @@
       }
     }
 
-    // NOVA LÓGICA DE CLIQUE: Esquerda volta, Direita avança
+    // NAVEGAÇÃO CORRIGIDA: Lado esquerdo volta, lado direito vai
     function handleBookClick(e) {
+      if (isAnimating) return;
+      
       const rect = container.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      const isMobile = window.innerWidth < 640;
-
-      if (clickX > rect.width / 2) {
-        nextPage();
-      } else {
+      
+      // Se clicar no lado esquerdo da tela (primeiros 40%), volta.
+      // Caso contrário, vai para frente.
+      if (clickX < rect.width * 0.4) {
         prevPage();
+      } else {
+        nextPage();
       }
     }
 
     function nextPage() {
-      if (currentSheet < sheets.length) {
+      if (currentSheet < sheets.length && !isAnimating) {
+        isAnimating = true;
         sheets[currentSheet].classList.add('flipped');
         sheets[currentSheet].style.zIndex = 100 + currentSheet;
         currentSheet++;
         updateIndicator();
+        setTimeout(() => { isAnimating = false; }, 800);
       }
     }
 
     function prevPage() {
-      if (currentSheet > 0) {
+      if (currentSheet > 0 && !isAnimating) {
+        isAnimating = true;
         currentSheet--;
         sheets[currentSheet].classList.remove('flipped');
-        sheets[currentSheet].style.zIndex = (MENU_DATA.length/2) - currentSheet + 10;
+        // Restaurar Z-index original para que a página volte ao topo da pilha da direita
+        sheets[currentSheet].style.zIndex = Math.floor((MENU_DATA.length - (currentSheet * 2)) / 2) + 15;
         updateIndicator();
+        setTimeout(() => { isAnimating = false; }, 800);
       }
     }
 
@@ -390,12 +407,6 @@
       indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
     }
 
-    function handleResize() {
-      container.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2/1";
-    }
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
     initBook();
   </script>
 </body>
