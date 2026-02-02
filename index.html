@@ -5,162 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Cardápio Bar - AFPESP Peruíbe II</title>
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  
   <style>
     :root {
-      --gold: #c5a059;
-      --dark-brown: #3d241f;
+      --gold: #d4af37;
+      --dark-brown: #120807; /* Couro bem escuro e rico */
       --paper: #fdfbf7;
+      --black-bg: #050404;
+      --font-serif: 'Cinzel', 'Georgia', serif;
+      --font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     }
 
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      background-color: #1a1110;
-      overflow: hidden;
-      overscroll-behavior: none;
-      -webkit-tap-highlight-color: transparent;
-      display: flex;
-      flex-direction: column;
+      margin: 0; padding: 0; height: 100%; width: 100%;
+      background-color: var(--black-bg);
+      overflow: hidden; overscroll-behavior: none;
+      display: flex; flex-direction: column;
+      font-family: var(--font-sans);
     }
 
-    header.top-bar {
-      flex-shrink: 0;
-      height: 45px;
-      background: #000;
-      display: flex;
-      align-items: center;
-      padding: 0 15px;
-      z-index: 100;
+    /* BARRA SUPERIOR */
+    .top-bar {
+      flex-shrink: 0; height: 50px; background: #000;
+      display: flex; align-items: center; padding: 0 15px; z-index: 100;
+      border-bottom: 1px solid #222;
     }
+    .top-bar img { height: 32px; width: auto; display: block; }
+    .top-bar span { color: white; font-weight: bold; margin-left: 12px; font-size: 14px; letter-spacing: 0.5px; }
 
-    section.title-bar {
-      flex-shrink: 0;
-      background-color: #333436;
-      padding: 6px 10px;
-      text-align: center;
-      z-index: 90;
+    .title-bar {
+      flex-shrink: 0; background-color: #333436; padding: 8px 10px;
+      text-align: center; z-index: 90;
     }
-    section.title-bar h1 { color: #00ff00; font-size: 13px; font-weight: bold; text-transform: uppercase; margin: 0; }
+    .title-bar h1 { color: #00ff00; font-size: 13px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
 
+    /* CONTAINER DO LIVRO */
     #root {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 5px;
-      min-height: 0;
+      flex-grow: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 10px;
       position: relative;
     }
 
     #book-container {
-      position: relative;
-      width: 98%;
-      max-width: 1000px;
-      height: 75vh;
-      margin: auto;
-      perspective: 2000px;
-      -webkit-perspective: 2000px;
-      opacity: 0; /* Começa invisível para evitar o flash de letras */
-      transition: opacity 0.4s ease-in-out;
-      background-color: transparent;
+      position: relative; width: 95%; max-width: 1000px; height: 75vh;
+      margin: auto; perspective: 2500px;
+      opacity: 0; transition: opacity 0.5s ease-in-out;
+      cursor: pointer;
     }
 
-    .transform-style-3d { 
-      transform-style: preserve-3d; 
-      -webkit-transform-style: preserve-3d;
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .book-wrapper {
+      transform-style: preserve-3d; width: 100%; height: 100%; position: relative;
     }
     
     .sheet {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 50%;
-      height: 100%;
+      position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
       transform-origin: left;
-      transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
-      -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1);
-      z-index: 10;
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      z-index: 10; transform-style: preserve-3d;
       will-change: transform;
     }
 
-    .sheet.flipped {
-      transform: rotateY(-180deg);
-      -webkit-transform: rotateY(-180deg);
-    }
+    .sheet.flipped { transform: rotateY(-180deg); }
 
     .face {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      background-color: var(--paper); /* Fundo sólido para evitar transparência */
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      backface-visibility: hidden; background-color: var(--paper);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.1);
     }
 
-    .bg-texture-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
-    .bg-texture-leather { background-image: url('https://www.transparenttextures.com/patterns/leather.png'); }
+    .face.back { transform: rotateY(180deg); }
 
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      width: 100%;
-      gap: 3px;
-    }
-    .item-dots {
-      flex-grow: 1;
-      border-bottom: 2px dotted rgba(0, 0, 0, 0.1);
-      min-width: 4px;
-      margin-bottom: 3px;
+    /* TEXTURAS */
+    .bg-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
+    .bg-leather { 
+      background-color: var(--dark-brown) !important; 
+      background-image: url('https://www.transparenttextures.com/patterns/leather.png');
+      color: var(--gold) !important;
     }
 
-    .custom-scrollbar {
-      overflow-y: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-      touch-action: pan-y !important;
-      height: 100%;
-      width: 100%;
+    /* CONTEÚDO DAS PÁGINAS */
+    .page-content { padding: 22px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; scrollbar-width: none; }
+    .page-content::-webkit-scrollbar { display: none; }
+    
+    .menu-section { margin-bottom: 18px; }
+    .section-title {
+      font-family: var(--font-serif); font-size: 14px; font-weight: bold;
+      color: #222; border-bottom: 1.5px solid var(--gold);
+      padding-bottom: 4px; margin-bottom: 10px; display: flex; align-items: center;
+      gap: 8px; text-transform: uppercase; letter-spacing: 1px;
     }
 
-    .flip-zone {
-      position: absolute;
-      top: 0;
-      width: 40%;
-      height: 100%;
-      z-index: 5000;
-      cursor: pointer;
+    .menu-item-wrapper { margin-bottom: 6px; }
+    .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .item-name { font-weight: 700; color: #111; font-size: 12.5px; flex: 1; }
+    .item-dots { flex-grow: 1; border-bottom: 1px dotted #aaa; margin-bottom: 4px; }
+    .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 12.5px; white-space: nowrap; }
+    .item-desc { font-size: 10px; color: #666; font-style: italic; margin-top: -2px; line-height: 1.2; }
+
+    /* CAPA */
+    .cover-content {
+      height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 25px; border: 3px double var(--gold); margin: 15px;
+      background: rgba(0,0,0,0.45);
     }
-    .flip-zone-right { right: 0; }
-    .flip-zone-left { left: 0; }
+    .cover-content h1 { font-family: var(--font-serif); font-size: 38px; margin: 10px 0; letter-spacing: 4px; color: var(--gold); text-shadow: 2px 2px 4px black; }
+    .cover-content p { font-family: var(--font-serif); font-size: 18px; text-transform: uppercase; letter-spacing: 2.5px; color: var(--gold); font-weight: bold; }
+    .gold-line { width: 60px; height: 2px; background: var(--gold); margin: 15px 0; box-shadow: 0 0 8px var(--gold); }
 
-    .font-serif { font-family: 'Cinzel', serif; }
+    /* IMAGENS */
+    .image-container { position: relative; height: 100%; background: #000; overflow: hidden; }
+    .image-el { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+    .image-caption {
+      position: absolute; bottom: 0; left: 0; right: 0; 
+      background: linear-gradient(transparent, rgba(0,0,0,0.95));
+      padding: 40px 20px 20px; text-align: center; color: white;
+      font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 2px; font-size: 16px;
+    }
 
+    /* CONTROLES */
+    .controls {
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      margin-top: 10px; padding-bottom: 15px;
+    }
+    .btn-nav {
+      background: var(--dark-brown); color: var(--gold); border: 1.5px solid var(--gold);
+      width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 15px; min-width: 60px; text-align: center; }
+
+    /* RESPONSIVIDADE MOBILE */
     @media (max-width: 640px) {
-      #book-container { height: 70vh; }
-      .p-page { padding: 12px !important; }
-      .p-header { padding: 15px 5px !important; }
-    }
-
-    @media (max-height: 550px) {
-      #book-container { height: 62vh; }
-      header.top-bar { height: 35px; }
-      section.title-bar { padding: 2px; }
+      #book-container { height: 70vh; aspect-ratio: 0.75/1 !important; }
+      .sheet { left: 0; width: 100%; transform-origin: left; }
+      .face.back { transform: rotateY(0); display: none; }
+      .sheet.flipped .face.front { display: none; }
+      .sheet.flipped .face.back { display: flex; transform: rotateY(0); }
+      .cover-content h1 { font-size: 28px; }
+      .page-content { padding: 18px; }
     }
   </style>
 <script type="importmap">
@@ -174,8 +159,8 @@
 <body>
 
   <header class="top-bar">
-    <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" style="height: 20px;" />
-    <span style="color:white; font-weight:bold; margin-left:10px; font-size:12px;">AFPESP Peruíbe II</span>
+    <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="Logo AFPESP" />
+    <span>AFPESP Peruíbe II</span>
   </header>
 
   <section class="title-bar">
@@ -183,182 +168,122 @@
   </section>
 
   <div id="root">
-    <div id="book-container">
-      <div id="book" class="transform-style-3d"></div>
+    <div id="book-container" onclick="handleBookClick(event)">
+      <div id="book" class="book-wrapper"></div>
     </div>
 
-    <div class="flex items-center justify-center gap-5 mt-3 mb-2 sm:hidden flex-shrink-0">
-      <button id="prevBtn" onclick="prevPage()" class="p-2 bg-[#3d241f] rounded-full text-[#c5a059]"> 
-        <i data-lucide="chevron-left" class="w-5 h-5"></i> 
+    <div class="controls">
+      <button class="btn-nav" onclick="prevPage()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
       </button>
-      <span id="page-indicator" class="text-[#c5a059] font-bold font-serif text-[10px] tracking-widest min-w-[50px] text-center">1 / 1</span>
-      <button id="nextBtn" onclick="nextPage()" class="p-2 bg-[#3d241f] rounded-full text-[#c5a059]"> 
-        <i data-lucide="chevron-right" class="w-5 h-5"></i> 
+      <span id="page-indicator" class="page-indicator">1 / 1</span>
+      <button class="btn-nav" onclick="nextPage()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </button>
     </div>
   </div>
 
   <script>
+    const SVGS = {
+      'chef-hat': `<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 13.81A6 6 0 1 1 18 13.81M6 13V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6M19 13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2M7 21h10"></path></svg>`,
+      'heart': `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
+      'glass': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
+      'beer': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
+      'wine': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
+      'food': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
+      'coffee': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
+    };
+
     const MENU_DATA = [
       { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1546171753-97d7676e4602?q=80&w=800', caption: 'Bebidas Geladas' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas Selecionadas' },
       { 
         type: 'content', 
         sections: [
-          {
-            title: 'Doses',
-            icon: 'glass-water',
-            items: [
-              { n: 'Pinga 51', p: '4,00' }, { n: 'Velho Barreiro', p: '4,00' },
-              { n: 'Sagatiba', p: '5,00' }, { n: 'Saquê', p: '6,00' },
-              { n: 'Vodka (Caipiroska)', p: '5,00' }, { n: 'Campari', p: '7,00' }
-            ]
-          },
-          {
-            title: 'Caipirinhas',
-            icon: 'martini',
-            items: [
-              { n: 'Pinga 51', p: '20,00' }, { n: 'Velho Barreiro', p: '15,00' },
-              { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' },
-              { n: 'Vodka (Caipiroska)', p: '25,00' }
-            ]
-          },
-          {
-            title: 'Cervejas',
-            icon: 'beer',
-            items: [
-              { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' },
-              { n: 'Brahma Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' },
-              { n: 'Heineken sem álcool', p: '10,00' }
-            ]
-          }
+          { title: 'Doses', icon: 'glass', items: [ { n: 'Pinga 51', p: '4,00' }, { n: 'Velho Barreiro', p: '4,00' }, { n: 'Sagatiba', p: '5,00' }, { n: 'Saquê', p: '6,00' }, { n: 'Vodka (Caipiroska)', p: '5,00' }, { n: 'Campari', p: '7,00' } ] },
+          { title: 'Caipirinhas', icon: 'glass', items: [ { n: 'Pinga 51', p: '20,00' }, { n: 'Velho Barreiro', p: '15,00' }, { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' }, { n: 'Vodka (Caipiroska)', p: '25,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=1000', caption: 'Vinhos & Momentos' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?q=80&w=1000', caption: 'Cervejas e Chopp' },
       { 
         type: 'content', 
         sections: [
-          {
-            title: 'Chopp',
-            icon: 'beer',
-            items: [
-              { n: 'Chopp Claro', p: '9,00', d: '330ml' },
-              { n: 'Chopp Claro', p: '13,50', d: '500ml' },
-              { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' }
-            ]
-          },
-          {
-            title: 'Vinhos',
-            icon: 'wine',
-            items: [
-              { n: 'Vinho Tinto Seco', p: '8,00' }, { n: 'Vinho Tinto Suave', p: '8,00' },
-              { n: 'Concha y Toro Tinto Meio Seco', p: '50,00' },
-              { n: 'Periquita Tinto Meio Seco', p: '90,00' },
-              { n: 'Santa Helena Chardonnay', p: '52,00' }
-            ]
-          },
-          {
-            title: 'Batidas',
-            icon: 'martini',
-            items: [
-              { n: 'Pinga 51', p: '20,00' }, { n: 'Velho Barreiro', p: '20,00' },
-              { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '20,00' },
-              { n: 'Vodka (Caipiroska)', p: '25,00' }, { n: 'Espanhola (Morango)', p: '18,00' }
-            ]
-          }
+          { title: 'Cervejas', icon: 'beer', items: [ { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' }, { n: 'Brahma Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' }, { n: 'Heineken sem álcool', p: '10,00' } ] },
+          { title: 'Chopp', icon: 'beer', items: [ { n: 'Chopp Claro', p: '9,00', d: '330ml' }, { n: 'Chopp Claro', p: '13,50', d: '500ml' }, { n: 'Chopp Escuro', p: '30,00', d: 'Garrafa 1L' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000', caption: 'Refresco Gelado' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000', caption: 'Vinhos & Momentos' },
       { 
         type: 'content', 
         sections: [
-          {
-            title: 'Bebidas não alcoólicas',
-            icon: 'glass-water',
-            items: [
-              { n: 'Água com gás', p: '5,00' }, { n: 'Água sem gás', p: '5,00' },
-              { n: 'Coca-Cola', p: '7,00' }, { n: 'Coca-Cola Zero', p: '7,00' },
-              { n: 'Guaraná', p: '6,00' }, { n: 'Guaraná Zero', p: '6,00' },
-              { n: 'Schweppes', p: '7,00' }, { n: 'Água Tônica', p: '6,00' },
-              { n: 'Água Tônica Zero', p: '6,00' }, { n: 'H2O Limão', p: '7,00' },
-              { n: 'Pacote de Gelo (3kg)', p: '6,00' }
-            ]
-          }
+          { title: 'Vinhos', icon: 'wine', items: [ { n: 'Vinho Tinto Seco', p: '8,00' }, { n: 'Vinho Tinto Suave', p: '8,00' }, { n: 'Concha y Toro Tinto', p: '50,00', d: 'Meio Seco' }, { n: 'Periquita Tinto', p: '90,00', d: 'Meio Seco' }, { n: 'Santa Helena Chardonnay', p: '52,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?q=80&w=1000', caption: 'Energia Natural' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000', caption: 'Refrescos' },
       { 
         type: 'content', 
         sections: [
-          {
-            title: 'Sucos Naturais',
-            icon: 'glass-water',
-            items: [
-              { n: 'Suco de Laranja', p: '10,00' }, { n: 'Suco de Limão', p: '10,00' },
-              { n: 'Suco de Melancia', p: '10,00' },
-              { n: 'Suco de Laranja', p: '18,00', d: 'Jarra' },
-              { n: 'Suco de Limão', p: '18,00', d: 'Jarra' },
-              { n: 'Suco de Melancia', p: '18,00', d: 'Jarra' }
-            ]
-          },
-          {
-            title: 'Sucos (Outros)',
-            icon: 'glass-water',
-            items: [
-              { n: 'Suco de Uva', p: '15,00', d: 'Integral – Copo' },
-              { n: 'Suco de Uva', p: '8,00', d: 'Del Valle – Lata' },
-              { n: 'Suco de Pêssego', p: '8,00', d: 'Del Valle – Lata' }
-            ]
-          },
-          {
-            title: 'Especiais',
-            icon: 'coffee',
-            items: [
-              { n: 'Copo de Leite Longo', p: '5,00' }, { n: 'Café Expresso Pequeno', p: '5,00' },
-              { n: 'Espanhola Sem Álcool', p: '8,00', d: 'Drink' },
-              { n: 'Especial Peruíbe II', p: '8,00', d: 'Drink sem álcool' }
-            ]
-          }
+          { title: 'Não Alcoólicas', icon: 'glass', items: [ 
+            { n: 'Água com gás', p: '5,00' }, 
+            { n: 'Água sem gás', p: '5,00' }, 
+            { n: 'Coca-Cola (Normal/Zero)', p: '7,00' }, 
+            { n: 'Guaraná (Normal/Zero)', p: '6,00' }, 
+            { n: 'Schweppes', p: '7,00' },
+            { n: 'Água tônica', p: '6,00' },
+            { n: 'Água tônica Zero', p: '6,00' },
+            { n: 'H2O Limão', p: '7,00' }, 
+            { n: 'Pacote de Gelo 3kg', p: '6,00' } 
+          ] }
         ]
       },
-      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos Deliciosos' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1000', caption: 'Sucos Naturais' },
       { 
         type: 'content', 
         sections: [
-          {
-            title: 'Porções',
-            icon: 'utensils',
-            items: [
-              { n: 'Batata Frita', p: '15,00', d: '200g' }, { n: 'Batata Frita', p: '20,00', d: '400g' },
-              { n: 'Camarão', p: '40,00', d: '250g' }, { n: 'Camarão', p: '55,00', d: '500g' },
-              { n: 'Isca de Peixe', p: '45,00', d: '500g' }, { n: 'Calabresa Acebolada', p: '18,00', d: '400g' }
-            ]
-          },
-          {
-            title: 'Lanches',
-            icon: 'utensils',
-            items: [
-              { n: 'Misto Quente', p: '7,00' }, { n: 'Misto Frio', p: '10,00' },
-              { n: 'Queijo Quente', p: '10,00' }
-            ]
-          },
-          {
-            title: 'Pratos Extras',
-            icon: 'utensils',
-            items: [
-              { n: 'Omelete', p: '4,00' }, { n: 'Omelete com Queijo', p: '5,00' },
-              { n: 'Ovo Cozido', p: '2,00' }, { n: 'Ovo Frito', p: '3,00' },
-              { n: 'Filé de Frango', p: '5,00' }, { n: 'Bife Grelhado', p: '9,00' }
-            ]
-          }
+          { title: 'Sucos Naturais', icon: 'glass', items: [ 
+            { n: 'Suco de Laranja / Limão', p: '10,00 / 18,00', d: 'Copo / Jarra' }, 
+            { n: 'Suco de Melancia', p: '10,00 / 18,00', d: 'Copo / Jarra' }
+          ] },
+          { title: 'Sucos (Outros)', icon: 'glass', items: [ 
+            { n: 'Suco de Uva Integral', p: '15,00', d: 'Copo' }, 
+            { n: 'Suco de Uva Del Valle', p: '8,00', d: 'Lata' }, 
+            { n: 'Suco de Pêssego Del Valle', p: '8,00', d: 'Lata' } 
+          ] }
         ]
       },
-      { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Obrigado pela preferência' }
+      { type: 'image', url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000', caption: 'Especiais e Lanches' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Especiais', icon: 'coffee', items: [ { n: 'Copo de Leite Longo', p: '5,00' }, { n: 'Café Expresso Pequeno', p: '5,00' }, { n: 'Espanhola Sem Álcool', p: '8,00' }, { n: 'Especial Peruíbe II (S/ Álcool)', p: '8,00' } ] },
+          { title: 'Lanches', icon: 'food', items: [ { n: 'Misto Quente', p: '7,00' }, { n: 'Misto Frio', p: '10,00' }, { n: 'Queijo Quente', p: '10,00' } ] }
+        ]
+      },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=1000', caption: 'Para Compartilhar' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Porções', icon: 'food', items: [ 
+            { n: 'Batata Frita', p: '15,00 / 20,00', d: '200g / 400g' }, 
+            { n: 'Camarão', p: '40,00 / 55,00', d: '250g / 500g' }, 
+            { n: 'Isca de Peixe 500g', p: '45,00' }, 
+            { n: 'Calabresa Acebolada 400g', p: '18,00' } 
+          ] },
+          { title: 'Pratos Extras', icon: 'food', items: [ 
+            { n: 'Omelete (Simples / Queijo)', p: '4,00 / 5,00' }, 
+            { n: 'Ovo (Cozido / Frito)', p: '2,00 / 3,00' }, 
+            { n: 'Filé de Frango', p: '5,00' }, 
+            { n: 'Bife Grelhado', p: '9,00' } 
+          ] }
+        ]
+      },
+      { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Bar AFPESP Peruíbe II' }
     ];
 
     let currentSheet = 0;
     const book = document.getElementById('book');
     const container = document.getElementById('book-container');
+    const indicator = document.getElementById('page-indicator');
     const sheets = [];
 
     function initBook() {
@@ -366,111 +291,87 @@
       sheets.length = 0;
       for (let i = 0; i < MENU_DATA.length; i += 2) {
         const sheet = document.createElement('div');
-        sheet.className = 'sheet transform-style-3d';
+        sheet.className = 'sheet';
         sheet.style.zIndex = Math.floor((MENU_DATA.length - i) / 2) + 10;
         
         const front = document.createElement('div');
-        front.id = `front-${i/2}`;
-        front.className = 'face bg-texture-paper border-r border-black/10 shadow-lg overflow-hidden';
-        front.style.pointerEvents = 'auto';
-        front.innerHTML = renderPage(MENU_DATA[i]);
+        front.className = 'face front bg-paper';
+        setupFace(front, MENU_DATA[i]);
         
-        const flipR = document.createElement('div');
-        flipR.className = 'flip-zone flip-zone-right';
-        flipR.onclick = (e) => { e.stopPropagation(); nextPage(); };
-        front.appendChild(flipR);
-
         const back = document.createElement('div');
-        back.id = `back-${i/2}`;
-        back.className = 'face bg-texture-paper border-l border-black/10 shadow-lg overflow-hidden';
-        back.style.transform = 'rotateY(180deg)';
-        back.style.webkitTransform = 'rotateY(180deg)';
-        back.style.pointerEvents = 'none'; 
-        back.innerHTML = MENU_DATA[i+1] ? renderPage(MENU_DATA[i+1]) : '<div class="h-full bg-[#3d241f]"></div>';
+        back.className = 'face back bg-paper';
+        setupFace(back, MENU_DATA[i+1]);
         
-        const flipL = document.createElement('div');
-        flipL.className = 'flip-zone flip-zone-left'; 
-        flipL.onclick = (e) => { e.stopPropagation(); prevPage(); };
-        back.appendChild(flipL);
-
         sheet.appendChild(front);
         sheet.appendChild(back);
         book.appendChild(sheet);
         sheets.push(sheet);
       }
       updateIndicator();
-      lucide.createIcons();
-      // Revela o livro apenas após montar tudo para evitar flicker
-      requestAnimationFrame(() => {
-        container.style.opacity = '1';
-      });
+      setTimeout(() => container.style.opacity = '1', 150);
     }
 
-    function renderPage(data) {
+    function setupFace(faceEl, data) {
+      if (!data) {
+        faceEl.classList.add('bg-leather');
+        return;
+      }
+
       if (data.type === 'cover' || data.type === 'back') {
-        const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
-        const isBack = data.type === 'back';
-        
-        // Ajustes para a capa (tamanhos maiores conforme solicitado)
-        const titleSize = isBack ? 'text-xl sm:text-5xl' : 'text-3xl sm:text-5xl';
-        const subtitleSize = isBack ? 'text-[11px] sm:text-[18px]' : 'text-[14px] sm:text-2xl'; // Subtítulo aumentado
-        const iconSize = isBack ? 'w-10 h-10 sm:w-16 sm:h-16' : 'w-20 h-20 sm:w-32 sm:h-32'; // Ícone aumentado
-
-        return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] p-header p-4 text-center relative overflow-hidden">
-                  <div class="absolute inset-0 bg-texture-leather opacity-20 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center w-full max-w-[90%] mt-[-40px]">
-                    <i data-lucide="${icon}" class="${iconSize} mb-8"></i>
-                    <h1 class="font-serif ${titleSize} font-bold uppercase mb-4 w-full leading-tight">${data.title}</h1>
-                    <div class="w-16 h-1 bg-[#c5a059] mb-8"></div>
-                    <p class="font-serif ${subtitleSize} opacity-90 uppercase tracking-[0.1em] leading-relaxed font-bold">${data.subtitle}</p>
-                  </div>
-                </div>`;
-      }
-      if (data.type === 'image') {
-        return `<div class="h-full relative overflow-hidden bg-black">
-                  <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('${data.url}')"></div>
-                  <div class="absolute inset-0 bg-black/40"></div>
-                  <div class="absolute bottom-5 left-0 right-0 text-center text-white px-2">
-                    <h3 class="font-serif text-[10px] sm:text-lg tracking-widest uppercase mb-1">${data.caption}</h3>
-                    <div class="w-6 h-0.5 bg-[#c5a059] mx-auto"></div>
-                  </div>
-                </div>`;
-      }
-      
-      const sectionsHtml = data.sections.map(s => `
-        <div class="mb-5 sm:mb-8">
-          <h3 class="font-serif text-[10px] sm:text-[13px] font-bold text-gray-500 mb-2 border-b border-[#c5a059]/30 pb-1 flex items-center gap-2 uppercase tracking-wider">
-            <i data-lucide="${s.icon}" class="w-3 h-3 text-[#3d241f]"></i> ${s.title}
-          </h3>
-          ${s.items.map(item => `
-            <div class="mb-2">
-              <div class="menu-item">
-                <span class="font-bold text-gray-800 text-[10px] sm:text-[14px] leading-tight flex-1 pr-1">${item.n}</span>
-                <div class="item-dots"></div>
-                <span class="font-serif font-bold text-gray-900 text-[10px] sm:text-[14px] whitespace-nowrap">R$ ${item.p}</span>
-              </div>
-              ${item.d ? `<div class="text-[8px] sm:text-[10px] text-gray-400 italic mt-[-1px]">${item.d}</div>` : ''}
+        faceEl.classList.add('bg-leather');
+        const svgKey = data.type === 'cover' ? 'chef-hat' : 'heart';
+        faceEl.innerHTML = `
+          <div class="cover-content">
+            ${SVGS[svgKey]}
+            <h1>${data.title}</h1>
+            <div class="gold-line"></div>
+            <p>${data.subtitle}</p>
+          </div>`;
+      } else if (data.type === 'image') {
+        faceEl.innerHTML = `
+          <div class="image-container">
+            <img class="image-el" src="${data.url}" alt="${data.caption}" loading="lazy" />
+            <div class="image-caption">
+              <h3>${data.caption}</h3>
             </div>
-          `).join('')}
-        </div>
-      `).join('');
-
-      return `<div class="h-full bg-texture-paper flex flex-col p-page p-4 sm:p-10 relative overflow-hidden">
-                <div class="custom-scrollbar pr-1">
-                  <div class="pb-6 pt-1">${sectionsHtml}</div>
+          </div>`;
+      } else {
+        const content = data.sections.map(s => `
+          <div class="menu-section">
+            <div class="section-title">${SVGS[s.icon] || ''} ${s.title}</div>
+            ${s.items.map(item => `
+              <div class="menu-item-wrapper">
+                <div class="menu-item">
+                  <span class="item-name">${item.n}</span>
+                  <div class="item-dots"></div>
+                  <span class="item-price">R$ ${item.p}</span>
                 </div>
-              </div>`;
+                ${item.d ? `<div class="item-desc">${item.d}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+        faceEl.innerHTML = `<div class="page-content">${content}</div>`;
+      }
+    }
+
+    // NOVA LÓGICA DE CLIQUE: Esquerda volta, Direita avança
+    function handleBookClick(e) {
+      const rect = container.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const isMobile = window.innerWidth < 640;
+
+      if (clickX > rect.width / 2) {
+        nextPage();
+      } else {
+        prevPage();
+      }
     }
 
     function nextPage() {
       if (currentSheet < sheets.length) {
-        const sheet = sheets[currentSheet];
-        sheet.classList.add('flipped');
-        const front = document.getElementById(`front-${currentSheet}`);
-        const back = document.getElementById(`back-${currentSheet}`);
-        if(front) front.style.pointerEvents = 'none';
-        if(back) back.style.pointerEvents = 'auto';
-        sheet.style.zIndex = 100 + currentSheet;
+        sheets[currentSheet].classList.add('flipped');
+        sheets[currentSheet].style.zIndex = 100 + currentSheet;
         currentSheet++;
         updateIndicator();
       }
@@ -479,32 +380,22 @@
     function prevPage() {
       if (currentSheet > 0) {
         currentSheet--;
-        const sheet = sheets[currentSheet];
-        sheet.classList.remove('flipped');
-        const front = document.getElementById(`front-${currentSheet}`);
-        const back = document.getElementById(`back-${currentSheet}`);
-        if(front) front.style.pointerEvents = 'auto';
-        if(back) back.style.pointerEvents = 'none';
-        sheet.style.zIndex = 200 - currentSheet;
+        sheets[currentSheet].classList.remove('flipped');
+        sheets[currentSheet].style.zIndex = (MENU_DATA.length/2) - currentSheet + 10;
         updateIndicator();
       }
     }
 
     function updateIndicator() {
-      const indicator = document.getElementById('page-indicator');
-      if (indicator) {
-        indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
-      }
+      indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
     }
 
-    function updateBookSize() {
-      const cont = document.getElementById('book-container');
-      if (!cont) return;
-      cont.style.aspectRatio = window.innerWidth < 640 ? "0.7/1" : "2.1/1";
+    function handleResize() {
+      container.style.aspectRatio = window.innerWidth < 640 ? "0.75/1" : "2/1";
     }
 
-    window.addEventListener('resize', updateBookSize);
-    updateBookSize();
+    window.addEventListener('resize', handleResize);
+    handleResize();
     initBook();
   </script>
 </body>
