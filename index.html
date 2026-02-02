@@ -410,16 +410,19 @@
       if (data.type === 'cover' || data.type === 'back') {
         const icon = data.type === 'cover' ? 'chef-hat' : 'heart';
         const isBack = data.type === 'back';
+        
+        // Ajustes para a capa (tamanhos maiores conforme solicitado)
         const titleSize = isBack ? 'text-xl sm:text-5xl' : 'text-3xl sm:text-5xl';
-        const subtitleSize = isBack ? 'text-[11px] sm:text-[18px]' : 'text-[10px] sm:text-sm';
+        const subtitleSize = isBack ? 'text-[11px] sm:text-[18px]' : 'text-[14px] sm:text-2xl'; // Subtítulo aumentado
+        const iconSize = isBack ? 'w-10 h-10 sm:w-16 sm:h-16' : 'w-20 h-20 sm:w-32 sm:h-32'; // Ícone aumentado
 
         return `<div class="h-full w-full flex flex-col items-center justify-center bg-[#3d241f] text-[#c5a059] p-header p-4 text-center relative overflow-hidden">
                   <div class="absolute inset-0 bg-texture-leather opacity-20 pointer-events-none"></div>
-                  <div class="relative z-10 flex flex-col items-center w-full max-w-[90%]">
-                    <i data-lucide="${icon}" class="w-10 h-10 sm:w-16 sm:h-16 mb-4"></i>
+                  <div class="relative z-10 flex flex-col items-center w-full max-w-[90%] mt-[-40px]">
+                    <i data-lucide="${icon}" class="${iconSize} mb-8"></i>
                     <h1 class="font-serif ${titleSize} font-bold uppercase mb-4 w-full leading-tight">${data.title}</h1>
-                    <div class="w-10 h-1 bg-[#c5a059] mb-6"></div>
-                    <p class="font-serif ${subtitleSize} opacity-90 uppercase tracking-[0.1em] leading-relaxed">${data.subtitle}</p>
+                    <div class="w-16 h-1 bg-[#c5a059] mb-8"></div>
+                    <p class="font-serif ${subtitleSize} opacity-90 uppercase tracking-[0.1em] leading-relaxed font-bold">${data.subtitle}</p>
                   </div>
                 </div>`;
       }
