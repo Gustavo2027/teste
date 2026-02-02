@@ -58,6 +58,7 @@
       perspective: 2500px;
       opacity: 0; 
       transition: opacity 0.5s ease-in-out;
+      cursor: pointer; /* Indica que é clicável */
     }
 
     .book-wrapper {
@@ -177,7 +178,8 @@
   </section>
 
   <div id="root">
-    <div id="book-container">
+    <!-- Adicionado onclick para virar as páginas clicando no livro -->
+    <div id="book-container" onclick="handleBookClick(event)">
       <div id="book" class="book-wrapper"></div>
     </div>
 
@@ -369,6 +371,21 @@
       }
     }
 
+    // Função para tratar o clique direto no livro
+    function handleBookClick(e) {
+      if (isAnimating) return;
+      
+      const rect = container.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      
+      // Se clicar na metade esquerda, volta. Se clicar na direita, avança.
+      if (clickX < rect.width / 2) {
+        prevPage();
+      } else {
+        nextPage();
+      }
+    }
+
     function nextPage() {
       if (currentSheet < sheets.length && !isAnimating) {
         isAnimating = true;
@@ -386,13 +403,12 @@
         isAnimating = true;
         currentSheet--;
         const sheet = sheets[currentSheet];
-        // z-index muito alto antes de começar a animação de retorno
+        //  z-index alto para a animação de retorno ser limpa
         sheet.style.zIndex = 200; 
         sheet.classList.remove('flipped');
         updateIndicator();
         
         setTimeout(() => { 
-          // Após a animação,  o z-index original para não quebrar a pilha
           sheet.style.zIndex = sheet.dataset.originalZ;
           isAnimating = false; 
         }, 800);
