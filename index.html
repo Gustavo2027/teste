@@ -8,7 +8,7 @@
   <style>
     :root {
       --gold: #d4af37;
-      --dark-brown: #1a0d0b; /* Marrom couro profundo */
+      --dark-brown: #1a0d0b;
       --paper: #fdfbf7;
       --black-bg: #050404;
       --font-serif: 'Cinzel', 'Georgia', serif;
@@ -39,9 +39,9 @@
       flex-shrink: 0; background-color: #333436; padding: 6px 10px;
       text-align: center; z-index: 90;
     }
-    .title-bar h1 { color: #00ff00; font-size: 12px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+    .title-bar h1 { color: #00ff00; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
 
-    /* CONTAINER DO LIVRO - MANTÉM 2 PÁGINAS SEMPRE */
+    /* CONTAINER DO LIVRO - ALTURA REDUZIDA */
     #root {
       flex-grow: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 5px;
@@ -51,9 +51,9 @@
     #book-container {
       position: relative; 
       width: 98%; 
-      max-width: 1000px; 
-      height: 70vh;
-      aspect-ratio: 2 / 1.4; /* Mantém proporção de livro aberto */
+      max-width: 900px; 
+      height: 62vh; /* Reduzido para não ficar muito comprido */
+      aspect-ratio: 2 / 1.3;
       margin: auto; 
       perspective: 2500px;
       opacity: 0; 
@@ -80,46 +80,55 @@
       backface-visibility: hidden; background-color: var(--paper);
       display: flex; flex-direction: column; overflow: hidden;
       box-shadow: inset 0 0 30px rgba(0,0,0,0.15);
-      border-radius: 2px 5px 5px 2px;
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
-    .face.back { transform: rotateY(180deg); border-radius: 5px 2px 2px 5px; }
+    .face.back { transform: rotateY(180deg); }
 
-    /* TEXTURAS */
-    .bg-paper { background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
     .bg-leather { 
       background-color: var(--dark-brown) !important; 
       background-image: url('https://www.transparenttextures.com/patterns/leather.png');
       color: var(--gold) !important;
     }
 
-    /* CONTEÚDO DAS PÁGINAS */
-    .page-content { padding: 15px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; scrollbar-width: none; }
-    .page-content::-webkit-scrollbar { display: none; }
+    /* PÁGINA COM ROLAGEM */
+    .page-content { 
+      padding: 18px 12px; 
+      height: 100%; 
+      overflow-y: auto; 
+      display: flex; 
+      flex-direction: column;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) transparent;
+    }
     
-    .menu-section { margin-bottom: 12px; }
+    .page-content::-webkit-scrollbar { width: 4px; }
+    .page-content::-webkit-scrollbar-track { background: transparent; }
+    .page-content::-webkit-scrollbar-thumb { background-color: var(--gold); border-radius: 10px; }
+    
+    .menu-section { margin-bottom: 14px; }
     .section-title {
-      font-family: var(--font-serif); font-size: 11px; font-weight: bold;
+      font-family: var(--font-serif); font-size: 12px; font-weight: bold;
       color: #222; border-bottom: 1px solid var(--gold);
-      padding-bottom: 3px; margin-bottom: 8px; display: flex; align-items: center;
+      padding-bottom: 4px; margin-bottom: 10px; display: flex; align-items: center;
       gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    .menu-item-wrapper { margin-bottom: 5px; }
-    .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 5px; }
-    .item-name { font-weight: 700; color: #111; font-size: 10.5px; flex: 1; }
-    .item-dots { flex-grow: 1; border-bottom: 1px dotted #ccc; margin-bottom: 3px; }
-    .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 10.5px; white-space: nowrap; }
-    .item-desc { font-size: 8.5px; color: #666; font-style: italic; margin-top: -1px; line-height: 1.1; }
+    .menu-item-wrapper { margin-bottom: 7px; }
+    .menu-item { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
+    .item-name { font-weight: 700; color: #111; font-size: 11px; flex: 1; line-height: 1.2; }
+    .item-dots { flex-grow: 1; border-bottom: 1px dotted #bbb; margin-bottom: 3px; margin: 0 4px; }
+    .item-price { font-family: var(--font-serif); font-weight: 700; color: #000; font-size: 11px; white-space: nowrap; }
+    .item-desc { font-size: 9px; color: #555; font-style: italic; margin-top: 1px; line-height: 1.1; }
 
     /* CAPA */
     .cover-content {
       height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 15px; border: 2px double var(--gold); margin: 10px;
+      text-align: center; padding: 15px; border: 2px double var(--gold); margin: 12px;
       background: rgba(0,0,0,0.5);
     }
-    .cover-content h1 { font-family: var(--font-serif); font-size: 24px; margin: 8px 0; letter-spacing: 2px; color: var(--gold); text-shadow: 2px 2px 3px black; }
-    .cover-content p { font-family: var(--font-serif); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: bold; }
+    .cover-content h1 { font-family: var(--font-serif); font-size: 26px; margin: 8px 0; letter-spacing: 2px; color: var(--gold); text-shadow: 2px 2px 3px black; }
+    .cover-content p { font-family: var(--font-serif); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: bold; }
     .gold-line { width: 40px; height: 1.5px; background: var(--gold); margin: 10px 0; box-shadow: 0 0 5px var(--gold); }
 
     /* IMAGENS */
@@ -128,8 +137,8 @@
     .image-caption {
       position: absolute; bottom: 0; left: 0; right: 0; 
       background: linear-gradient(transparent, rgba(0,0,0,0.9));
-      padding: 20px 10px 10px; text-align: center; color: white;
-      font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 1px; font-size: 12px;
+      padding: 20px 10px; text-align: center; color: white;
+      font-family: var(--font-serif); text-transform: uppercase; letter-spacing: 1px; font-size: 11px;
     }
 
     /* CONTROLES */
@@ -139,17 +148,17 @@
     }
     .btn-nav {
       background: var(--dark-brown); color: var(--gold); border: 1.5px solid var(--gold);
-      width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+      width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     }
     .page-indicator { color: var(--gold); font-family: var(--font-serif); font-weight: bold; font-size: 13px; min-width: 50px; text-align: center; }
 
-    /* AJUSTES PARA TELAS MÉDIAS (TABLETS) */
     @media (min-width: 641px) {
-      .item-name, .item-price { font-size: 12.5px; }
-      .section-title { font-size: 13px; }
-      .cover-content h1 { font-size: 34px; }
+      .item-name, .item-price { font-size: 13px; }
+      .section-title { font-size: 14px; }
+      .cover-content h1 { font-size: 38px; }
+      #book-container { height: 65vh; }
     }
   </style>
 <script type="importmap">
@@ -193,11 +202,11 @@
     const SVGS = {
       'chef-hat': `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 13.81A6 6 0 1 1 18 13.81M6 13V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6M19 13a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2M7 21h10"></path></svg>`,
       'heart': `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
-      'glass': `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
-      'beer': `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
-      'wine': `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
-      'food': `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
-      'coffee': `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
+      'glass': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
+      'beer': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
+      'wine': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
+      'food': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
+      'coffee': `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
     };
 
     const MENU_DATA = [
@@ -366,15 +375,10 @@
       }
     }
 
-    // NAVEGAÇÃO: Lado esquerdo volta, lado direito avança
     function handleBookClick(e) {
       if (isAnimating) return;
-      
       const rect = container.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      
-      // Se clicar na metade esquerda (0% a 50%), volta.
-      // Se clicar na metade direita (50% a 100%), vai para frente.
       if (clickX < rect.width / 2) {
         prevPage();
       } else {
@@ -398,7 +402,6 @@
         isAnimating = true;
         currentSheet--;
         sheets[currentSheet].classList.remove('flipped');
-        // Restaurar Z-index original
         sheets[currentSheet].style.zIndex = Math.floor((MENU_DATA.length - (currentSheet * 2)) / 2) + 20;
         updateIndicator();
         setTimeout(() => { isAnimating = false; }, 800);
