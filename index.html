@@ -151,9 +151,28 @@
       },
       { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Bar AFPESP Peruíbe II' }
     ];
-
+    let startX = 0;
+let startY = 0;
+let isScrolling = false;
     let currentSheet = 0;
     let isAnimating = false;
+    container.addEventListener("touchstart", (e) => {
+  const touch = e.touches[0];
+  startX = touch.clientX;
+  startY = touch.clientY;
+  isScrolling = false;
+});
+
+container.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  const diffX = Math.abs(touch.clientX - startX);
+  const diffY = Math.abs(touch.clientY - startY);
+
+  // Se mexeu mais na vertical → é scroll
+  if (diffY > diffX) {
+    isScrolling = true;
+  }
+});
     const book = document.getElementById('book');
     const container = document.getElementById('book-container');
     container.addEventListener("click", handleBookClick);
@@ -230,14 +249,17 @@
 
     // Função para tratar o clique direto no livro
     function handleBookClick(e) {
-  if (isAnimating) return;
+  if (isAnimating || isScrolling) return;
 
-  const scrollable = e.target.closest('.page-content');
+  const rect = container.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
 
-  // Se tiver scroll, NÃO vira página
-  if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
-    return;
+  if (clickX < rect.width / 2) {
+    prevPage();
+  } else {
+    nextPage();
   }
+}
 
   const rect = container.getBoundingClientRect();
   const clickX = e.clientX - rect.left;
