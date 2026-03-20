@@ -161,7 +161,19 @@ let isAnimating = false;
 
 
 
-container.addEventListener("click", handleBookClick);
+
+
+  if (diffY > diffX) {
+    isScrolling = true;
+  }
+});
+    const book = document.getElementById('book');
+    const container = document.getElementById('book-container');
+    container.addEventListener("click", handleBookClick);
+    const indicator = document.getElementById('page-indicator');
+    const sheets = [];
+
+    container.addEventListener("click", handleBookClick);
 
 container.addEventListener("touchstart", (e) => {
   const touch = e.touches[0];
@@ -179,11 +191,6 @@ container.addEventListener("touchmove", (e) => {
     isScrolling = true;
   }
 });
-    const book = document.getElementById('book');
-    const container = document.getElementById('book-container');
-    container.addEventListener("click", handleBookClick);
-    const indicator = document.getElementById('page-indicator');
-    const sheets = [];
 
     function initBook() {
       book.innerHTML = '';
