@@ -7,6 +7,30 @@
       --font-serif: 'Cinzel', 'Georgia', serif;
       --font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     }
+/* Evitar quebra feia */
+.item-name {
+  word-break: break-word;
+}
+
+/* Layout flexível automático */
+.menu-item {
+  display: flex;
+  align-items: center;
+  font-size: clamp(12px, 2.5vw, 16px);
+}
+
+/* Scroll interno */
+.page-content {
+  overflow-y: auto;
+  max-height: 100%;
+  padding: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Evita scroll lateral */
+body {
+  overflow-x: hidden;
+}
 .face {
   overflow: hidden;
   display: flex;
