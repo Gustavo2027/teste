@@ -8,6 +8,17 @@
       --font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     }
 
+.page-content {
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px;
+}
+
+#book-container {
+  touch-action: pan-y;
+}
+
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     html, body {
