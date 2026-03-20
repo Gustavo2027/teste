@@ -7,7 +7,15 @@
       --font-serif: 'Cinzel', 'Georgia', serif;
       --font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     }
+.face {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
+.page-content {
+  flex: 1;
+}
 .page-content {
   max-height: 100%;
   overflow-y: auto;
