@@ -151,12 +151,22 @@
       },
       { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Bar AFPESP Peruíbe II' }
     ];
-    let startX = 0;
+   let startX = 0;
 let startY = 0;
 let isScrolling = false;
-    let currentSheet = 0;
-    let isAnimating = false;
-    container.addEventListener("touchstart", (e) => {
+
+let currentSheet = 0;
+let isAnimating = false;
+
+const book = document.getElementById('book');
+const container = document.getElementById('book-container');
+const indicator = document.getElementById('page-indicator');
+const sheets = [];
+
+
+container.addEventListener("click", handleBookClick);
+
+container.addEventListener("touchstart", (e) => {
   const touch = e.touches[0];
   startX = touch.clientX;
   startY = touch.clientY;
@@ -168,7 +178,6 @@ container.addEventListener("touchmove", (e) => {
   const diffX = Math.abs(touch.clientX - startX);
   const diffY = Math.abs(touch.clientY - startY);
 
-  // Se mexeu mais na vertical → é scroll
   if (diffY > diffX) {
     isScrolling = true;
   }
@@ -248,7 +257,7 @@ container.addEventListener("touchmove", (e) => {
     }
 
     // Função para tratar o clique direto no livro
-    function handleBookClick(e) {
+   function handleBookClick(e) {
   if (isAnimating || isScrolling) return;
 
   const rect = container.getBoundingClientRect();
@@ -261,15 +270,7 @@ container.addEventListener("touchmove", (e) => {
   }
 }
 
-  const rect = container.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-
-  if (clickX < rect.width / 2) {
-    prevPage();
-  } else {
-    nextPage();
-  }
-}
+ 
 
     function nextPage() {
       if (currentSheet < sheets.length && !isAnimating) {
