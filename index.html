@@ -230,18 +230,24 @@
 
     // Função para tratar o clique direto no livro
     function handleBookClick(e) {
-      if (isAnimating) return;
-      
-      const rect = container.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      
-      // Se clicar na metade esquerda, volta. Se clicar na direita, avança.
-      if (clickX < rect.width / 2) {
-        prevPage();
-      } else {
-        nextPage();
-      }
-    }
+  if (isAnimating) return;
+
+  const scrollable = e.target.closest('.page-content');
+
+  // Se tiver scroll, NÃO vira página
+  if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
+    return;
+  }
+
+  const rect = container.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+
+  if (clickX < rect.width / 2) {
+    prevPage();
+  } else {
+    nextPage();
+  }
+}
 
     function nextPage() {
       if (currentSheet < sheets.length && !isAnimating) {
