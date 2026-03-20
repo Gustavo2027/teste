@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="index.css">
 
   <title>Cardápio Bar - AFPESP Peruíbe II</title>
@@ -31,7 +31,7 @@
 
   <div id="root">
     <!-- Adicionado onclick para virar as páginas clicando no livro -->
-    <div id="book-container" onclick="handleBookClick(event)">
+   <div id="book-container">
       <div id="book" class="book-wrapper"></div>
     </div>
 
@@ -156,6 +156,7 @@
     let isAnimating = false;
     const book = document.getElementById('book');
     const container = document.getElementById('book-container');
+    container.addEventListener("click", handleBookClick);
     const indicator = document.getElementById('page-indicator');
     const sheets = [];
 
