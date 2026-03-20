@@ -151,6 +151,9 @@
       },
       { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Bar AFPESP Peruíbe II' }
     ];
+    let book;
+let container;
+let indicator;
    let startX = 0;
 let startY = 0;
 let isScrolling = false;
@@ -158,39 +161,13 @@ let isScrolling = false;
 let currentSheet = 0;
 let isAnimating = false;
 
-
-
-
-
-
-  if (diffY > diffX) {
-    isScrolling = true;
-  }
-});
-    const book = document.getElementById('book');
-    const container = document.getElementById('book-container');
-    container.addEventListener("click", handleBookClick);
-    const indicator = document.getElementById('page-indicator');
+  
+  
     const sheets = [];
 
-    container.addEventListener("click", handleBookClick);
+    
 
-container.addEventListener("touchstart", (e) => {
-  const touch = e.touches[0];
-  startX = touch.clientX;
-  startY = touch.clientY;
-  isScrolling = false;
-});
 
-container.addEventListener("touchmove", (e) => {
-  const touch = e.touches[0];
-  const diffX = Math.abs(touch.clientX - startX);
-  const diffY = Math.abs(touch.clientY - startY);
-
-  if (diffY > diffX) {
-    isScrolling = true;
-  }
-});
 
     function initBook() {
       book.innerHTML = '';
@@ -309,7 +286,32 @@ container.addEventListener("touchmove", (e) => {
       indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
     }
 
-    window.onload = initBook;
+document.addEventListener("DOMContentLoaded", () => {
+ book = document.getElementById('book');
+container = document.getElementById('book-container');
+indicator = document.getElementById('page-indicator');
+
+  container.addEventListener("click", handleBookClick);
+
+  container.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isScrolling = false;
+  });
+
+  container.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    const diffX = Math.abs(touch.clientX - startX);
+    const diffY = Math.abs(touch.clientY - startY);
+
+    if (diffY > diffX) {
+      isScrolling = true;
+    }
+  });
+
+  initBook();
+});
   </script>
 </body>
 </html>
