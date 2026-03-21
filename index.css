@@ -7,6 +7,14 @@
       --font-serif: 'Cinzel', 'Georgia', serif;
       --font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
     }
+.sheet {
+  height: 100%;
+}
+.book-wrapper {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+}
 /* Evitar quebra feia */
 .item-name {
   word-break: break-word;
@@ -32,7 +40,8 @@ body {
   overflow-x: hidden;
 }
 .face {
-  overflow: hidden;
+ overflow-x: hidden;
+overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -48,7 +57,22 @@ body {
 }
 
 #book-container {
-  touch-action: pan-y;
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+
+  height: auto;
+  min-height: 400px;
+  max-height: 80vh;
+
+  aspect-ratio: auto; /* remove trava */
+
+  margin: auto;
+  perspective: 2500px;
+
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  cursor: pointer;
 }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -191,3 +215,18 @@ body {
       .cover-content h1 { font-size: 42px; }
       #book-container { height: 65vh; }
     }
+@media (min-width: 900px) {
+  #book-container {
+    height: 70vh;
+    max-width: 1100px;
+  }
+
+  .item-name,
+  .item-price {
+    font-size: 16px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+}
