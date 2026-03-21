@@ -309,6 +309,11 @@ indicator = document.getElementById('page-indicator');
       isScrolling = true;
     }
   });
+  container.addEventListener("touchend", () => {
+  setTimeout(() => {
+    isScrolling = false;
+  }, 50);
+});
 
   initBook();
 });
