@@ -305,9 +305,10 @@ indicator = document.getElementById('page-indicator');
     const diffX = Math.abs(touch.clientX - startX);
     const diffY = Math.abs(touch.clientY - startY);
 
-    if (diffY > diffX) {
-      isScrolling = true;
-    }
+  if (diffY > diffX) {
+  isScrolling = true;
+  return;
+}
   });
   container.addEventListener("touchend", () => {
   setTimeout(() => {
