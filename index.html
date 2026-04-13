@@ -2,25 +2,19 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="index.css">
 
   <title>Cardápio Bar - AFPESP Peruíbe II</title>
-  
-  
-<!-- <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4"
-  }
-}
-</script> -->
 </head>
 <body>
 
   <header class="top-bar">
     <div class="logo-container">
-      <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="AFPESP" />
+      <img src="https://i.ibb.co/R4jn242d/afpesp-2.png" alt="AFPESP" referrerPolicy="no-referrer" />
     </div>
     <span>AFPESP Peruíbe II</span>
   </header>
@@ -109,7 +103,7 @@
           ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?q=80&w=1000', caption: 'Sucos Naturais' },
+      { type: 'image', url: 'https://i.ibb.co/HLz8zbFd/Design-sem-nome-24.webp', caption: 'Sucos Naturais' },
       { 
         type: 'content', 
         sections: [
@@ -218,7 +212,7 @@ let isAnimating = false;
       } else if (data.type === 'image') {
         faceEl.innerHTML = `
           <div class="image-container">
-            <img class="image-el" src="${data.url}" alt="${data.caption}" loading="eager" />
+            <img class="image-el" src="${data.url}" alt="${data.caption}" loading="eager" referrerPolicy="no-referrer" />
             <div class="image-caption">
               <h3>${data.caption}</h3>
             </div>
@@ -308,11 +302,11 @@ indicator = document.getElementById('page-indicator');
     const diffX = Math.abs(touch.clientX - startX);
     const diffY = Math.abs(touch.clientY - startY);
 
-  if (diffY > diffX) {
-  isScrolling = true;
-  return;
-}
-  });
+    // Se o movimento vertical for maior que o horizontal e maior que um pequeno threshold
+    if (diffY > diffX && diffY > 5) {
+      isScrolling = true;
+    }
+  }, { passive: true });
   container.addEventListener("touchend", () => {
   setTimeout(() => {
     isScrolling = false;
