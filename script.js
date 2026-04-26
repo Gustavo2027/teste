@@ -1,1 +1,279 @@
 
+
+
+    const SVGS = {
+      'chef-hat': `<svg width="70" height="70" viewBox="0 0 24 24" fill="var(--gold)" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3C10.5 3 9.1 3.6 8.1 4.6C7.1 5.6 6.5 7 6.5 8.5C6.5 9 6.6 9.5 6.7 9.9C5.1 10.4 4 11.8 4 13.5C4 15.4 5.6 17 7.5 17H16.5C18.4 17 20 15.4 20 13.5C20 11.8 18.9 10.4 17.3 9.9C17.4 9.5 17.5 9 17.5 8.5C17.5 7 16.9 5.6 15.9 4.6C14.9 3.6 13.5 3 12 3ZM7 18H17V20C17 20.6 16.6 21 16 21H8C7.4 21 7 20.6 7 20V18Z"/>
+        </svg>`,
+      'heart': `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>`,
+      'glass': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 22H8.8a2 2 0 0 1-2-1.79L5 3h14l-1.81 17.21A2 2 0 0 1 15.2 22ZM6 12a5 5 0 0 1 6 0 5 5 0 0 0 6 0"></path></svg>`,
+      'beer': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
+      'wine': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M7 10h10M12 15v7M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"></path></svg>`,
+      'food': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"></path></svg>`,
+      'coffee': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"></path></svg>`
+    };
+
+    const MENU_DATA = [
+      { type: 'cover', title: 'MENU BAR', subtitle: 'AFPESP Peruíbe II' },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000', caption: 'Bebidas Selecionadas' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Doses', icon: 'glass', items: [ { n: 'Pinga_51', p: '4,00' }, { n: 'Velho_Barreiro', p: '4,00' }, { n: 'Sagatiba', p: '5,00' }, { n: 'Saquê', p: '6,00' }, { n: 'Vodka_Caipiroska', p: '5,00' }, { n: 'Campari', p: '7,00' } ] },
+          { title: 'Caipirinhas', icon: 'glass', items: [ { n: 'Pinga 51', p: '20,00' }, { n: 'Velho_Barreiro', p: '15,00' }, { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' }, { n: 'Vodka(Caipiroska)', p: '25' } ] }
+        ]
+      },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1535958636474-b021ee887b13?q=80&w=1000', caption: 'Cervejas e Chopp' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Cervejas', icon: 'beer', items: [ { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' }, { n: 'Brahma_Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' }, { n: 'Heineken(zero)', p: '10,00' } ] },
+          { title: 'Chopp', icon: 'beer', items: [ { n: 'Claro_330ml', p: '9,00' }, { n: 'Claro_500ml', p: '13,50' }, { n: 'Escuro_Garrafa(1L)', p: '30,00' } ] }
+        ]
+      },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1000', caption: 'Vinhos e Momentos' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Vinhos', icon: 'wine', items: [ { n: 'Tinto_Seco', p: '8,00' }, { n: 'Tinto_Suave', p: '8,00' }, { n: 'Concha_Toro', p: '50,00' }, { n: 'Periquita', p: '90,00' }, { n: 'Santa_Helena', p: '52,00' } ] }
+        ]
+      },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000', caption: 'Bebidas Geladas' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Não Alcoólicas', icon: 'glass', items: [ 
+            { n: 'Água_com_gás', p: '5,00' }, 
+            { n: 'Água_sem_gás', p: '5,00' }, 
+            { n: 'Coca_Cola', p: '7,00' }, 
+            { n: 'Coca_Cola(Zero)', p: '7,00' }, 
+            { n: 'Guaraná', p: '6,00' }, 
+            { n: 'Guaraná(Zero)', p: '6,00' }, 
+            { n: 'Schweppes', p: '7,00' },
+            { n: 'Água_tônica', p: '6,00' },
+            { n: 'H2O_Limão', p: '7,00' }, 
+            { n: 'Pacote_Gelo(3kg)', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' },
+            { n: 'Pacote de Gelo 3kg', p: '6,00' }
+         
+          ] }
+        ]
+      },
+      { type: 'image', url: 'https://i.ibb.co/HLz8zbFd/Design-sem-nome-24.webp', caption: 'Sucos Naturais' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Sucos Naturais', icon: 'glass', items: [ 
+            { n: 'Laranja(Copo)', p: '10,00' }, 
+            { n: 'Melancia(Copo)', p: '10,00' },
+            { n: 'Limão(Jarra)', p: '18,00' },
+            { n: 'Melancia(Jarra)', p: '18,00' }
+          ] },
+          { title: 'Sucos (Del_Valle)', icon: 'glass', items: [ 
+            
+            { n: 'Suco_Uva', p: '8,00' }, 
+            { n: 'Suco_Pêssego', p: '8,00' } 
+          ] }
+        ]
+      },
+      { type: 'image', url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000', caption: 'Especiais e Lanches' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Especiais', icon: 'coffee', items: [ { n: 'Copo_de_Leite', p: '5,00' }, { n: 'Café_Expresso Pequeno', p: '5,00' },  { n: 'Especial_Peruíbe_II', p: '8,00' } ] },
+          { title: 'Lanches', icon: 'food', items: [ { n: 'Misto_Quente', p: '7,00' }, { n: 'Misto_Frio', p: '10,00' }, { n: 'Queijo_Quente', p: '10,00' } ] }
+        ]
+      },
+      { type: 'image', url: 'https://i.ibb.co/99h3wM28/porcao-de-camarao-frito.jpg', caption: 'Petiscos e Pratos' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Porções', icon: 'food', items: [ 
+            { n: 'Batata_Frita(400g)', p: '20,00' }, 
+            { n: 'Camarão(250g)', p: '40,00' }, 
+            { n: 'Isca_Peixe(500g)', p: '45,00' }, 
+            { n: 'Calabresa Acebolada_400g', p: '18,00' } 
+          ] },
+          { title: 'Pratos Extras', icon: 'food', items: [ 
+            { n: 'Omelete(Simples)', p: '4,00' }, 
+            { n: 'Ovo(Cozido)', p: '2,00' }, 
+            { n: 'Filé_Frango', p: '5,00' }, 
+            { n: 'Bife_Grelhado', p: '9,00' } 
+          ] }
+        ]
+      },
+      { type: 'back', title: 'VOLTE SEMPRE', subtitle: 'Bar AFPESP Peruíbe II' }
+    ];
+    let book;
+let container;
+let indicator;
+   let startX = 0;
+let startY = 0;
+let isScrolling = false;
+
+let currentSheet = 0;
+let isAnimating = false;
+
+  
+  
+    const sheets = [];
+
+    
+
+
+
+    function initBook() {
+      book.innerHTML = '';
+      sheets.length = 0;
+      for (let i = 0; i < MENU_DATA.length; i += 2) {
+        const sheet = document.createElement('div');
+        sheet.className = 'sheet';
+        const z = Math.floor((MENU_DATA.length - i) / 2);
+        sheet.style.zIndex = z;
+        sheet.dataset.originalZ = z;
+        
+        const front = document.createElement('div');
+        front.className = 'face front';
+        setupFace(front, MENU_DATA[i]);
+        
+        const back = document.createElement('div');
+        back.className = 'face back';
+        setupFace(back, MENU_DATA[i+1]);
+        
+        sheet.appendChild(front);
+        sheet.appendChild(back);
+        book.appendChild(sheet);
+        sheets.push(sheet);
+      }
+      updateIndicator();
+      setTimeout(() => { container.style.opacity = '1'; }, 200);
+    }
+
+    function setupFace(faceEl, data) {
+      if (!data) {
+        faceEl.classList.add('bg-leather');
+        return;
+      }
+
+      if (data.type === 'cover' || data.type === 'back') {
+        faceEl.classList.add('bg-leather');
+        const svgKey = data.type === 'cover' ? 'chef-hat' : 'heart';
+        faceEl.innerHTML = `
+          <div class="cover-content">
+            <div style="margin-bottom: 15px;">${SVGS[svgKey]}</div>
+            <h1>${data.title}</h1>
+            <div class="gold-line"></div>
+            <p>${data.subtitle}</p>
+          </div>`;
+      } else if (data.type === 'image') {
+        faceEl.innerHTML = `
+          <div class="image-container">
+            <img class="image-el" src="${data.url}" alt="${data.caption}" loading="eager" referrerPolicy="no-referrer" />
+            <div class="image-caption">
+              <h3>${data.caption}</h3>
+            </div>
+          </div>`;
+      } else {
+        const content = data.sections.map(s => `
+          <div class="menu-section">
+            <div class="section-title">${SVGS[s.icon] || ''} ${s.title}</div>
+            ${s.items.map(item => `
+              <div class="menu-item">
+                <span class="item-name">${item.n}</span>
+                <div class="item-dots"></div>
+                <span class="item-price">R$ ${item.p}</span>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+        faceEl.innerHTML = `<div class="page-content">${content}</div>`;
+      }
+    }
+
+    // Função para tratar o clique direto no livro
+   function handleBookClick(e) {
+  if (isAnimating || isScrolling) return;
+
+  const rect = container.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+
+  if (clickX < rect.width / 2) {
+    prevPage();
+  } else {
+    nextPage();
+  }
+}
+
+ 
+
+    function nextPage() {
+      if (currentSheet < sheets.length && !isAnimating) {
+        isAnimating = true;
+        const sheet = sheets[currentSheet];
+        sheet.classList.add('flipped');
+        sheet.style.zIndex = 100 + currentSheet;
+        currentSheet++;
+        updateIndicator();
+        setTimeout(() => { isAnimating = false; }, 800);
+      }
+    }
+
+    function prevPage() {
+      if (currentSheet > 0 && !isAnimating) {
+        isAnimating = true;
+        currentSheet--;
+        const sheet = sheets[currentSheet];
+        //  z-index alto para a animação de retorno ser limpa
+        sheet.style.zIndex = 200; 
+        sheet.classList.remove('flipped');
+        updateIndicator();
+        
+        setTimeout(() => { 
+          sheet.style.zIndex = sheet.dataset.originalZ;
+          isAnimating = false; 
+        }, 800);
+      }
+    }
+
+    function updateIndicator() {
+      indicator.innerText = `${currentSheet + 1} / ${sheets.length}`;
+    }
+
+document.addEventListener("DOMContentLoaded", () => {
+ book = document.getElementById('book');
+container = document.getElementById('book-container');
+indicator = document.getElementById('page-indicator');
+
+  container.addEventListener("click", handleBookClick);
+
+  container.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isScrolling = false;
+  });
+
+  container.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    const diffX = Math.abs(touch.clientX - startX);
+    const diffY = Math.abs(touch.clientY - startY);
+
+    // Se o movimento vertical for maior que o horizontal e maior que um pequeno threshold
+    if (diffY > diffX && diffY > 5) {
+      isScrolling = true;
+    }
+  }, { passive: true });
+  container.addEventListener("touchend", () => {
+  setTimeout(() => {
+    isScrolling = false;
+  }, 50);
+});
+
+  initBook();
+});
+window.nextPage = nextPage;
+window.prevPage = prevPage;
