@@ -80,6 +80,24 @@
           ] }
         ]
       },
+
+          { type: 'image', url: 'https://i.ibb.co/HLz8zbFd/Design-sem-nome-24.webp', caption: 'Sucos Naturais' },
+      { 
+        type: 'content', 
+        sections: [
+          { title: 'Sucos Naturais', icon: 'glass', items: [ 
+            { n: 'Laranja(Copo)', p: '10,00' }, 
+            { n: 'Melancia(Copo)', p: '10,00' },
+            { n: 'Limão(Jarra)', p: '18,00' },
+            { n: 'Melancia(Jarra)', p: '18,00' }
+          ] },
+          { title: 'Sucos (Del_Valle)', icon: 'glass', items: [ 
+            
+            { n: 'Suco_Uva', p: '8,00' }, 
+            { n: 'Suco_Pêssego', p: '8,00' } 
+          ] }
+        ]
+      },
       { type: 'image', url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000', caption: 'Especiais e Lanches' },
       { 
         type: 'content', 
