@@ -305,16 +305,28 @@ indicator = document.getElementById('page-indicator');
     isScrolling = false;
   });
 
-  container.addEventListener("touchmove", (e) => {
+  // container.addEventListener("touchmove", (e) => {
+  //   const touch = e.touches[0];
+  //   const diffX = Math.abs(touch.clientX - startX);
+  //   const diffY = Math.abs(touch.clientY - startY);
+
+ 
+  //   if (diffY > diffX && diffY > 5) {
+  //     isScrolling = true;
+  //   }
+  // }, { passive: true });
+
+    container.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     const diffX = Math.abs(touch.clientX - startX);
     const diffY = Math.abs(touch.clientY - startY);
 
-    // Se o movimento vertical for maior que o horizontal e maior que um pequeno threshold
-    if (diffY > diffX && diffY > 5) {
+    if (diffY > diffX && diffY > 10) {
       isScrolling = true;
     }
   }, { passive: true });
+
+    
   container.addEventListener("touchend", () => {
   setTimeout(() => {
     isScrolling = false;
