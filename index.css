@@ -151,16 +151,27 @@ html, body {
   color: var(--gold) !important;
 }
 
+/* .page-content { 
+  padding: 20px 15px; 
+  flex: 1;
+  min-height: 0;
+  height: 100%; 
+  overflow-y: scroll; 
+  display: flex; 
+  flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y; */
 .page-content { 
   padding: 20px 15px; 
   flex: 1;
   min-height: 0;
   height: 100%; 
-  overflow-y: scroll; /* Force scroll container */
+  overflow-y: scroll;
+  overflow-x: auto;
   display: flex; 
   flex-direction: column;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
+  touch-action: pan-y pan-x;
   position: relative;
   z-index: 1;
   overscroll-behavior-y: contain;
