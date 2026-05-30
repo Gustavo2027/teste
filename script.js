@@ -37,7 +37,7 @@
           { title: 'Vinhos', icon: 'wine', items: [ { n: 'Tinto_Seco', p: '8,00' }, { n: 'Tinto_Suave', p: '8,00' }, { n: 'Almaden_T/Suave', p: '35,00' },{ n: 'Almaden_T/Seco', p: '40,00' }, { n: 'Concha_Toro', p: '50,00' }, { n: 'Periquita', p: '90,00' }, { n: 'Santa_Helena', p: '52,00' } ] }
         ]
       },
-      { type: 'image', url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000', caption: 'Bebidas Geladas' },
+      { type: 'image', url: 'https://i.ibb.co/sdvNqm0d/4f54c48f-e496-4f9b-8efe-0b70e47bfea3.png', caption: 'Bebidas Geladas' },
       { 
         type: 'content', 
         sections: [
