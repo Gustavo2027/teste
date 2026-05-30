@@ -19,6 +19,7 @@
         type: 'content', 
         sections: [
           { title: 'Doses', icon: 'glass', items: [ { n: 'Pinga_51', p: '4,00' }, { n: 'Velho_Barreiro', p: '4,00' }, { n: 'Sagatiba', p: '5,00' }, { n: 'Saquê', p: '6,00' }, { n: 'Vodka', p: '5,00' }, { n: 'Campari', p: '7,00' } ] },
+            {   title: 'Batida', icon: 'glass', items: [ { n: 'Pinga_51', p: '20,00' }, { n: 'Velho_Barreiro', p: '20,00' }, { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '20,00' }, { n: 'Vodka', p: '25,00' }, { n: 'Espanhola', p: '18,00' } ] },
           { title: 'Caipirinhas', icon: 'glass', items: [ { n: 'Pinga 51', p: '15,00' }, { n: 'Velho_Barreiro', p: '15,00' }, { n: 'Sagatiba', p: '25,00' }, { n: 'Saquê', p: '18,00' }, { n: 'Caipiroska', p: '25,00' } ] }
         ]
       },
@@ -27,6 +28,7 @@
         type: 'content', 
         sections: [
           { title: 'Cervejas', icon: 'beer', items: [ { n: 'Skol', p: '7,00' }, { n: 'Brahma', p: '7,00' }, { n: 'Brahma_Malzbier', p: '9,00' }, { n: 'Heineken', p: '10,00' }, { n: 'Heineken_Zero', p: '10,00' } ] },
+            
           { title: 'Chopp', icon: 'beer', items: [ { n: 'Claro_330ml', p: '9,00' }, { n: 'Claro_500ml', p: '13,50' }, { n: 'Escuro_Garrafa(1L)', p: '30,00' } ] }
         ]
       },
@@ -76,7 +78,7 @@
            { n: 'Melancia', p: '18,00' },
            { n: 'Limão', p: '18,00' },
            { n: 'Abacaxi_c/hortelã', p: '18,00' },
-            { n: 'Abacaxi', p: '18,00' }
+           { n: 'Abacaxi', p: '18,00' }
           ] },
             
           { title: 'Sucos (Del_Valle)', icon: 'glass', items: [ 
@@ -130,10 +132,10 @@
       { n: 'Camarão(500g)', p: '55,00' }, 
       { n: 'Camarão(250g)', p: '40,00' }, 
       { n: 'Isca_Peixe(500g)', p: '45,00' }, 
-      { n: 'Calabresa_Acebolada_400g', p: '18,00' },
+      { n: 'Calabresa_(400g)', p: '18,00' },
       { n: 'Misto_Quente', p: '13,00' }
     ]},
-    { title: 'Pratos Extras', icon: 'food', items: [ 
+    { title: 'Pratos Opcionais', icon: 'food', items: [ 
       { n: 'Omelete_Simples', p: '4,00' },
       { n: 'Omelete_c/Queijo', p: '5,00' },
       { n: 'Ovo_Mexido', p: '3,00' },
@@ -141,10 +143,14 @@
       { n: 'Ovo_Cozido', p: '2,00' }, 
       { n: 'Bife_Grelhado', p: '9,00' },
       { n: 'Filé_Frango', p: '8,00' }
-    ]}
+    ]},
+
+  { title: 'Opcionais exclusivos durante as refeições', icon: '', items: [] }
+
+      
   ]
 },
-{ type: 'image', url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000', caption: 'Especiais e Lanches' },
+{ type: 'image', url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000', caption: 'Bebidas Quentes' },
 { 
   type: 'content', 
   sections: [
@@ -305,18 +311,7 @@ indicator = document.getElementById('page-indicator');
     isScrolling = false;
   });
 
-  // container.addEventListener("touchmove", (e) => {
-  //   const touch = e.touches[0];
-  //   const diffX = Math.abs(touch.clientX - startX);
-  //   const diffY = Math.abs(touch.clientY - startY);
-
- 
-  //   if (diffY > diffX && diffY > 5) {
-  //     isScrolling = true;
-  //   }
-  // }, { passive: true });
-
-    container.addEventListener("touchmove", (e) => {
+ container.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     const diffX = Math.abs(touch.clientX - startX);
     const diffY = Math.abs(touch.clientY - startY);
@@ -325,8 +320,6 @@ indicator = document.getElementById('page-indicator');
       isScrolling = true;
     }
   }, { passive: true });
-
-    
   container.addEventListener("touchend", () => {
   setTimeout(() => {
     isScrolling = false;
