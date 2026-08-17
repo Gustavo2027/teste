@@ -24,11 +24,12 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   font-family: 'Segoe UI', Roboto, 'Trebuchet MS', sans-serif;
   background: linear-gradient(160deg, var(--purple-dark), var(--purple) 55%, var(--pink) 130%);
   color: var(--text-dark);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -139,7 +140,7 @@ canvas#gameCanvas {
    OVERLAYS (telas sobrepostas: início, pergunta, game over)
    ========================================================= */
 .overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
@@ -148,7 +149,8 @@ canvas#gameCanvas {
   backdrop-filter: blur(3px);
   padding: 16px;
   animation: fadeIn 0.35s ease;
-  z-index: 10;
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 .overlay.hidden {
@@ -169,8 +171,10 @@ canvas#gameCanvas {
   text-align: center;
   box-shadow: 0 15px 40px rgba(0,0,0,0.35);
   animation: popIn 0.3s ease;
-  max-height: 92%;
+  max-height: 90vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: auto;
 }
 
 @keyframes popIn {
@@ -341,6 +345,11 @@ canvas#gameCanvas {
   .options { grid-template-columns: 1fr; }
   .panel { padding: 20px 16px; }
   .btn { padding: 10px 22px; font-size: 0.9rem; }
+  .game-area {
+    aspect-ratio: 4 / 3;
+    height: 60vh;
+    max-height: 60vh;
+  }
 }
 
 @media (max-width: 400px) {
